@@ -1,0 +1,51 @@
+{
+  "_comment": "Exploration palette — 2-color linear gradients with a topographic texture overlay tiled 4x on bordered cards. All colors are Tailwind defaults; tokens are the source of truth, hex values are the compiled output.",
+  "system": "tailwind",
+  "gradient_variants": {
+    "orange_indigo": {
+      "from": { "token": "orange-400", "hex": "#FB923C" },
+      "to": { "token": "indigo-400", "hex": "#818CF8" },
+      "direction": "linear, 0% → 100%",
+      "_description": "Warm orange → periwinkle indigo."
+    },
+    "teal_amber": {
+      "from": { "token": "teal-700", "hex": "#0F766E" },
+      "to": { "token": "amber-500", "hex": "#F59E0B" },
+      "direction": "linear, 0% → 100%",
+      "_description": "Deep teal → warm amber."
+    },
+    "fuchsia_blue": {
+      "from": { "token": "fuchsia-400", "hex": "#E879F9" },
+      "to": { "token": "blue-500", "hex": "#3B82F6" },
+      "direction": "linear, 0% → 100%",
+      "_description": "Fuchsia → royal blue."
+    },
+    "indigo_slate": {
+      "from": { "token": "indigo-300", "hex": "#A5B4FC" },
+      "to": { "token": "slate-500", "hex": "#64748B" },
+      "direction": "linear, 0% → 100%",
+      "_description": "Soft indigo → slate. Muted, monochromatic feel."
+    },
+    "rose_violet": {
+      "from": { "token": "rose-400", "hex": "#FB7185" },
+      "to": { "token": "violet-400", "hex": "#A78BFA" },
+      "direction": "linear, 0% → 100%",
+      "_description": "Rose → violet."
+    }
+  },
+  "texture_overlay": {
+    "file": "brand/assets/texture-topographic.png",
+    "description": "Seamless topographic / organic-line pattern. Low-opacity overlay on top of the gradient. Tiled 4x across a bordered card. Standalone gradient tiles use a single instance.",
+    "tile_count_on_card": 4
+  },
+  "inner_card": {
+    "top_section_bg": "#FFFFFF",
+    "bottom_section_bg": "#F5F4EB",
+    "_note": "Cream (#F5F4EB) is the default inner bottom panel. Some variants may use a lighter tint of the gradient's primary color — confirm if we want variant-specific inner tints."
+  },
+  "neutrals": {
+    "ink": "#000000",
+    "white": "#FFFFFF",
+    "cream": "#F5F4EB"
+  }
+}

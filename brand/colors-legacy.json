@@ -1,0 +1,11 @@
+{
+  "_comment": "Legacy Kiln palette — editorial b&w foundation with colorful illustration accents. Color only enters through illustration, not as flat fills.",
+  "neutrals": {
+    "ink": "#000000",
+    "cream": "#F5F4EB",
+    "white": "#FFFFFF"
+  },
+  "accents": {
+    "_note": "Legacy does not use solid accent colors as flat fills — color comes from illustrations (3D icons, cityscapes). No flat accent values defined."
+  }
+}
