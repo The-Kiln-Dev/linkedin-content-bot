@@ -1,0 +1,13 @@
+{
+  "output_dir": "output/experiment-screenshot",
+  "_note": "Single-slide experiment: content slide with a Clay.com hero screenshot filling the lower body. The capture lives at captures/clay-hero.png (1440x560).",
+  "slides": [
+    {
+      "type": "content",
+      "step": 1,
+      "headline": "Clay's moats are real.",
+      "body": "A data-provider marketplace that's hard to compete with, platform engineering built for 100k+ simultaneous API calls, and a compliant interface for GTM workflows.",
+      "support_image": "captures/clay-hero.png"
+    }
+  ]
+}

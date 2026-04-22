@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kiln Carousel — Cover</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .cover-stack {
+    position: absolute;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    top: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    z-index: 2;
+  }
+  .cover-stack .category { margin-bottom: 4px; }
+  .cover-stack .cta-pill { margin-top: 20px; align-self: flex-start; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="top-bar">
+      <img class="logo-lockup" src="{{asset_logo_lockup}}" alt="The Kiln">
+      <div class="author-badge">
+        <span class="name">Patrick</span>
+        <img src="{{asset_author_photo}}" alt="Patrick">
+      </div>
+    </div>
+
+    <div class="cover-stack">
+      <div class="category">{{category}}</div>
+      <h1 class="hero-headline">{{headline}}</h1>
+      <div class="cta-pill">{{cta_text}}</div>
+    </div>
+
+    {{doodle_left_block}}
+    {{icon_right_block}}
+  </div>
+</body>
+</html>

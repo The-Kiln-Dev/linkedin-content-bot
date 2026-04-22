@@ -1,0 +1,24 @@
+{
+  "output_dir": "output/experiment-logo-cards",
+  "_note": "Demonstrates logo cards with the hardened-capture logos (transparent-trimmed via lib/fetch-logo.js).",
+  "slides": [
+    {
+      "type": "content",
+      "step": 1,
+      "headline": "Two players. Same category.",
+      "body": "Clay is the incumbent GTM-data platform. Claude Code is the new cheap-and-flexible challenger. Which one belongs in your stack depends on what you're actually trying to build.",
+      "tool_cards": [
+        {
+          "logo": "captures/logos/clay.com.png",
+          "name": "Clay",
+          "note": "Data-provider marketplace + compliant GTM workflows"
+        },
+        {
+          "logo": "captures/logos/anthropic.com.png",
+          "name": "Claude Code",
+          "note": "Powerful models + flexible workflow runtime"
+        }
+      ]
+    }
+  ]
+}

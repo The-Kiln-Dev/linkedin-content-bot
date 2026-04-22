@@ -1,0 +1,510 @@
+/* Legacy-direction carousel — shared styles
+   Canvas: 1080×1350 per ../../brand/specs.md
+   Palette: ../../brand/colors-legacy.json
+   Layout rules: ../../brand/brand-legacy.md */
+
+:root {
+  --ink: #000000;
+  --cream: #F5F4EB;
+  --white: #FFFFFF;
+  --muted: #6b6b6b;
+  --divider: #e5e5e0;
+
+  --canvas-w: 1080px;
+  --canvas-h: 1350px;
+
+  --pad-x: 72px;
+  --pad-y: 72px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: var(--canvas-w);
+  height: var(--canvas-h);
+  background: #111; /* only visible if canvas has transparency; slides fill it */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.slide {
+  position: relative;
+  width: var(--canvas-w);
+  height: var(--canvas-h);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* ---------- Top bar (cover + CTA) ---------- */
+.top-bar {
+  position: absolute;
+  top: var(--pad-y);
+  left: var(--pad-x);
+  right: var(--pad-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 3;
+}
+
+.logo-lockup {
+  height: 52px;
+  width: auto;
+  display: block;
+}
+
+.author-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.author-badge img {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+}
+
+.author-badge .name {
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Category label ---------- */
+.category {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ---------- Hero headline (cover + CTA) ---------- */
+.hero-headline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 88px;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 100%;
+}
+
+/* ---------- Pill CTA button ---------- */
+.cta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: var(--white);
+  padding: 20px 34px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Content-slide headline ---------- */
+.content-headline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 72px;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.content-body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.4;
+  color: var(--ink);
+  max-width: 780px;
+}
+
+/* ---------- Content-slide step label ---------- */
+.step-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ---------- Content-slide cream footer ---------- */
+.footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 120px;
+  background: var(--cream);
+  padding: 0 var(--pad-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 3;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--pad-x);
+  right: var(--pad-x);
+  height: 1px;
+  background: var(--divider);
+}
+
+.footer .logo-lockup { height: 40px; }
+
+.footer .next {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Absolute-positioned flanking visuals ----------
+   Corner placements match reference carousel: one doodle + one 3D icon on cover,
+   3D icons partial-off-canvas on content, doodles flanking on CTA. */
+
+.visual {
+  position: absolute;
+  z-index: 1;
+}
+
+/* cover defaults — hero-scale flanking */
+.cover-doodle-left {
+  left: -40px;
+  bottom: 40px;
+  width: 360px;
+  height: auto;
+}
+
+.cover-icon-right {
+  right: -60px;
+  bottom: -40px;
+  width: 380px;
+  height: auto;
+}
+
+/* content defaults — 3D icons tucked partially into corners */
+.content-icon-tr {
+  right: -70px;
+  top: -60px;
+  width: 300px;
+  height: auto;
+}
+
+.content-icon-bl {
+  left: -60px;
+  bottom: 120px; /* above the cream footer */
+  width: 240px;
+  height: auto;
+  opacity: 0.96;
+}
+
+/* content supporting visual — center-body image/screenshot or illustration.
+   Two variants, selected by the image's file family (screenshot vs. illustration). */
+.content-support {
+  display: block;
+  width: calc(100% + 48px);
+  max-width: none;
+  margin: 48px -24px 0;
+  height: auto;
+  border-radius: 18px;
+  border: 1px solid var(--divider);
+  box-shadow: 0 24px 64px -28px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Illustration variant: no chrome (no border, no shadow, no radius), centered,
+   sized smaller so the 3D scene reads as an accent rather than a framed panel. */
+.content-support.is-illustration {
+  width: 560px;
+  max-width: 100%;
+  height: auto;
+  margin: 40px auto 0;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  display: block;
+}
+
+/* ---------- Tool cards: logo + name + note in a rounded white card. ----------
+   Renders as a flex row of 2–3 cards below the content body. */
+.tool-cards {
+  display: flex;
+  gap: 20px;
+  margin-top: 48px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.tool-card {
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--white);
+  border: 1px solid var(--divider);
+  border-radius: 20px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: 0 12px 32px -18px rgba(0,0,0,0.14), 0 1px 3px rgba(0,0,0,0.04);
+}
+
+/* Fixed bounding-box frame normalizes logos across aspect ratios. Every logo
+   fits the same optical envelope regardless of whether it's a tall mark or a
+   wide wordmark. Override per-card with "scale" (0–1) to tune outliers. */
+.tool-card .tool-logo-frame {
+  width: 220px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.tool-card .tool-logo {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: left center;
+  display: block;
+}
+
+.tool-card .tool-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.tool-card .tool-note {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+/* ---------- Flowchart: linear row (or column) of node boxes with arrows ----------
+   Fills slide width. Nodes equally share horizontal space with flex:1.
+   Inner sizes (icon/font/padding) sized to carry visual weight on a 1080-wide slide. */
+.flowchart {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  gap: 18px;
+  margin-top: 56px;
+}
+
+.flowchart.is-vertical {
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.flow-node {
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--white);
+  border: 1px solid var(--divider);
+  border-radius: 22px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  box-shadow: 0 14px 36px -18px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.flowchart.is-vertical .flow-node { width: 460px; flex: 0 0 auto; }
+
+.flow-node .node-icon {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  display: block;
+}
+
+.flow-node .node-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.flow-node .node-sub {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.flow-arrow {
+  flex: 0 0 auto;
+  align-self: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 40px;
+  color: var(--ink);
+  line-height: 1;
+  opacity: 0.7;
+}
+
+/* ================================================================
+   Artistic logo layouts — alternatives to the cards/grid pattern.
+   Each variant fills the lower body of a content slide with a
+   more editorial composition. One of these renders via the slide's
+   `logos_layout` property in generate.js.
+   ================================================================ */
+
+/* Shared scatter area: sits below the text block, above the footer. */
+.logos-scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 520px;
+  bottom: 120px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.logos-scene .scene-doodle {
+  position: absolute;
+  pointer-events: none;
+  filter: none;
+}
+
+.logos-scene img.logo-float,
+.logos-scene img.logo-primary,
+.logos-scene img.logo-satellite,
+.logos-scene img.logo-marquee-item {
+  display: block;
+  height: auto;
+  object-fit: contain;
+}
+
+/* A — Scattered constellation: free-floating logos, slight rotations, big bg doodle */
+.logos-scene.is-scattered .scene-doodle {
+  width: 720px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  opacity: 0.1;
+}
+.logos-scene.is-scattered img.logo-float {
+  position: absolute;
+}
+
+/* B — Tilted notes: logos on cream cards with rotation + tape */
+.logos-scene.is-notes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 40px;
+}
+.logos-scene.is-notes .logo-note {
+  background: var(--cream);
+  padding: 52px 56px;
+  border-radius: 6px;
+  box-shadow: 0 18px 36px -16px rgba(0,0,0,0.22), 0 2px 4px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  pointer-events: auto;
+}
+.logos-scene.is-notes .logo-note::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 76px;
+  height: 24px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 2px;
+}
+.logos-scene.is-notes .logo-note img {
+  display: block;
+  max-width: 240px;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+/* C — Diagonal path: logos on a curve, a hand-drawn doodle threads through */
+.logos-scene.is-path .scene-doodle {
+  width: 100%;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.18;
+}
+.logos-scene.is-path img.logo-float {
+  position: absolute;
+}
+
+/* D — Hero + satellites */
+.logos-scene.is-hero img.logo-primary {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 540px;
+  max-height: 200px;
+}
+.logos-scene.is-hero img.logo-satellite {
+  position: absolute;
+  max-width: 220px;
+  max-height: 72px;
+  opacity: 0.94;
+}
+
+/* E — Logo-doodle integration: hero doodle anchors, logos orbit around it */
+.logos-scene.is-integrated .scene-doodle {
+  width: 380px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+.logos-scene.is-integrated img.logo-float {
+  position: absolute;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+}
+
+/* CTA defaults — doodles flanking, near corners (not crowding center headline) */
+.cta-doodle-left {
+  left: -60px;
+  bottom: 80px;
+  width: 280px;
+  height: auto;
+}
+
+.cta-doodle-right {
+  right: -60px;
+  top: 160px;
+  width: 280px;
+  height: auto;
+}

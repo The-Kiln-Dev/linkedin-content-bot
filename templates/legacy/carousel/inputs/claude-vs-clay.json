@@ -1,0 +1,77 @@
+{
+  "output_dir": "output/claude-vs-clay",
+  "_source_draft": "../../../../drafts/claude-code-vs-clay.md",
+  "_voice_rules": "Copy pulled from Patrick's draft + calibrated against voice/examples/best/. No em-dashes. Use hyphens, commas, parens. Claim-first, opinion-owned ('Personally', 'My conclusion?'), specific names.",
+  "_asset_strategy": {
+    "cover":          "3D beaker + zigzag doodle",
+    "both-good":      "Tilted-notes logo layout (B) for Clay + Anthropic, editorial side-by-side feel",
+    "clay-moats":     "Clay.com hero screenshot, shows the actual product",
+    "claude-strengths": "Generated 3D robot+plug scene, power is abstract",
+    "enterprise":     "Scattered logo layout (A) with cursive-swoop doodle, Snowflake/Gong/Salesloft as systems of record",
+    "verdict":        "Generated 3D balance-scale illustration",
+    "cta":            "Flanking doodles"
+  },
+  "slides": [
+    {
+      "type": "cover",
+      "category": "HOT TAKE",
+      "headline": "Will Claude Code replace Clay?",
+      "cta_text": "Read more \u2192",
+      "icon_3d": "beaker.png",
+      "doodle": "zigzag-line.png"
+    },
+    {
+      "type": "content",
+      "step": 1,
+      "headline": "Both tools are actually really good.",
+      "body": "Before getting into the nuance, both Clay and Claude Code have serious strengths. The question isn't which one is 'better', it's which one fits what you're trying to build.",
+      "logos_layout": "notes",
+      "logos": [
+        { "src": "captures/logos/clay.com.png",      "rotate": -4 },
+        { "src": "captures/logos/anthropic.com.png", "rotate": 3  }
+      ]
+    },
+    {
+      "type": "content",
+      "step": 2,
+      "headline": "Clay has a few core moats.",
+      "body": "A marketplace of data providers that's really hard to compete with. Platform engineering that can run 100k+ API calls at once. And a compliant interface for building GTM workflows that isn't relying on AI for the whole thing.",
+      "support_image": "captures/clay-hero.png"
+    },
+    {
+      "type": "content",
+      "step": 3,
+      "headline": "But Claude Code has huge strengths too.",
+      "body": "The most powerful AI models in the world. Workflows that run really cheaply. And you can connect tools and data providers (Supabase, Sheets, whatever) in minutes without much work.",
+      "support_image": "generated/strengths-robot.png"
+    },
+    {
+      "type": "content",
+      "step": 4,
+      "headline": "Here's where it gets tricky though.",
+      "body": "Can enterprise really connect their Salesforce to a Claude-built workflow and trust it? Personally, I don't think so. Same story for Snowflake, Outreach, and anything else that holds critical data.",
+      "logos_layout": "scattered",
+      "background_doodle": "cursive-swoop.png",
+      "logos": [
+        { "src": "captures/logos/snowflake.com.png", "left": 70,  "top": 40,  "width": 280, "rotate": -4 },
+        { "src": "captures/logos/gong.io.png",       "left": 560, "top": 180, "width": 320, "rotate": 3  },
+        { "src": "captures/logos/salesloft.com.png", "left": 200, "top": 440, "width": 260, "rotate": -6 }
+      ]
+    },
+    {
+      "type": "content",
+      "step": 5,
+      "headline": "My conclusion?",
+      "body": "Right now, not a great replacement for enterprise. Too many compliance problems, tracking issues, and variability. For startups running simple enrichment or a ton of actions in one table, Claude and a few good APIs can absolutely get the job done.",
+      "support_image": "generated/verdict-scale.png"
+    },
+    {
+      "type": "cta",
+      "category": "NEED SUPPORT?",
+      "headline": "Figuring out your GTM stack?",
+      "cta_text": "Talk with us \ud83d\udc4b",
+      "doodle_left": "labyrinth.png",
+      "doodle_right": "wavy-arrow.png"
+    }
+  ]
+}

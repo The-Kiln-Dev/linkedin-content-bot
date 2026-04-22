@@ -1,0 +1,6 @@
+node_modules/
+.npm-cache/
+.env
+.env.local
+output/
+# generated/ is committed so AI illustrations (non-deterministic, paid outputs) persist with the deck they belong to.

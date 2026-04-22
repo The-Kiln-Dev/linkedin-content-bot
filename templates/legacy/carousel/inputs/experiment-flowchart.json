@@ -1,0 +1,21 @@
+{
+  "output_dir": "output/experiment-flowchart",
+  "_note": "Demo: horizontal flowchart component showing a GTM workflow. Nodes use 3D icons from the legacy library.",
+  "slides": [
+    {
+      "type": "content",
+      "step": 2,
+      "headline": "A typical enrichment flow.",
+      "body": "What both Clay and a Claude-built workflow need to handle: capture inbound, enrich, score against ICP, and route to the right rep.",
+      "flowchart": {
+        "orientation": "horizontal",
+        "nodes": [
+          { "label": "Capture",  "sub": "Form fill / import",    "icon": "envelope.png" },
+          { "label": "Enrich",   "sub": "Waterfall providers",   "icon": "magnifying-glass.png" },
+          { "label": "Score",    "sub": "ICP match",             "icon": "target.png" },
+          { "label": "Route",    "sub": "To the right rep",      "icon": "rocket.png" }
+        ]
+      }
+    }
+  ]
+}

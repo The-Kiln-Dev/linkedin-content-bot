@@ -1,0 +1,13 @@
+{
+  "output_dir": "output/experiment-novel-subject",
+  "_note": "Proves style-lock + novel-subject generation. References (rocket/trophy/globe) provide style only; subject (bank vault + shield) doesn't exist in the icon library.",
+  "slides": [
+    {
+      "type": "content",
+      "step": 3,
+      "headline": "Here's where it breaks for enterprise.",
+      "body": "Compliance: enterprise teams don't trust a Claude-built workflow against their Salesforce. Data: some providers you can't buy off the shelf. Engineering: nested workflows get messy fast.",
+      "support_image": "generated/enterprise-vault-scene.png"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kiln Carousel — Content</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .content-stack {
+    position: absolute;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    top: var(--pad-y);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .content-stack .step-label { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="content-stack">
+      <div class="step-label">{{step_label}}</div>
+      <h2 class="content-headline">{{headline}}</h2>
+      <p class="content-body">{{body}}</p>
+      {{support_block}}
+      {{tool_cards_block}}
+      {{flowchart_block}}
+    </div>
+    {{logos_scene_block}}
+
+    {{icon_tr_block}}
+    {{icon_bl_block}}
+
+    <div class="footer">
+      <img class="logo-lockup" src="{{asset_logo_lockup}}" alt="The Kiln">
+      <span class="next">Next step →</span>
+    </div>
+  </div>
+</body>
+</html>

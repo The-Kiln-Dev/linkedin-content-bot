@@ -1,0 +1,13 @@
+{
+  "output_dir": "output/experiment-generated",
+  "_note": "Single-slide experiment: content slide using a gpt-image-1-generated Fluent-3D scene as the central visual (generated/claude-strengths-scene.png). References: rocket + lightbulb + speech-bubble.",
+  "slides": [
+    {
+      "type": "content",
+      "step": 2,
+      "headline": "Claude Code has real strengths too.",
+      "body": "The most powerful models on the market, workflows that run cheaply, and you can wire in any tool or data provider without much work.",
+      "support_image": "generated/claude-strengths-scene.png"
+    }
+  ]
+}
