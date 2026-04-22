@@ -1,8 +1,18 @@
-# The Kiln — Legacy Brand (v1 draft)
+# The Kiln — Legacy Brand
 
-The current live identity. Editorial black-and-white foundation with colorful illustration accents. This is what thekiln.com uses and what most existing assets look like.
+Editorial, content-forward direction. Clean white backgrounds, bold sans-serif headlines, 3D illustrated icons, hand-drawn doodles as hero-scale elements. This is what most Kiln marketing currently ships, including the LinkedIn carousels and most website pages.
 
-Color values live in `colors-legacy.json` — edit there to change colors without touching this doc.
+Color values live in `colors-legacy.json`. Asset inventory + placement rules live in `assets/legacy/manifest.md`. Canvas/resolution rules live in `specs.md`.
+
+---
+
+## When to use this direction
+
+- Carousels (default)
+- Content-heavy formats — tutorials, step-by-steps, "here are N things" lists
+- Tool / process diagrams
+- Banners when the exploration gradient would compete with the content
+- Anything where readability across multiple slides is the primary need
 
 ---
 
@@ -11,96 +21,89 @@ Color values live in `colors-legacy.json` — edit there to change colors withou
 - **Name:** The Kiln
 - **Primary tagline:** A Clay Agency
 - **Descriptive tagline:** Expert GTM Engineers, at your fingertips
-- **Brand promise line (from site):** "Create systems that allow you to sell, not prepare to sell"
-- **Category:** GTM engineering / RevOps agency; Clay partner
+- **Brand promise (from thekiln.com):** "Create systems that allow you to sell, not prepare to sell"
 - **Three service pillars:** Sales/GTM automation · Marketing/Growth · RevOps
 
 ## Logo
 
-- Wordmark "The Kiln" in bold display sans, with a stylized smoke/cloud mark above.
-- Full lockup adds "A Clay Agency" tagline beneath wordmark.
-- Used on white/cream, black, and colored backgrounds (blue, pink/lavender variants seen in LinkedIn banners).
-- **TODO:** SVG exports into `brand/logos/` (icon-only, wordmark-only, full lockup, light + dark).
+Same lockup files as exploration — identity is shared across directions.
+- `assets/legacy/logos/kiln-mark-black.png` — 4-petal mark only
+- `assets/legacy/logos/kiln-lockup-black.png` — full mark + "TheKiln" wordmark
 
 ## Color
 
-Editorial foundation: ink, cream, white, black. Color only enters through illustration (3D icons, cityscape vectors) — not as flat fills or brand accents.
+Editorial foundation:
+- Ink: `#000000`
+- Cream: `#F5F4EB` (used for content-slide footers, soft backgrounds)
+- White: `#FFFFFF` (primary canvas)
 
-See `colors-legacy.json` for hex values. Current status: **hex values still TODO** — need to extract from a selected frame in Figma desktop.
+Color comes through 3D illustration accents (saturated envelope, rocket, trophy, etc.) and selected copy CTAs (black pill buttons). There are no flat brand accent fills.
+
+See `colors-legacy.json`.
 
 ## Typography
 
-- **Display:** bold modern sans (geometric, slightly rounded). Used at large sizes for hero headlines. Family feels related to Clash Display / Satoshi / Neue Haas Grotesk.
-- **Body:** clean neutral sans (likely Inter or equivalent grotesk).
-- **Weights in play:** 400 body, 600–700 emphasis, 800–900 display.
-- **Case:** sentence case for headlines and body; avoid all-caps.
-- **TODO:** confirm exact font names + weights via Figma selection.
+- **Display (headlines):** bold modern sans-serif, extrabold weight, tight tracking. Likely Inter ExtraBold or similar geometric sans. *Confirm exact face from Figma.*
+- **Body:** clean sans, likely Inter regular or medium.
+- **Case:** sentence case for headlines, small caps for category labels ("TUTORIAL", "STEP 1", "NEED SUPPORT?").
+- **Signature move:** 2–4 line hero headlines at very large size, dominating the upper half of the slide.
 
 ## Illustration & imagery
 
-Three coexisting visual vocabularies. Pick **one per asset** — never mix in the same piece.
+Three asset families, all used together in a single piece (this is different from exploration, where we rule out mixing):
 
-1. **Hand-drawn monoline doodles** — loose black-ink squiggles, swashes, stars, paper airplanes. Used as texture/margin accents on editorial pieces. Human, playful.
-2. **3D illustrated icons** (Fluent 3D style) — heart, trophy, megaphone, lightbulb, globe, magnifying glass, target, rocket, speech bubble, award ribbons. Saturated, slightly cartoonish. Heroes or repeated motifs.
-3. **Flat vector cityscape illustrations** — small colorful buildings. Used in LinkedIn banners. Implies "the city / market" without being literal.
+1. **3D illustrated icons** (Fluent 3D style) — saturated, colorful, playful. Used at hero scale, often cropped partially off-canvas to feel dynamic. Envelope, rocket, trophy, megaphone, lightbulb, heart, globe, etc.
+2. **Hand-drawn monoline doodles** — black-ink, loose. On legacy they appear at *hero scale*, not as small accents (contra exploration).
+3. **Screenshots / photo / flat vector supports** — real product screenshots (Clay tables, etc.), tool-logo cards, cityscape vectors. Used in the middle body of content slides.
 
-**Avoid:** stock photography of office/teamwork scenes; abstract corporate gradients; clip-art-feeling flat icons.
+**Avoid:** stock photography of office/teamwork; gradient backgrounds; filigree / decorative ornamentation; the exploration-direction topographic texture.
 
-## Layout & composition
+## Layout principles
 
-- Generous whitespace. Content breathes.
-- **Rounded pill/capsule shapes** for diagram nodes and tags — full half-height rounding, not small corner radii.
-- Left-aligned headlines and body; centered only for hero moments.
-- Strong type hierarchy: display is much larger than body.
-- Illustration placement: corners, margins, accents — never behind primary text.
+- Generous whitespace on cover + CTA slides; denser on content slides.
+- Left-aligned headlines and body.
+- Black pill CTA buttons with white text and arrow.
+- Cream footer strip on content slides: Kiln lockup left, "Next step →" right.
+- Category label (small caps, gray or black, ~2–3% of slide height) sits above the headline on cover / CTA, or replaces it with "STEP N" on content slides.
+- Hero-scale flanking visuals on cover / CTA, often one doodle + one 3D icon on opposite sides.
 
-## Voice surfaces (copy conventions seen in design)
+## Author attribution
 
-CTAs are verb-led and low-friction, often with a small emoji:
-- "Talk with us 💬"
+Legacy-only: the "Patrick + photo" badge appears top-right of cover and CTA slides. Small photo (~64 px square, rounded corners) beside the word "Patrick" in bold sans. Uses `assets/legacy/people/patrick.png`.
+
+This is *not* used on exploration-direction outputs.
+
+## Voice surfaces
+
+CTAs are same register as exploration:
+- "Talk with us 👋"
 - "Book demo 📅"
-- "Read story"
-- "Learn more →"
-
-Headlines lean:
-- Utility-first ("4 ways to find more email addresses")
-- Contrarian-playful ("Hiring a GTM SME is not easy")
-- Outcome-framed for the reader
-
-Brand phrases to keep in rotation:
-- "Create systems that allow you to sell, not prepare to sell"
-- "magical to see" (customer word — came up organically in testimonials)
-
-## LinkedIn content formats available
-
-- LinkedIn banner (4:1 horizontal)
-- Square content card (title + body + step indicator)
-- Square quote/takeaway card (hand-drawn accent + short line)
-- Square CTA card
-- Icon-row strip (horizontal divider of hand-drawn icons)
-- Tools map / flowchart (large format)
-- Gradient tile (small decorative break)
-
-## Credibility anchors (customer voice)
-
-Available from site for credibility moments in posts:
-- **Harish Bilimale** — "This was supposed to be basic enrichment—what we got was operational transformation."
-- **Katie Penner** — "We handed off a dream. The Kiln built it flawlessly."
-- **Luiz Cent** — "They automated everything… it was magical to see."
+- "Learn how →"
+- "Next step →"
+- "Read more →"
 
 ## Reference
 
 - Website: https://thekiln.com/
 - Figma (Kiln Legacy — Patrick Copy): https://www.figma.com/design/Z09BfiqwCyAMH9jyAncR5l/Kiln-Legacy--Patrick-Copy-
+  - LI Templates — `node-id=1611-24` (reference carousel lives here)
   - LI Tools Map — `node-id=1812-7`
   - LI Banner — `node-id=1572-18`
-  - LI Templates — `node-id=1611-24`
   - Brand Assets — `node-id=1716-1095`
   - Services Overview — `node-id=1757-30`
 
+## Reference carousel (canonical target for our templates)
+
+Five slides from the Figma LI Templates page, saved in `Company Brand Assets/• LI templates/`:
+- Slide 1: Cover — "4 ways to find more email addresses" · TUTORIAL · envelope 3D + wave doodle · "Learn how →" CTA
+- Slide 2: Step 1 — "Switch to better email lookup solutions" · envelope + rocket 3D corners · cream footer
+- Slide 3: Step 2 — "Use a waterfall solution for the unfounds" · trophy 3D + rocket + Clay table screenshot
+- Slide 4: Step 3 — "Leverage the best tools out there" · trophy 3D + tool cards (Clay, Prospeo, Lemlist)
+- Slide 5: CTA — "Get in touch today to level-up your outbound" · NEED SUPPORT? · labyrinth + squiggle doodles · "Talk with us 👋"
+
 ## Open TODOs
 
-1. Extract exact hex values → `colors-legacy.json`.
-2. Extract exact font family + weights.
-3. Export SVG logo variants → `brand/logos/`.
-4. Add 2–3 canonical example screenshots → `brand/reference/`.
+1. User uploads 3D icons → `assets/legacy/icons-3d/`.
+2. User uploads legacy-specific doodles → `assets/legacy/doodles/`.
+3. User uploads Patrick profile photo → `assets/legacy/people/patrick.png`.
+4. Confirm exact display font (likely Inter ExtraBold).
