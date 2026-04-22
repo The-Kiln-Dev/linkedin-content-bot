@@ -63,6 +63,9 @@ Used large on legacy cover and CTA slides, typically flanking the headline. Diff
 | `labyrinth.png` | 400×424 | Square-angular labyrinth / maze spiral | Complexity · systems · "we built this from scratch" · architecture · the CTA slide in the reference carousel |
 | `wave-blob.png` | 400×392 | Amorphous wavy blob | Fluidity · adaptation · the big left-side shape on the cover slide in the reference |
 | `cloud.png` | 400×136 | Puffy cloud (horizontal) | Softness · "thinking out loud" · hypothetical · airy takes |
+| `wavy-arrow.png` | 400×336 | Wavy W-shape line with arrow trailing off + small accent | Progression · "here's where this is going" · trajectory · journey |
+| `zigzag-line.png` | 418×266 | Squiggly M-shaped line (single stroke) | Volatility · ups and downs · messy middle · non-linear paths |
+| `cursive-swoop.png` | 418×491 | Large cursive "e"-shaped swoop | Elegance · flow · curved motion · soft statement-making |
 
 Note: `wave-blob` exists in both `exploration/doodles/` and `legacy/doodles/` — they're different files with the same name, each tuned to their direction's scale and style. Only use the one in the direction you're composing.
 
@@ -151,5 +154,4 @@ When composing a carousel slide, I pick:
 ## Open TODOs
 
 1. Confirm exact headline font (likely Inter ExtraBold).
-2. Possibly add more doodles — there are `Group 22.png`, `line-1 2.png`, and `line-7 2.png` files in the source folder that look like the same hand-drawn style. User said "doodles all have vector in the name" so I've held off on these. Flag for confirmation.
-3. Once carousel templates are built, add a per-slide-type asset recommendation table to this manifest.
+2. Once carousel templates are built, add a per-slide-type asset recommendation table to this manifest.
