@@ -1,0 +1,31 @@
+{
+  "_comment": "Registry of known-good logo selectors per domain. First-time capture saves the selector here so we don't have to rediscover it.",
+  "domains": {
+    "clay.com": {
+      "selector": "a.nav_brand img",
+      "hide": [
+        ".nav-banner"
+      ]
+    },
+    "anthropic.com": {
+      "selector": "a.nav_logo_wrap"
+    },
+    "snowflake.com": {
+      "selector": "a.default-logo svg"
+    },
+    "hubspot.com": {
+      "selector": "a.global-nav-logo-wrapper img",
+      "invert": true
+    },
+    "outreach.io": {
+      "selector": "a.nav-logo_link",
+      "invert": true
+    },
+    "gong.io": {
+      "selector": "a.focus-outline-primary img"
+    },
+    "salesloft.com": {
+      "selector": "a.navigation-link-ga img"
+    }
+  }
+}
