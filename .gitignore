@@ -1,0 +1,11 @@
+# OS / editor junk
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+
+# Local env (carousel/.env contains the OpenAI key — never commit)
+.env
+.env.local
