@@ -36,7 +36,6 @@ templates/
                                Gradient frame + Fraunces italic-emphasis + cream body panel.
                                Section types: stat-grid, comparison-table, metrics-rows.
                                Full docs in its README.
-    card-statement.html        Single statement card prototype (static HTML)
   legacy/                      (alternate direction)
     carousel/                  Editorial b&w carousel generator (Node + Puppeteer → PNG)
                                Renders 1080×1350 slides with cover/content/CTA layouts
@@ -70,41 +69,53 @@ When new content needs a layout the shipped slide types don't cover, the move is
 
 ## Required setup (one-time, per machine)
 
-1. **Node.js ≥ 22** — both the carousel generator and HyperFrames need this.
+1. **Node.js ≥ 22** — generators and HyperFrames both need this.
    ```
    node --version  # should be v22 or higher
    ```
-2. **FFmpeg + FFprobe** — required for HyperFrames rendering. The brew formula pulls a lot of codec deps; a static binary is simpler:
+2. **Install deps** (once, at repo root):
+   ```
+   npm install
+   ```
+   Installs `puppeteer`, `openai`, and `sharp` — shared by all three generators (carousel, info-card, legacy carousel).
+3. **FFmpeg + FFprobe** — required for HyperFrames rendering. The brew formula pulls a lot of codec deps; a static binary is simpler:
    ```
    curl -sL "https://evermeet.cx/ffmpeg/getrelease/zip"          -o /tmp/ff.zip && unzip /tmp/ff.zip -d /tmp && mv /tmp/ffmpeg  /opt/homebrew/bin/
    curl -sL "https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip"  -o /tmp/fp.zip && unzip /tmp/fp.zip -d /tmp && mv /tmp/ffprobe /opt/homebrew/bin/
    chmod +x /opt/homebrew/bin/ffmpeg /opt/homebrew/bin/ffprobe
    ```
-3. **HyperFrames skill bundle for Claude Code** — gives Claude the SKILL.md and patterns it needs to author motion compositions:
+4. **HyperFrames skill bundle for Claude Code** — gives Claude the SKILL.md and patterns it needs to author motion compositions:
    ```
    GIT_LFS_SKIP_SMUDGE=1 npx skills add heygen-com/hyperframes --yes --global
    ```
    (The `GIT_LFS_SKIP_SMUDGE=1` skips the LFS test fixtures so you don't need `git-lfs` installed.)
-4. **OpenAI API key** (optional — only needed to generate *new* 3D illustrations). Drop into `templates/legacy/carousel/.env` (gitignored):
+5. **OpenAI API key** (only needed when *generating* new doodles or 3D illustrations; rendering existing committed assets works without it). Drop into `.env` at repo root (gitignored):
    ```
    OPENAI_API_KEY=sk-proj-...
    ```
-   The existing illustrations are committed, so you can render the existing deck without this.
-
-That's it. Carousel and animation projects each `npm install` their own deps on first run.
 
 ## Quick start
 
-### Re-render the existing Claude-vs-Clay carousel deck
+### Re-render the sample exploration carousel
 
 ```
-cd templates/legacy/carousel
-npm install
-node generate.js inputs/claude-vs-clay.json
-open output/claude-vs-clay/*.png
+npm run render:carousel -- templates/exploration/carousel/inputs/sample-outbound.json
+open templates/exploration/carousel/output/sample-outbound/*.png
 ```
 
-7 PNGs (cover, 5 content, CTA) at 2160×2700 each. No network, no OpenAI credits — all assets are committed.
+5 PNGs (cover, 3 content, CTA) at 2160×2700 each. No network, no OpenAI credits — all assets including the AI-generated doodles are committed.
+
+### Re-render the info-card sample
+
+```
+npm run render:info-card -- templates/exploration/info-card/inputs/outreach-cheatsheet.json
+```
+
+### Re-render the legacy Claude-vs-Clay deck
+
+```
+npm run render:legacy-carousel -- templates/legacy/carousel/inputs/claude-vs-clay.json
+```
 
 ### Re-render an existing animation
 

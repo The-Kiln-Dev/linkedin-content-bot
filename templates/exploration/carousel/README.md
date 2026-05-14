@@ -2,12 +2,20 @@
 
 JSON-driven multi-slide PNG generator for LinkedIn carousels — the **default carousel direction** for the repo. Renders cover/content/CTA slides at 1080×1350 using the exploration visual language: gradient frame, topographic texture, Fraunces italic-emphasis headlines, two-tone white/cream interior, single-accent discipline, small monoline doodles.
 
+From repo root (deps installed once at root via `npm install`):
+
 ```
-cd templates/exploration/carousel
-npm install
-node generate.js inputs/sample-outbound.json
-open output/sample-outbound/*.png
+npm run render:carousel -- templates/exploration/carousel/inputs/sample-outbound.json
+open templates/exploration/carousel/output/sample-outbound/*.png
 ```
+
+Or directly:
+
+```
+node templates/exploration/carousel/generate.js templates/exploration/carousel/inputs/sample-outbound.json
+```
+
+Either form works — the generator resolves input paths from your current working directory.
 
 ## System, not template
 
@@ -97,7 +105,7 @@ Rotate across posts for variety. Never mix variants within one deck.
 For decks where the brand inventory doesn't have a doodle that matches a slide's content (e.g. "warm intros" needs a handshake, not an envelope), generate one via gpt-image-1 using the existing brand doodles as style references:
 
 ```
-# requires OPENAI_API_KEY in .env (or templates/legacy/carousel/.env as fallback)
+# requires OPENAI_API_KEY in .env at repo root
 node lib/gen-doodle.js \
   --concept "two clasped hands forming a handshake icon" \
   --out generated/sample-outbound/handshake.png

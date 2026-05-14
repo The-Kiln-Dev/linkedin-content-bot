@@ -1,18 +1,15 @@
 # Legacy carousel generator
 
+> **Note:** Carousels now default to the **exploration** direction (see `../../exploration/carousel/`). This legacy generator is the **alternate** direction — keep it for decks that explicitly want the editorial b&w + 3D-icon register over the gradient-frame + Fraunces register. New carousels should default here only when the brand-legacy treatment is the deliberate choice.
+
 Node + Puppeteer. Renders the three legacy-direction slide templates (cover, content, CTA) to PNGs at 1080×1350 (device-scale 2× → 2160×2700 output).
-
-## Install
-
-```
-cd linkedin/templates/legacy/carousel
-npm install
-```
 
 ## Run
 
+Deps are installed once at repo root (`npm install` there). From anywhere:
+
 ```
-node generate.js inputs/claude-vs-clay.json
+npm run render:legacy-carousel -- templates/legacy/carousel/inputs/claude-vs-clay.json
 ```
 
 Output goes to `output/<deck-name>/NN-<type>.png`.

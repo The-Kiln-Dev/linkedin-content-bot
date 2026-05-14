@@ -2,11 +2,11 @@
 
 JSON-driven generator for a **single dense info-card** — one tall PNG built from numbered sections (stat grids, comparison tables, metrics rows). Sits alongside the carousel and animation pipelines as the third standard output format.
 
+From repo root (deps installed once at root via `npm install`):
+
 ```
-cd templates/exploration/info-card
-npm install
-node generate.js inputs/outreach-cheatsheet.json
-open output/outreach-cheatsheet.png
+npm run render:info-card -- templates/exploration/info-card/inputs/outreach-cheatsheet.json
+open templates/exploration/info-card/output/outreach-cheatsheet.png
 ```
 
 ## When to use this vs other formats

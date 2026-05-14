@@ -6,6 +6,17 @@
 *.swo
 Thumbs.db
 
-# Local env (carousel/.env contains the OpenAI key — never commit)
+# Local env (.env contains the OpenAI key — never commit)
 .env
 .env.local
+
+# Node deps (installed once at repo root)
+node_modules/
+.npm-cache/
+
+# Render outputs (re-generated on demand; outputs that should persist
+# live in templates/*/generated/, which is tracked)
+templates/exploration/carousel/output/
+templates/exploration/info-card/output/
+templates/legacy/carousel/output/
+**/.tmp-render*.html

@@ -1,0 +1,18 @@
+{
+  "name": "linkedin-content-bot",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Patrick's LinkedIn content system for The Kiln. Brand assets, voice docs, draft library, and generators for the three output formats: info-card (single image), carousel (multi-slide), animation (GIF/MP4). One npm install at this root provisions everything except the HyperFrames CLI (installed globally as a Claude Code skill).",
+  "scripts": {
+    "render:carousel": "node templates/exploration/carousel/generate.js",
+    "render:info-card": "node templates/exploration/info-card/generate.js",
+    "render:legacy-carousel": "node templates/legacy/carousel/generate.js",
+    "gen:doodle": "node templates/exploration/carousel/lib/gen-doodle.js",
+    "gen:illustration": "node templates/legacy/carousel/lib/gen-illustration.js"
+  },
+  "dependencies": {
+    "openai": "^6.34.0",
+    "puppeteer": "^24.0.0",
+    "sharp": "^0.34.5"
+  }
+}

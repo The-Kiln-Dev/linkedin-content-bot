@@ -56,8 +56,7 @@ brand/
 templates/
 ├── exploration/                (default direction)
 │   ├── carousel/               ← multi-slide carousel generator (PNG)
-│   ├── info-card/              ← single dense info-card generator (PNG)
-│   └── card-statement.html     ← statement card (static HTML prototype)
+│   └── info-card/              ← single dense info-card generator (PNG)
 └── legacy/                     (alternate direction)
     └── carousel/               ← editorial b&w carousel generator (PNG)
 ```

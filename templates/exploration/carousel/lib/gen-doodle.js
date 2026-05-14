@@ -37,6 +37,7 @@ const STYLE_PROMPT = [
 
 function loadEnv() {
   const candidates = [
+    path.resolve(ROOT, '..', '..', '..', '.env'),
     path.join(ROOT, '.env'),
     path.resolve(ROOT, '..', '..', 'legacy', 'carousel', '.env'),
   ];

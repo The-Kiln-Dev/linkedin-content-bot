@@ -432,7 +432,12 @@ async function main() {
     console.error('Usage: node generate.js inputs/<file>.json');
     process.exit(1);
   }
-  const inputPath = path.resolve(ROOT, inputArg);
+  const inputPath = (() => {
+    if (path.isAbsolute(inputArg)) return inputArg;
+    const cwd = path.resolve(process.cwd(), inputArg);
+    if (fs.existsSync(cwd)) return cwd;
+    return path.resolve(ROOT, inputArg);
+  })();
   const deck = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
   const w = (deck.canvas && deck.canvas.width) || DEFAULT_WIDTH;
   const h = (deck.canvas && deck.canvas.height) || DEFAULT_HEIGHT;
