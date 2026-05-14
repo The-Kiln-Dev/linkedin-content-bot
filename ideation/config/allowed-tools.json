@@ -1,0 +1,99 @@
+{
+  "_note": "Company / product / tool names that ARE allowed to appear in extracted content ideas, including those derived from external calls. Anything not on this list is disallowed in external-call output (see prompts/external-call-extraction.md). Maintained by hand — add to it as new tools enter the Kiln stack or as new mainstream GTM tools become referenceable. Flatten all category arrays into one set when checking.",
+  "categories": {
+    "crm": [
+      "Salesforce",
+      "HubSpot",
+      "Pipedrive",
+      "Attio"
+    ],
+    "sequencing": [
+      "Outreach",
+      "Salesloft",
+      "Lemlist",
+      "Smartlead",
+      "Instantly",
+      "Apollo",
+      "Reply"
+    ],
+    "conversation_intelligence": [
+      "Gong",
+      "Chorus",
+      "Fathom"
+    ],
+    "data_enrichment": [
+      "Clay",
+      "Bettercontact",
+      "Findymail",
+      "Lusha",
+      "ZoomInfo",
+      "RocketReach",
+      "Apollo",
+      "FullEnrich",
+      "Crustdata",
+      "PeopleDataLabs",
+      "PDL",
+      "Datagma",
+      "Hunter",
+      "Prospeo"
+    ],
+    "data_warehouse": [
+      "Snowflake",
+      "BigQuery",
+      "Postgres",
+      "Supabase",
+      "Redshift"
+    ],
+    "ai_models_and_tools": [
+      "Anthropic",
+      "OpenAI",
+      "Claude",
+      "ChatGPT",
+      "GPT-4",
+      "GPT-5",
+      "Cursor",
+      "Replit",
+      "Cline",
+      "Aider",
+      "Windsurf",
+      "Perplexity"
+    ],
+    "linkedin_ops": [
+      "HeyReach",
+      "Phantombuster",
+      "Expandi",
+      "MeetAlfred",
+      "Dripify"
+    ],
+    "workspace": [
+      "Slack",
+      "Notion",
+      "Figma",
+      "GitHub",
+      "Gmail",
+      "Google Workspace",
+      "Linear",
+      "Asana"
+    ],
+    "marketing": [
+      "Marketo",
+      "Pardot",
+      "Mailchimp",
+      "Customer.io"
+    ],
+    "search_and_scraping": [
+      "Exa",
+      "Serper",
+      "SerpAPI",
+      "Firecrawl",
+      "Apify",
+      "BrightData"
+    ],
+    "other_named_companies_we_publicly_reference": [
+      "The Kiln",
+      "Stripe",
+      "Vercel",
+      "Anthropic"
+    ]
+  }
+}

@@ -48,6 +48,13 @@ animations/                    Animated media (GIF + MP4) via HyperFrames
   flowchart-animation/         Standalone flowchart GIF example
   Each project has its own design.md with the formal-motion rules.
 
+ideation/                      On-demand content idea generation from Fathom calls
+  SKILL.md                     Instructions Claude follows when invoked
+  prompts/                     Internal vs external extraction prompts
+  config/                      Whitelist of allowed company/tool names in output
+  output/                      Generated idea files (ideas-YYYY-MM-DD.md)
+  README.md                    Setup + usage
+
 landing-mock/                  Standalone landing page prototype (separate concern)
 ```
 
@@ -66,6 +73,10 @@ These are deliberately separate. GIFs are never embedded in carousels, carousels
 The generators are a content **system**, not a fixed template. Within a single deck, different slides can use different layouts based on what each slide is trying to communicate — a comparison wants a 2-up, a workflow wants a flowchart, a stat wants a hero number. The shared chassis (gradient frame, typography, brand colors) is what holds the deck together visually; the per-slide layout is open.
 
 When new content needs a layout the shipped slide types don't cover, the move is to **add a new slide-type renderer** (one small function + a CSS block + a switch case), not to bend the content into an existing type. See `templates/exploration/carousel/README.md` → "System, not template" for the extension pattern.
+
+## Where ideas come from
+
+The generators above produce *assets* (carousels, info-cards, GIFs). The `ideation/` pipeline produces *ideas to feed the generators*. Ask Claude *"what content ideas do I have from this week's calls?"* and it pulls the last 7 days of Fathom meetings, classifies each as internal-vs-external by participant email domain, runs the right extraction prompt per classification (specifics allowed for internal calls; strict abstraction for external), and writes ideas to `ideation/output/ideas-YYYY-MM-DD.md`. External calls — anything with a non-`@thekiln.com` participant — are processed under hard privacy rules: no company names except tools on the `ideation/config/allowed-tools.json` whitelist. Full details in `ideation/README.md`.
 
 ## Required setup (one-time, per machine)
 
