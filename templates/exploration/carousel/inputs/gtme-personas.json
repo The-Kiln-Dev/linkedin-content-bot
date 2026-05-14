@@ -1,0 +1,56 @@
+{
+  "deck_name": "gtme-personas",
+  "canvas": { "width": 1080, "height": 1350 },
+  "gradient_variant": "teal_amber",
+  "author": "Patrick Spychalski",
+  "slides": [
+    {
+      "type": "cover",
+      "category": "HIRING",
+      "title_roman": "Three personas",
+      "title_italic": "for hiring a GTME",
+      "subtitle": "We've hired a lot of them at The Kiln. Here's what works.",
+      "doodle": "generated/gtme-personas/magnifying-glass.png"
+    },
+    {
+      "type": "content",
+      "step_label": "PERSONA 1",
+      "title_roman": "The forward-deployed eng,",
+      "title_italic": "looking for a career pivot",
+      "body": "Super technical, aren't constrained by no-code tools, understand the code-level roots of everything they're building. Hire when you want robust, cutting-edge automations beyond outbound and CRM enrichment. You'll carry the GTM strategy yourself.",
+      "doodle": "generated/gtme-personas/laptop-code.png"
+    },
+    {
+      "type": "content",
+      "step_label": "PERSONA 2",
+      "title_roman": "The ex-RevOps person,",
+      "title_italic": "leveling up with Clay",
+      "body": "Deep understanding of the tools that plug into Clay (Salesforce, Outreach, Gong). Hire when you have a complex CRM and need Clay-to-CRM integration done right. Watch for tool-loyalty: they may resist switching.",
+      "doodle": "generated/gtme-personas/network-nodes.png"
+    },
+    {
+      "type": "content",
+      "step_label": "PERSONA 3",
+      "title_roman": "The ex-salesperson,",
+      "title_italic": "going technical",
+      "body": "Fundamental grasp of GTM strategy and what sales teams actually want from automation. Amazing in client-facing and stakeholder work. Hire when you need sales strategy in-house. Expect a learning curve on the technical side.",
+      "doodle": "generated/gtme-personas/wrench.png"
+    },
+    {
+      "type": "content",
+      "step_label": "BONUS PERSONA",
+      "title_roman": "The wildcard,",
+      "title_italic": "obsessed with AI tooling",
+      "body": "New to GTM, obsessed with automation, building with cutting-edge AI tools. Personally, this is where the most creative builds I've seen are coming from right now.",
+      "doodle": "light-bulb.png"
+    },
+    {
+      "type": "cta",
+      "title_roman": "Hiring (or hunting)",
+      "title_italic": "for a GTME?",
+      "subtitle": "All four personas live at The Kiln.",
+      "button_text": "Get in touch →",
+      "doodle": "envelope.png"
+    }
+  ]
+}

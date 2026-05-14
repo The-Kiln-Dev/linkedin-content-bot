@@ -353,8 +353,8 @@ function buildHtml(slideHtml, deck) {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 36px;
-    flex: 0 0 auto;
+    flex: 1;
+    min-height: 0;
   }
   .content-doodle {
     width: 280px;

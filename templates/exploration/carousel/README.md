@@ -52,6 +52,7 @@ Per `../../../brand/brand-exploration.md`:
 - **Single accent color** throughout the interior — only the gradient `from` value is reused (numbered circles, italic emphasis, button hover states). No second hue for emphasis.
 - **Kiln lockup top-left** of every slide. The "Patrick + photo" badge is **legacy-only** and never appears here.
 - **Small monoline doodles** as supporting visuals — from `brand/assets/exploration/doodles/` (curated inventory) or `generated/<deck-name>/` (AI-generated, per-deck). Both use `mix-blend-mode: multiply` to blend cleanly onto cream.
+- **Doodle placement on content slides.** The doodle is **vertically centered in the cream space between the bottom of the body paragraph and the bottom of the cream panel** — not pinned just below the body. Implemented via `flex: 1` + `align-items: center` on `.content-visual`. Don't switch to a fixed `margin-top` — it pulls the doodle toward the upper-middle of the slide and reads as a mid-slide orphan.
 - **Page indicator** (`02 / 05`) in the footer of every slide so the swipe sequence is obvious.
 
 ## Gradient variants
