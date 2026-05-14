@@ -8,9 +8,16 @@ Invoke when the user asks for content ideas, "what should I post about this week
 
 ## The flow
 
-### Step 0 — Verify Fathom MCP is connected
+### Step 0 — Verify prerequisites
 
-Before pulling anything, confirm Fathom MCP is available in the current Claude Code session. The skill is dead-in-the-water without it.
+Before pulling anything, confirm two prerequisites:
+
+**(a) Fathom MCP is connected** — required for call ideas (the internal-data side of the pipeline).
+**(b) `gtm-signal-scan` skill is installed** — required for news ideas (Step 4). This is a global Claude Code skill at `~/.claude/skills/gtm-signal-scan/SKILL.md`.
+
+If only one is available, proceed with the available source and skip the other in the output. If neither is available, the whole skill can't run — tell the user what to install and stop.
+
+For Fathom MCP:
 
 To verify: look for Fathom-namespaced tools in your available tool list — `list_meetings`, `get_meeting_transcript`, `search_meetings`, `get_recording_by_url`, etc. If they're present, proceed to Step 1.
 
@@ -20,9 +27,14 @@ If they're **not** present, the user hasn't connected Fathom MCP yet. Help them 
 2. Show the user the connector entry and walk them through the install/auth flow. Most MCP connectors in Claude Code need an OAuth sign-in (open browser → authorize Fathom → return to Claude Code).
 3. Ask them to restart Claude Code if prompted — the new tools need to register.
 4. After they say it's connected, do a test call: `list_meetings` with no filters, just to confirm the tool responds. Even zero results = connected. A tool-not-found error = still not connected, loop back to step 1.
-5. Once a `list_meetings` call succeeds, proceed to Step 1 of the skill.
+5. Once a `list_meetings` call succeeds, the Fathom side is ready.
 
-Do NOT proceed past Step 0 until Fathom MCP is responding. Don't fabricate meetings, don't ask the user for transcripts manually, don't fall back to other sources. The whole pipeline assumes Fathom data.
+Do NOT skip the Fathom check by fabricating meetings or asking the user for transcripts manually. The call-side pipeline assumes Fathom data.
+
+For `gtm-signal-scan`:
+
+1. Check whether `gtm-signal-scan` appears in the available-skills list for this session. If yes, the news side of the pipeline (Step 4) will run.
+2. If not, tell the user the skill needs installing (it lives at `~/.claude/skills/gtm-signal-scan/SKILL.md`) and that without it, news ideas will be skipped in this run. Continue with the call side only.
 
 ### Step 1 — Pull last 7 days of meetings
 
@@ -61,18 +73,38 @@ The external prompt has strict abstraction rules. Read them carefully each time 
 
 Extraction targets 0–3 ideas per meeting. Zero is a fine answer when nothing extracts cleanly.
 
-### Step 4 — Render output
+### Step 4 — Pull external news and extract ideas
+
+Run the news-side extraction. If `gtm-signal-scan` is not installed (per Step 0), skip this step entirely.
+
+1. **Invoke `gtm-signal-scan` in `raw` mode with an extended window.** The skill's default window is 24-48 hours; for the ideation pipeline, request a **72-hour window** so a few days of news can accumulate between on-demand pulls. Pass an explicit instruction like *"Scan in raw mode using a 72-hour window."* The skill returns a JSON-style list of every notable item it found across all five tiers (no 8-10 cap in raw mode): tier, tool/topic, headline, summary, URL, published_at.
+
+2. **Load `prior_posts_context` for de-duplication.** Read every `.md` file in `voice/examples/best/` and `drafts/`. For each, extract:
+   - The first heading or first line as the **title**
+   - The first 1-2 sentences as a **summary**
+
+   Build a compact list of `{ title, summary }` entries. This becomes the `prior_posts_context` passed to the news-extraction prompt.
+
+   **Do NOT include prior idea files (`ideation/output/ideas-*.md`) in this context.** Per the de-dup rule: dedup against posted/drafted content, not against prior idea suggestions the user didn't pick. If an idea was suggested before and the user didn't act on it, it's fine to suggest it again.
+
+3. **Run the news-extraction prompt** at `prompts/news-extraction.md` against the raw signal items, with the `prior_posts_context` list as context. The prompt applies its angle test to each item, de-duplicates against the prior-posts list, and returns 0-4 news-derived content ideas.
+
+4. **Capture the ideas** for inclusion in the unified output file (Step 5). Each idea must include the **Citation** field with the article URL so the user can verify before posting.
+
+### Step 5 — Render output
 
 Write the rendered ideas to `ideation/output/ideas-YYYY-MM-DD.md` (use today's date; overwrite if it exists). Each idea must contain enough substance for the user to make a judgment call on whether to act on it — a one-line hook isn't enough. The user will read the file, pick one or two, and either write the post themselves or have you write it. They need to be able to decide between ideas at the file level, without asking follow-up questions.
 
 Structure:
 
 ```markdown
-# Content ideas — <YYYY-MM-DD> (last 7 days)
+# Content ideas — <YYYY-MM-DD> (last 7 days calls · last 72h news)
 
-**<N> meetings pulled · <N> internal · <N> external · <N> external (uncertain) · <N> ideas total**
+**<N> meetings · <N> news items · <N> ideas total**
+**Calls: <N> internal · <N> external · <N> external-uncertain**
+**News: <N> signal items scanned, <N> angle-bearing ideas extracted**
 
-[Optional: scope note if any meetings weren't fully processed]
+[Optional: scope note if any sources weren't fully processed]
 
 ---
 
@@ -122,20 +154,46 @@ Structure:
 
 **Source:** External call, <YYYY-MM-DD> (specifics abstracted)
 **Compliance check:** Scanned for: <terms>. None present in output.
+
+---
+
+## From external news (with Patrick's angle, citations included)
+
+### <idea title>
+
+**Hook:** "<one sentence; italic-emphasis with *asterisks*>"
+
+**The argument**
+
+<3–5 sentences carrying Patrick's angle on the news. Build on or push against the item. NOT a summary of the news — the news is the trigger; the post is Patrick's take.>
+
+**Why it's a Patrick post**
+
+<1–2 sentences naming the opinion marker / voice anchor.>
+
+**Format:** <carousel / info-card / GIF / not-sure-yet> — <reasoning>
+
+**Structure:**
+- <outline appropriate to format>
+
+**Source:** External news — <tool / topic>, Tier <N>
+**Citation:** <article headline> — <url>
+**Compliance note:** Public news, no abstraction required. Verify the URL and any quoted stats before posting.
 ```
 
-If a group is empty (e.g. all calls were internal), omit that section entirely.
+If a group is empty (e.g. no news items had angles worth surfacing this run), omit that section entirely rather than showing a heading with nothing under it.
 
-### Step 5 — Summary in chat
+### Step 6 — Summary in chat
 
 After writing the file, post a summary to chat:
-- Counts: meetings pulled, classification split (internal / external / external-uncertain), ideas extracted
+- **Calls:** meetings pulled, classification split (internal / external / external-uncertain), call-side ideas extracted
+- **News:** signal items scanned, news-side ideas extracted (or "skipped — gtm-signal-scan not installed" if applicable)
 - Path to the file
-- 2–3 strongest hooks as teasers so the user gets a feel for the batch without reading the whole file
+- 2–3 strongest hooks as teasers, drawn from across both sources, so the user gets a feel for the batch without reading the whole file
 
 Don't paste the entire file into chat — the file is the artifact.
 
-### Step 6 — Ask which idea + write-or-describe
+### Step 7 — Ask which idea + write-or-describe
 
 After the chat summary, ask the user two questions:
 
@@ -159,7 +217,7 @@ If they pick "describe it more":
 - End with a clear handoff: "When you're done writing, paste your post back here and I'll generate the asset from it." This is the cue for Step 7.
 - Keep voice rules in force throughout the treatment (so any phrasings or framings the user borrows from it are already clean).
 
-### Step 7 — Asset generation from finished post text
+### Step 8 — Asset generation from finished post text
 
 This step is triggered when the user returns with a finished LinkedIn post — either right after a "describe it more" treatment, or in a later conversation. Cue phrases: *"here's my post"*, *"I finished writing"*, *"generate the asset for this"*, or just pasting a multi-paragraph post.
 
