@@ -25,17 +25,24 @@ voice/
 drafts/                        Posts in progress (Patrick-authored)
 
 templates/
-  legacy/
+  exploration/                 (default direction)
     carousel/                  Static carousel generator (Node + Puppeteer → PNG)
-                               Renders 1080×1350 slides with cover/content/CTA layouts
-                               Supports screenshots, 3D illustrations, logos, flowcharts,
-                               artistic logo layouts. Full docs in its README.
-  exploration/
-    card-statement.html        Single statement card prototype (static HTML)
+                               1080×1350 slides with gradient frame + Fraunces
+                               italic-emphasis + cream/white panels.
+                               Slide types are extensible (system, not template).
+                               Includes lib/gen-doodle.js for per-deck AI doodles.
+                               Full docs in its README.
     info-card/                 Single dense info-card generator (Node + Puppeteer → PNG)
                                Gradient frame + Fraunces italic-emphasis + cream body panel.
                                Section types: stat-grid, comparison-table, metrics-rows.
                                Full docs in its README.
+    card-statement.html        Single statement card prototype (static HTML)
+  legacy/                      (alternate direction)
+    carousel/                  Editorial b&w carousel generator (Node + Puppeteer → PNG)
+                               Renders 1080×1350 slides with cover/content/CTA layouts
+                               Supports screenshots, 3D illustrations, logos, flowcharts,
+                               artistic logo layouts. Use when a deck wants the cleaner
+                               editorial register over the exploration treatment.
 
 animations/                    Animated media (GIF + MP4) via HyperFrames
   cover-animation/             Title-card animation example
@@ -49,11 +56,17 @@ landing-mock/                  Standalone landing page prototype (separate conce
 
 | Format | Tool | Output | When to use |
 |---|---|---|---|
-| **Static carousel** (multi-slide deck) | `templates/legacy/carousel/` | PNGs (1080×1350 per slide) | Long-form thought posts. Multi-slide narrative. The Claude-vs-Clay deck is the worked example. |
+| **Static carousel** (multi-slide deck) | `templates/exploration/carousel/` (default) · `templates/legacy/carousel/` (alternate) | PNGs (1080×1350 per slide) | Long-form thought posts. Multi-slide narrative. The exploration sample-outbound deck is the worked example. |
 | **Single info-card** (one dense image) | `templates/exploration/info-card/` | 1 PNG (1080×1350) | Multiple short data points / patterns / principles in one feed-readable image. The outreach-cheatsheet is the worked example. |
 | **Animated media** (single GIF or MP4) | `animations/` (HyperFrames) | `.gif` and `.mp4` | One-off media to sit alongside a Patrick-authored LinkedIn caption. NOT a slide in a deck. |
 
 These are deliberately separate. GIFs are never embedded in carousels, carousels are never animated, and info-cards are never split into a deck. Each format has its own register and structural rules. See the per-format docs.
+
+## System, not template
+
+The generators are a content **system**, not a fixed template. Within a single deck, different slides can use different layouts based on what each slide is trying to communicate — a comparison wants a 2-up, a workflow wants a flowchart, a stat wants a hero number. The shared chassis (gradient frame, typography, brand colors) is what holds the deck together visually; the per-slide layout is open.
+
+When new content needs a layout the shipped slide types don't cover, the move is to **add a new slide-type renderer** (one small function + a CSS block + a switch case), not to bend the content into an existing type. See `templates/exploration/carousel/README.md` → "System, not template" for the extension pattern.
 
 ## Required setup (one-time, per machine)
 
@@ -116,7 +129,7 @@ Claude will pick up the conventions from this README + the per-folder READMEs + 
 These are the constraints that make the output feel like Patrick / The Kiln rather than generic AI content:
 
 ### Brand direction is binary
-Every asset picks `legacy` or `exploration`. The default for both carousels and animations is `legacy`. Never mix them in the same piece. `brand/README.md` is the source of truth.
+Every asset picks `legacy` or `exploration`. **Carousels and info-cards default to `exploration`** (gradient frame, Fraunces italic-emphasis). **Animations default to `legacy`**. Per-format defaults live in `brand/README.md` — that file is the source of truth. Never mix directions within one piece.
 
 ### Voice rules (hard, override `voice.md`)
 - **No em-dashes (`—`).** Hyphens, commas, parentheses, two sentences — anything but em-dashes. Em-dashes read as AI-generated and Patrick doesn't want them.

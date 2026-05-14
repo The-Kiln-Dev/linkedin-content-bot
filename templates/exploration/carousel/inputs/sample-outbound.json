@@ -1,0 +1,48 @@
+{
+  "deck_name": "sample-outbound",
+  "canvas": { "width": 1080, "height": 1350 },
+  "gradient_variant": "orange_indigo",
+  "author": "Patrick Spychalski",
+  "slides": [
+    {
+      "type": "cover",
+      "category": "GUIDE",
+      "title_roman": "Outbound in 2026,",
+      "title_italic": "it's not what it was",
+      "subtitle": "Three shifts that actually move pipeline now.",
+      "doodle": "paper-airplane.png"
+    },
+    {
+      "type": "content",
+      "step_label": "SHIFT 1",
+      "title_roman": "Warm intros over",
+      "title_italic": "raw volume",
+      "body": "Relationships compound. Sequences don't. Build a referral motion before you scale another SDR seat. Personally, the most reliable pipeline I've seen comes from 3-4 people who actively introduce.",
+      "doodle": "generated/sample-outbound/handshake.png"
+    },
+    {
+      "type": "content",
+      "step_label": "SHIFT 2",
+      "title_roman": "Trigger-based outbound",
+      "title_italic": "beats batch-and-blast",
+      "body": "Reference a hiring change, a recent post, a funding round. Generic openers get deleted on sight. The win is showing you noticed something real before you reached out.",
+      "doodle": "generated/sample-outbound/lightning-bolt.png"
+    },
+    {
+      "type": "content",
+      "step_label": "SHIFT 3",
+      "title_roman": "Multi-channel cadences,",
+      "title_italic": "sequenced not stacked",
+      "body": "LinkedIn touch, then email, then a voice note. Same message stacked across channels reads as spam. Different message per channel reads as a person who actually wants to talk.",
+      "doodle": "generated/sample-outbound/sequence-dots.png"
+    },
+    {
+      "type": "cta",
+      "title_roman": "Want help",
+      "title_italic": "rebuilding your motion?",
+      "subtitle": "We do this for RevOps teams every week.",
+      "button_text": "Book a chat →",
+      "doodle": "curl-cluster.png"
+    }
+  ]
+}

@@ -19,7 +19,7 @@ Unless overridden, each asset type defaults to one direction:
 | Quote card | `exploration` | Same |
 | CTA card (standalone) | `exploration` | Same |
 | **Info-card** (single dense multi-section image) | **`exploration`** | Pattern lists / benchmarks / data overviews stay on-brand with the gradient frame + Fraunces italic-emphasis treatment |
-| **Carousel** (multi-slide document) | **`legacy`** | Content-heavy, editorial. White backgrounds + bold sans read clearly across slides |
+| **Carousel** (multi-slide document) | **`exploration`** | Italic-emphasis carries Patrick's voice more deliberately than the legacy bold-sans treatment; gradient frame creates a cohesive swipe-through signature. Legacy carousel is still available as an alternate. |
 | Banner (profile / feed hero) | `legacy` | Clean, not overpowering |
 | Tool / process diagrams | `legacy` | Utility-first |
 | Branded GIF / video | direction of the matching static | Match the format family |
@@ -54,11 +54,12 @@ brand/
 
 ```
 templates/
-├── legacy/
-│   └── carousel/               ← cover-slide, content-slide, cta-slide
-└── exploration/
-    ├── card-statement.html     ← statement card (static HTML prototype)
-    └── info-card/              ← single dense info-card generator (PNG)
+├── exploration/                (default direction)
+│   ├── carousel/               ← multi-slide carousel generator (PNG)
+│   ├── info-card/              ← single dense info-card generator (PNG)
+│   └── card-statement.html     ← statement card (static HTML prototype)
+└── legacy/                     (alternate direction)
+    └── carousel/               ← editorial b&w carousel generator (PNG)
 ```
 
 ## Rules for me (Claude) when generating
