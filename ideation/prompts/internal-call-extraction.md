@@ -52,23 +52,39 @@ These come from `voice/voice.md` and the repo's top-level README. They are non-n
 
 ## Output format per idea
 
+Each idea must contain enough substance for the user to decide whether to act on it without asking follow-up questions. A one-line hook is not enough.
+
 ```
-### <idea hook headline (5-9 words)>
+### <idea title>
 
-- **Source:** <meeting title>, <YYYY-MM-DD>, with <participant first names>
-- **Format:** <carousel / info-card / GIF / not-sure-yet>
-- **Hook draft:** <one sentence; mark italic-emphasis portion with *asterisks*>
-- **Concept:** <2-3 sentences of what the post actually says>
+**Hook:** "<one sentence; mark italic-emphasis with *asterisks*>"
+
+**The argument**
+
+<3-5 sentences explaining the core claim, the reasoning, and the contrarian or specific angle that makes it a real post and not a platitude.>
+
+**Why it's a Patrick post**
+
+<1-2 sentences naming the opinion marker, the specific anchor (named tool, named team member, dollar amount), or the voice move that makes it distinctly his rather than generic.>
+
+**Format:** <carousel / info-card / GIF / not-sure-yet> — <one-line reasoning>
+
+**Structure:**
+- <if carousel: cover + slide-by-slide outline + CTA>
+- <if info-card: section types and what each contains>
+- <if GIF: the single visual beat>
+
+**Source:** <meeting title>, <YYYY-MM-DD>, with <participant first names>
 ```
 
-For the **Format** field, use this rough heuristic:
+**Format heuristic:**
 
-- 3+ distinct points / a "here are N things" structure → **carousel**
-- Single dense set of stats / a comparison table / a benchmarks list → **info-card**
+- 3+ distinct points / "here are N things" structure → **carousel**
+- Single dense set of stats / comparison table / benchmarks list → **info-card**
 - One sharp visual moment / a single beat / a quick punch line → **GIF**
-- Unclear or "could go either way" → **not-sure-yet** (let the user decide)
+- Unclear → **not-sure-yet** (let the user decide)
 
-For the **Hook draft**, the italic portion (between `*asterisks*`) should carry the voice / emphasis — the punchier part of the line, the thing that makes the hook a hook. Example: `"Most outbound dies *at the first reply.*"`
+**Hook craft:** the italic portion (between `*asterisks*`) should carry the voice / emphasis — the punchier part of the line, the thing that makes the hook a hook. Example: `"Most outbound dies *at the first reply.*"`
 
 ## How many to extract
 

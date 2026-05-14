@@ -47,19 +47,35 @@ These apply identically to internal and external prompts:
 
 ## Output format per idea
 
+Each idea must contain enough substance for the user to decide whether to act on it without asking follow-up questions. A one-line hook is not enough.
+
 ```
-### <idea hook headline (5-9 words)>
+### <idea title>
 
-- **Source:** External call, <YYYY-MM-DD> (specifics abstracted)
-- **Format:** <carousel / info-card / GIF / not-sure-yet>
-- **Hook draft:** <one sentence; mark italic-emphasis with *asterisks*>
-- **Concept:** <2-3 sentences, phrased as Patrick's independent observation from working in the space>
-- **Compliance check:** Scanned for: [list of specific terms you actively scanned the output against — at minimum, the participant company name, the participant first names, any product names mentioned in the call that aren't on the allowed-tools list]. None present in output.
+**Hook:** "<one sentence; mark italic-emphasis with *asterisks*>"
+
+**The argument**
+
+<3-5 sentences, phrased as Patrick's independent observation from working in the GTM space generally. Not "I heard this on a call". Concept-level only — never reference the engagement, the participant, the industry, or anything traceable.>
+
+**Why it's a Patrick post**
+
+<1-2 sentences naming the opinion marker / voice anchor / specific (allowed) reference that makes it distinctly his.>
+
+**Format:** <carousel / info-card / GIF / not-sure-yet> — <one-line reasoning>
+
+**Structure:**
+- <outline appropriate to format>
+
+**Source:** External call, <YYYY-MM-DD> (specifics abstracted)
+**Compliance check:** Scanned for: <list of specific terms — at minimum the participant company name, participant first names, industry-specific terms from the call, any non-allowed product names mentioned>. None present in output.
 ```
 
-The **Compliance check** field is mandatory. It serves two purposes: (a) forces you to do the scan explicitly rather than implicitly, (b) gives the user a list of terms to spot-check before posting.
+The **Compliance check** field is mandatory. It serves two purposes:
+1. Forces you to do the leak-scan explicitly rather than implicitly.
+2. Gives the user a list of terms to spot-check before posting.
 
-If you can't write the compliance check with confidence, that's a signal the idea isn't clean enough — discard it.
+If you can't write the compliance check with confidence, the idea isn't clean enough — discard it.
 
 ## How many to extract
 

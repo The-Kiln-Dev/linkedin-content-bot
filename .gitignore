@@ -20,3 +20,7 @@ templates/exploration/carousel/output/
 templates/exploration/info-card/output/
 templates/legacy/carousel/output/
 **/.tmp-render*.html
+
+# Ideation outputs are per-user, per-run — personal artifacts, not repo content
+ideation/output/*
+!ideation/output/.gitkeep
