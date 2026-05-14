@@ -18,6 +18,7 @@ Unless overridden, each asset type defaults to one direction:
 | Statement card (single big headline) | `exploration` | Atmospheric single-message formats benefit from the gradient treatment |
 | Quote card | `exploration` | Same |
 | CTA card (standalone) | `exploration` | Same |
+| **Info-card** (single dense multi-section image) | **`exploration`** | Pattern lists / benchmarks / data overviews stay on-brand with the gradient frame + Fraunces italic-emphasis treatment |
 | **Carousel** (multi-slide document) | **`legacy`** | Content-heavy, editorial. White backgrounds + bold sans read clearly across slides |
 | Banner (profile / feed hero) | `legacy` | Clean, not overpowering |
 | Tool / process diagrams | `legacy` | Utility-first |
@@ -54,9 +55,10 @@ brand/
 ```
 templates/
 ├── legacy/
-│   └── carousel/               ← cover-slide, content-slide, cta-slide (to be built)
+│   └── carousel/               ← cover-slide, content-slide, cta-slide
 └── exploration/
-    └── card-statement.html     ← statement card
+    ├── card-statement.html     ← statement card (static HTML prototype)
+    └── info-card/              ← single dense info-card generator (PNG)
 ```
 
 ## Rules for me (Claude) when generating

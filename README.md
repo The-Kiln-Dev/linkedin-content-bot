@@ -31,7 +31,11 @@ templates/
                                Supports screenshots, 3D illustrations, logos, flowcharts,
                                artistic logo layouts. Full docs in its README.
   exploration/
-    card-statement.html        Single statement card (atmospheric direction)
+    card-statement.html        Single statement card prototype (static HTML)
+    info-card/                 Single dense info-card generator (Node + Puppeteer → PNG)
+                               Gradient frame + Fraunces italic-emphasis + cream body panel.
+                               Section types: stat-grid, comparison-table, metrics-rows.
+                               Full docs in its README.
 
 animations/                    Animated media (GIF + MP4) via HyperFrames
   cover-animation/             Title-card animation example
@@ -41,14 +45,15 @@ animations/                    Animated media (GIF + MP4) via HyperFrames
 landing-mock/                  Standalone landing page prototype (separate concern)
 ```
 
-## The two output formats
+## The three output formats
 
 | Format | Tool | Output | When to use |
 |---|---|---|---|
-| **Static carousel** (multi-slide deck) | `templates/legacy/carousel/` | PNGs (1080×1350 per slide) | Long-form thought posts. The Claude-vs-Clay deck is the worked example. |
+| **Static carousel** (multi-slide deck) | `templates/legacy/carousel/` | PNGs (1080×1350 per slide) | Long-form thought posts. Multi-slide narrative. The Claude-vs-Clay deck is the worked example. |
+| **Single info-card** (one dense image) | `templates/exploration/info-card/` | 1 PNG (1080×1350) | Multiple short data points / patterns / principles in one feed-readable image. The outreach-cheatsheet is the worked example. |
 | **Animated media** (single GIF or MP4) | `animations/` (HyperFrames) | `.gif` and `.mp4` | One-off media to sit alongside a Patrick-authored LinkedIn caption. NOT a slide in a deck. |
 
-These are deliberately separate. GIFs are never embedded in carousels and carousels are never animated. Each format has its own register and structural rules. See the per-format docs.
+These are deliberately separate. GIFs are never embedded in carousels, carousels are never animated, and info-cards are never split into a deck. Each format has its own register and structural rules. See the per-format docs.
 
 ## Required setup (one-time, per machine)
 
