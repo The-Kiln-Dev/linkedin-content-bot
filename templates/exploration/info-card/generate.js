@@ -30,6 +30,48 @@ const GRADIENTS = JSON.parse(
   fs.readFileSync(path.join(BRAND_DIR, 'colors-exploration.json'), 'utf8')
 ).gradient_variants;
 
+/* ---------- Layout constants (must match the CSS in buildHtml) ----------
+   These are used by validateInput() to predict each section's natural height
+   before rendering, so we can fail fast with a clear error when content
+   would overflow the cream panel instead of letting Puppeteer render an
+   overlapping mess. If you change the CSS, update these too. */
+const LAYOUT = {
+  frame: 50,
+  headerPanel: {
+    paddingY: 44 + 36,
+    logoBlock: 42 + 26,
+    titleLineHeight: 64 * 1.05,
+    titleLinesMax: 2,
+    subtitle: 18 * 1.4 + 16,
+  },
+  body: {
+    paddingY: 30 + 24,
+  },
+  section: {
+    paddingY: 4 + 4,
+    headRow: 32 + 18,
+    borderTop: 1,
+    interGap: 28,
+  },
+  statGrid: {
+    cardHeight: 130,
+    gap: 12,
+  },
+  ctRow: 13 + 13 + 15 * 1.35 + 15 * 1.35,
+  mrRow: 13 + 13 + 15.5 * 1.35 + 15.5 * 1.35,
+  ctHeadRow: 11 + 6,
+  footer: 12.5 * 1 + 16 + 16,
+};
+
+/* ---------- Content limits per section type ----------
+   Soft limits documented in README. Validation uses predicted-height instead
+   of strict item-count caps so users can mix small and dense sections. */
+const SECTION_LIMITS = {
+  'stat-grid': { maxItems: 6, minColumns: 2, maxColumns: 4 },
+  'comparison-table': { maxRows: 6 },
+  'metrics-rows': { maxRows: 6 },
+};
+
 function pathToFileUrl(abs) {
   return 'file://' + abs.split(path.sep).map(encodeURIComponent).join('/');
 }
@@ -45,6 +87,89 @@ function escAllowB(s) {
   return String(s)
     .replace(/&/g, '&amp;')
     .replace(/<(?!\/?b>)/g, '&lt;');
+}
+
+function predictSectionHeight(s) {
+  const { section, statGrid, ctRow, mrRow, ctHeadRow } = LAYOUT;
+  const base = section.paddingY + section.headRow + section.borderTop;
+  let content = 0;
+
+  if (s.type === 'stat-grid') {
+    const cols = s.columns || 2;
+    const items = (s.items || []).length;
+    const rows = Math.ceil(items / cols);
+    content = rows * statGrid.cardHeight + Math.max(0, rows - 1) * statGrid.gap;
+  } else if (s.type === 'comparison-table') {
+    const rows = (s.rows || []).length;
+    content = ctHeadRow + rows * ctRow;
+  } else if (s.type === 'metrics-rows') {
+    const rows = (s.rows || []).length;
+    content = ctHeadRow + rows * mrRow;
+  } else {
+    throw new Error(`Unknown section type for height prediction: ${s.type}`);
+  }
+  return Math.ceil(base + content);
+}
+
+function predictHeaderHeight() {
+  const h = LAYOUT.headerPanel;
+  return h.paddingY + h.logoBlock + h.titleLineHeight * h.titleLinesMax + h.subtitle;
+}
+
+function predictFooterHeight() {
+  return LAYOUT.footer;
+}
+
+function predictBodyAvailableHeight(canvasHeight) {
+  const innerHeight = canvasHeight - 2 * LAYOUT.frame;
+  return innerHeight - predictHeaderHeight() - predictFooterHeight() - LAYOUT.body.paddingY;
+}
+
+function validateInput(input) {
+  const canvasH = (input.canvas && input.canvas.height) || DEFAULT_HEIGHT;
+  const available = predictBodyAvailableHeight(canvasH);
+
+  // Per-section soft-limit checks (caught before height math for clearer errors)
+  for (const s of input.sections || []) {
+    const limits = SECTION_LIMITS[s.type];
+    if (!limits) throw new Error(`Unknown section type: ${s.type}. Valid: ${Object.keys(SECTION_LIMITS).join(', ')}.`);
+    if (s.type === 'stat-grid') {
+      const items = (s.items || []).length;
+      if (items > limits.maxItems) {
+        throw new Error(`stat-grid section "${s.title_roman || s.title || '?'}" has ${items} items; max ${limits.maxItems}. Split into two sections or reduce items.`);
+      }
+      const cols = s.columns || 2;
+      if (cols < limits.minColumns || cols > limits.maxColumns) {
+        throw new Error(`stat-grid section "${s.title_roman || s.title || '?'}" has columns=${cols}; must be between ${limits.minColumns} and ${limits.maxColumns}.`);
+      }
+    } else {
+      const rows = (s.rows || []).length;
+      if (rows > limits.maxRows) {
+        throw new Error(`${s.type} section "${s.title_roman || s.title || '?'}" has ${rows} rows; max ${limits.maxRows}.`);
+      }
+    }
+  }
+
+  const sections = input.sections || [];
+  const sectionsTotal = sections.reduce((sum, s) => sum + predictSectionHeight(s), 0);
+  const gapsTotal = Math.max(0, sections.length - 1) * LAYOUT.section.interGap;
+  const needed = sectionsTotal + gapsTotal;
+  if (needed > available) {
+    const overshoot = needed - available;
+    const breakdown = (input.sections || [])
+      .map((s, i) => `  ${i + 1}. ${s.type} (${s.title_roman || s.title || '?'}): ${predictSectionHeight(s)}px`)
+      .join('\n');
+    throw new Error(
+      `Info-card content won't fit on canvas:\n` +
+      `  Sections predicted total: ${needed}px\n` +
+      `  Cream panel available:    ${available}px\n` +
+      `  Overflow by:              ${overshoot}px\n\n` +
+      `Section breakdown:\n${breakdown}\n\n` +
+      `Fix: reduce items in the densest section, drop a section, or split into two info-cards. ` +
+      `Per-section soft limits: stat-grid ≤6 items, comparison-table ≤6 rows, metrics-rows ≤6 rows. ` +
+      `Even within limits, total content must fit the available cream panel — three full sections of 6 items each will fail.`
+    );
+  }
 }
 
 function resolveGradient(key) {
@@ -268,7 +393,12 @@ function buildHtml(input) {
     line-height: 1.4;
   }
 
-  /* ---------- Body panel (cream) ---------- */
+  /* ---------- Body panel (cream) ----------
+     Top-aligned natural flow. Sections take their actual content height
+     (no flex:1), separated by a consistent gap. Leftover space sits at
+     the bottom before the footer — reads as natural padding regardless
+     of section count (2 sections vs 3 vs anything else). Pre-render
+     validation (validateInput) guarantees total natural content fits. */
   .body {
     background: var(--cream);
     padding: 30px var(--pad) 24px;
@@ -276,20 +406,21 @@ function buildHtml(input) {
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    gap: 28px;
     min-height: 0;
   }
 
   /* ---------- Section shell ---------- */
   .section {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 22px 0 20px;
+    padding: 4px 0 4px;
     border-top: 1px solid var(--rule);
-    min-height: 0;
+    overflow: hidden;
+    flex: 0 0 auto;
   }
-  .section:first-child { border-top: none; padding-top: 10px; }
-  .section > :last-child { flex: 1; }
+  .section:first-child { border-top: none; padding-top: 0; }
 
   .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
   .section-num {
@@ -321,11 +452,15 @@ function buildHtml(input) {
     color: var(--grad-from);
   }
 
-  /* ---------- Stat grid (white sub-cards on cream) ---------- */
+  /* ---------- Stat grid (white sub-cards on cream) ----------
+     grid-auto-rows uses a fixed minimum so cards have a predictable height
+     and the section's content size is deterministic (which is what
+     validateInput predicts against). Cards can grow taller if content
+     forces it, but the typical case lands at minHeight exactly. */
   .stat-grid {
     display: grid;
     gap: 12px;
-    grid-auto-rows: 1fr;
+    grid-auto-rows: minmax(118px, auto);
   }
   .stat-card {
     background: var(--white);
@@ -365,8 +500,11 @@ function buildHtml(input) {
   }
   .stat-card-body b { color: var(--ink); font-weight: 700; }
 
-  /* ---------- Comparison table (typography on cream) ---------- */
-  .ct { display: flex; flex-direction: column; justify-content: space-between; }
+  /* ---------- Comparison table (typography on cream) ----------
+     Natural row heights (no justify-content:space-between) so each section's
+     height is predictable for validateInput. Body-level space-between
+     handles vertical rhythm at the panel level instead. */
+  .ct { display: flex; flex-direction: column; }
   .ct-row {
     display: grid;
     grid-template-columns: 1fr 2.2fr 0.7fr;
@@ -392,8 +530,9 @@ function buildHtml(input) {
   .ct-first { font-weight: 600; }
   .ct-impact { color: var(--grad-from); font-weight: 700; }
 
-  /* ---------- Metrics rows (typography on cream) ---------- */
-  .mr { display: flex; flex-direction: column; justify-content: space-between; }
+  /* ---------- Metrics rows (typography on cream) ----------
+     Same rationale as .ct above: natural row heights, body-level rhythm. */
+  .mr { display: flex; flex-direction: column; }
   .mr-row {
     display: grid;
     grid-template-columns: 1.2fr 1.2fr 0.7fr;
@@ -474,6 +613,12 @@ async function main() {
     return path.resolve(ROOT, inputArg);
   })();
   const input = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+
+  // Fail fast if content won't fit. Better to surface a clear error here
+  // than to let Puppeteer render an overlapping mess that the user has to
+  // diagnose by eye.
+  validateInput(input);
+
   const w = (input.canvas && input.canvas.width) || DEFAULT_WIDTH;
   const h = (input.canvas && input.canvas.height) || DEFAULT_HEIGHT;
 

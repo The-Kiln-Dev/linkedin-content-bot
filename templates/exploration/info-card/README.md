@@ -119,15 +119,39 @@ Each section has a `number`, a roman+italic split title, and a type-specific bod
 
 ## Layout rules (don't break)
 
-- **`flex: 1` per section** — all sections share the cream panel's vertical space equally, so the card always fills the canvas regardless of content density. Don't switch to natural heights without checking how the slide looks at the LinkedIn display size.
-- **`grid-auto-rows: 1fr`** on the stat grid keeps cards equal-height inside a section. Don't remove.
-- **`justify-content: space-between`** on the comparison/metrics tables distributes rows across the section's allocated height. Don't remove.
+- **Sections take their natural content height** with a fixed 28px gap between them, top-aligned in the cream panel. Leftover space sits at the bottom before the footer. Don't switch to `flex: 1` per section — that caused silent overflow + visible overlap between adjacent sections when content density varied.
+- **`grid-auto-rows: minmax(118px, auto)`** on the stat grid sets a deterministic card height that the validator predicts against. Cards can grow taller if content forces it. Don't replace with `1fr`.
+- **`overflow: hidden`** on each section is a safety net. If content somehow exceeds its predicted height, it clips inside the section rather than bleeding into the next one. The validator should catch this case first, but the safety net stays.
 - **Single accent color rule.** Don't introduce a second hue for emphasis. If a row needs more weight, change its weight or size — don't reach for a green/red/etc.
+
+## Content limits (validated at JSON load)
+
+The generator runs `validateInput(input)` before rendering. It computes the predicted natural height of each section (deterministic, based on row/item counts) and fails fast with a clear error if the total exceeds the cream panel's available height. The error message includes:
+
+- Total predicted content height (px)
+- Total available height (px)
+- Overshoot amount
+- Per-section breakdown showing which section is heaviest
+- A "fix" suggestion (reduce items, drop a section, split into two info-cards)
+
+**Per-section soft limits** (these are caught explicitly with their own error, before the height math):
+
+| Section type | Max items / rows | Reasonable column counts |
+|---|---|---|
+| `stat-grid` | 6 items | 2 (default) – 4 columns |
+| `comparison-table` | 6 rows | fixed 3 columns |
+| `metrics-rows` | 6 rows | fixed 3 columns |
+
+**Even within the soft limits, the height math may still fail** — three full 6-item sections can't all fit. A typical fitting deck has 2 dense sections, or 3 with moderate density. If you hit the validator, the error message tells you exactly what to cut.
+
+**Why fail-fast instead of render-and-clip:**
+
+Earlier versions used `flex: 1` per section to force equal-share distribution. Content that exceeded its allotted third would visually overlap into the next section — silent, hard to diagnose, and breaks LinkedIn posts that ship with the artifact. The new approach: predict, validate, fail with actionable feedback before Puppeteer renders. The image you get out of a successful render is guaranteed to have no overlap.
 
 ## Known gaps (v0 → v1)
 
-- Only 3 section types. The Expandi-style reference uses 7. Missing: `flow-pills` (vertical step chain), `icon-list` (small-icon rows), `people-grid` (headshot grid).
-- One worked example only (`outreach-cheatsheet.json`).
-- All 5 gradient variants are wired but only `orange_indigo` is verified visually. Validate `teal_amber`, `fuchsia_blue`, etc., before trusting them.
-- Doodle slot is fixed bottom-right. If the bottom section is dense, the doodle can crowd content — consider a `doodle_position` input later.
-- No CI / lint. If a section's content overflows its `flex: 1` slot, it'll clip silently.
+- Only 3 section types. The Expandi-style reference uses 7. Missing: `flow-pills` (vertical step chain), `icon-list` (small-icon rows), `people-grid` (headshot grid). Each new type needs corresponding entries in `LAYOUT` and `SECTION_LIMITS` so validation extends cleanly.
+- Two worked examples: `outreach-cheatsheet.json` (3 sections, dense) and `not-everything-agentic.json` (2 sections, comfortable).
+- All 5 gradient variants are wired but only `orange_indigo` and `teal_amber` are visually validated. Validate `fuchsia_blue`, `indigo_slate`, `rose_violet` before trusting them.
+- Doodle slot is fixed bottom-right. If the last section's content lands very low in the cream panel, the doodle can crowd it — consider a `doodle_position` input later.
+- Validator predictions are conservative (over-estimate by ~10-15%). Some borderline-valid decks may be rejected. If the math gets tighter over time, calibrate `LAYOUT.statGrid.cardHeight` and `LAYOUT.ctRow`/`mrRow` constants against actual rendered measurements.

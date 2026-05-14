@@ -1,0 +1,41 @@
+{
+  "canvas": { "width": 1080, "height": 1350 },
+  "gradient_variant": "teal_amber",
+  "header": {
+    "title_roman": "Don't agentify",
+    "title_italic": "the back-end",
+    "subtitle": "Where agents pay off in your GTM stack, and where they don't."
+  },
+  "sections": [
+    {
+      "type": "comparison-table",
+      "number": 1,
+      "title_roman": "Front-end vs back-end:",
+      "title_italic": "the split that matters",
+      "columns": ["Function", "Where it belongs", "Right tool"],
+      "rows": [
+        ["Sourcing prospects", "Front-end (agentic)", "Claude / Cursor"],
+        ["Personalized openers", "Front-end (agentic)", "Claude / Cursor"],
+        ["Tech-stack lookups", "Back-end (deterministic)", "Clay / n8n"],
+        ["Dedup + scoring", "Back-end (deterministic)", "Clay / n8n"]
+      ]
+    },
+    {
+      "type": "metrics-rows",
+      "number": 2,
+      "title_roman": "Why agents fail",
+      "title_italic": "at the back-end",
+      "columns": ["Reason", "Magnitude", "Fix"],
+      "rows": [
+        ["Cost per call", "10-20x more", "Deterministic"],
+        ["Latency", "5-30 seconds", "Deterministic"],
+        ["Reasoning value", "None added", "Deterministic"]
+      ]
+    }
+  ],
+  "doodle": "light-bulb.png",
+  "footer": {
+    "left": "Patrick Spychalski",
+    "right": "thekiln.com"
+  }
+}
