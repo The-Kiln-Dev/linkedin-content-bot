@@ -43,12 +43,71 @@ The texture pattern (`brand/assets/texture-topographic.png`) is a **seamless til
 
 ## Typography
 
-Important revision from the earlier draft: the exploration **uses an italic serif for headlines**, not the bold sans-serif of the legacy direction. This is a meaningful typographic shift and distinguishes this direction clearly.
+The exploration **uses an italic serif for headlines**, not the bold sans-serif of the legacy direction. This is a meaningful typographic shift and distinguishes this direction clearly.
 
-- **Display (headlines):** **Lora** (Google Font, serif). Used in both regular and italic — the italic is the signature move in headlines (e.g., "Email deliverability, *optimization*" sets "optimization" in italic for emphasis).
-- **Logo wordmark:** clean sans (TBD — likely Inter or the same sans used in legacy).
-- **Body:** clean sans, same as legacy.
-- **Signature typographic move:** serif headline with a word or phrase in italic, set on a white panel, framed by a textured gradient border.
+### Display — Fraunces
+
+- **Family:** Fraunces (variable serif)
+- **Foundry:** Undercase Type — Phaedra Charles & Flavia Zimbardi
+- **License:** SIL Open Font License 1.1 (free for commercial use)
+- **Source:** https://fonts.google.com/specimen/Fraunces
+- **GitHub / TTFs:** https://github.com/undercasetype/Fraunces
+
+Earlier drafts used Lora, but Lora reads too literary/research-y for the brand voice we want ("high-ticket, put together, formal, but tech-forward"). Fraunces gives the same italic-emphasis move with a more contemporary, less editorial feel — letterforms have subtle calligraphic flourishes (lowercase `g`, `e`, the leg of `r`) that read modern, not old-style.
+
+**Variable axes used:**
+
+| Axis | Range used | Notes |
+|---|---|---|
+| `wght` | 400–700 | 500 for most headlines, 600 for emphasized italic |
+| `opsz` | 9–144 | Optical size — letters tighten and gain weight at large display sizes automatically |
+| `ital` | 0 / 1 | The signature emphasis move |
+| `SOFT` | 30–100 | Higher = more contemporary, less classical. Use 60+ to avoid the editorial Lora/Garamond feel. |
+
+**Loading from Google Fonts:**
+
+```html
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&display=swap" />
+```
+
+**To force the soft/contemporary cut in CSS** (some renderers ignore custom axes by default):
+
+```css
+.headline {
+  font-family: "Fraunces", Georgia, serif;
+  font-variation-settings: "SOFT" 80, "opsz" 96;
+}
+```
+
+### Body — Inter
+
+- **Family:** Inter (variable sans)
+- **License:** SIL OFL · free for commercial use
+- **Source:** https://fonts.google.com/specimen/Inter
+- **Weights used:** 400 / 500 / 600 / 700
+
+### Mono — JetBrains Mono
+
+- Used only for kickers, status pills, frame indicators, micro-labels. Never for body or headlines.
+- **Source:** https://fonts.google.com/specimen/JetBrains+Mono
+
+### The signature typographic move
+
+Roman Fraunces 500 with one or two words set in italic (`ital=1`, same weight, slightly heavier optical-size). Italic is colored with the brand accent — never gray, never resized. The italic carries the brand voice; the roman carries the message.
+
+Examples in production usage (landing-page mock):
+
+- "applied with *research-grade rigor*"
+- "Trusted by *leading* companies"
+- "From *640+ hours* of manual work…"
+- "Make your data *actually* usable."
+- "Get in touch today to *level-up* your processes."
+
+Italic emphasis is set on a white or near-white panel, framed by either a textured gradient border (LinkedIn cards) or surrounded by airy painterly washes (web).
+
+### Logo wordmark
+
+Currently using the existing `kiln-lockup-black.png`. Not Fraunces — the wordmark is its own bespoke shape and shouldn't be re-rendered as system text.
 
 ## Illustration & imagery
 
@@ -86,5 +145,6 @@ Same as legacy — no voice change tied to the visual exploration.
 
 1. Extract exact hex values for all 5 variants → `colors-exploration.json`.
 2. Extract exact border width + corner radius specs from a card.
-3. Confirm typography is identical to legacy (extract from a text layer to double-check).
+3. ~~Confirm typography is identical to legacy.~~ Resolved: typography intentionally diverges. Exploration = Fraunces (with italic emphasis); legacy uses its own bold sans. Decision documented in the Typography section above.
 4. Decide: is this direction LinkedIn-only, or is it the future site/brand direction too?
+5. Decide whether the carousel renderer should switch from Lora to Fraunces for exploration-direction templates (currently still references Lora — see `templates/legacy/carousel/`). Doing this would make the carousel match the website mock at `kiln-landing-mock/`.
