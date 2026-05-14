@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        background: #FFFFFF;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: #000000;
+      }
+
+      .scene-content {
+        width: 100%;
+        height: 100%;
+        padding: 96px 80px 80px 80px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        position: relative;
+      }
+
+      /* Header block — standalone hero, not a slide step */
+      .header {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .headline {
+        font-weight: 800;
+        font-size: 78px;
+        line-height: 1.0;
+        letter-spacing: -0.03em;
+        color: #000000;
+        max-width: 100%;
+      }
+
+      .kicker {
+        font-weight: 500;
+        font-size: 26px;
+        line-height: 1.4;
+        color: #6b6b6b;
+        max-width: 780px;
+      }
+
+      /* Flowchart row — the visual centerpiece of this standalone GIF */
+      .flowchart {
+        display: flex;
+        align-items: stretch;
+        gap: 14px;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+
+      .node {
+        flex: 1 1 0;
+        min-width: 0;
+        background: #FFFFFF;
+        border: 1px solid #e5e5e0;
+        border-radius: 18px;
+        padding: 28px 22px 26px 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 14px;
+        box-shadow: 0 12px 32px -18px rgba(0,0,0,0.14), 0 1px 3px rgba(0,0,0,0.04);
+        min-height: 220px;
+      }
+
+      .node .num {
+        font-weight: 600;
+        font-size: 16px;
+        letter-spacing: 0.14em;
+        color: #6b6b6b;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .node .label {
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: -0.015em;
+        color: #000000;
+        line-height: 1.15;
+      }
+
+      .node .sub {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 1.35;
+        color: #6b6b6b;
+      }
+
+      .arrow {
+        flex: 0 0 auto;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 24px;
+      }
+
+      .arrow svg {
+        width: 100%;
+        height: 100%;
+        transform-origin: left center;
+        color: #000000;
+        opacity: 0.75;
+      }
+
+      /* Brand mark — subtle bottom-right watermark, not a footer band */
+      .brand-mark {
+        position: absolute;
+        right: 80px;
+        bottom: 64px;
+        height: 30px;
+        width: auto;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="7"
+      data-width="1080"
+      data-height="1350"
+    >
+      <div class="scene-content">
+        <div class="header">
+          <h2 class="headline clip" id="headline"
+              data-start="0" data-duration="7" data-track-index="1">Anatomy of a GTM workflow.</h2>
+          <p class="kicker clip" id="kicker"
+             data-start="0" data-duration="7" data-track-index="2">Capture, enrich, score, route. Doesn't matter if you build it in Clay or in Claude Code.</p>
+        </div>
+
+        <div class="flowchart">
+          <div class="node clip" id="node1"
+               data-start="0" data-duration="7" data-track-index="4">
+            <div class="num">01</div>
+            <div class="label">Capture</div>
+            <div class="sub">Form fill or import</div>
+          </div>
+          <div class="arrow clip" id="arrow1"
+               data-start="0" data-duration="7" data-track-index="5">
+            <svg viewBox="0 0 56 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="2" y1="12" x2="48" y2="12" />
+              <polyline points="42,5 52,12 42,19" />
+            </svg>
+          </div>
+          <div class="node clip" id="node2"
+               data-start="0" data-duration="7" data-track-index="6">
+            <div class="num">02</div>
+            <div class="label">Enrich</div>
+            <div class="sub">Waterfall providers</div>
+          </div>
+          <div class="arrow clip" id="arrow2"
+               data-start="0" data-duration="7" data-track-index="7">
+            <svg viewBox="0 0 56 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="2" y1="12" x2="48" y2="12" />
+              <polyline points="42,5 52,12 42,19" />
+            </svg>
+          </div>
+          <div class="node clip" id="node3"
+               data-start="0" data-duration="7" data-track-index="8">
+            <div class="num">03</div>
+            <div class="label">Score</div>
+            <div class="sub">ICP match</div>
+          </div>
+          <div class="arrow clip" id="arrow3"
+               data-start="0" data-duration="7" data-track-index="9">
+            <svg viewBox="0 0 56 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="2" y1="12" x2="48" y2="12" />
+              <polyline points="42,5 52,12 42,19" />
+            </svg>
+          </div>
+          <div class="node clip" id="node4"
+               data-start="0" data-duration="7" data-track-index="10">
+            <div class="num">04</div>
+            <div class="label">Route</div>
+            <div class="sub">To the right rep</div>
+          </div>
+        </div>
+      </div>
+
+      <img class="brand-mark clip" id="brand-mark"
+           src="kiln-lockup.png" alt="The Kiln"
+           data-start="0" data-duration="7" data-track-index="11" />
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Header reveal — quiet editorial entrance
+      tl.from("#headline", { opacity: 0, y: 24, duration: 0.8, ease: "power3.out" }, 0.2);
+      tl.from("#kicker",   { opacity: 0, y: 16, duration: 0.7, ease: "power3.out" }, 0.55);
+
+      // Flowchart sequential reveal — alternating nodes and arrows
+      tl.from("#node1",  { opacity: 0, y: 12, duration: 0.5, ease: "power3.out" }, 1.0);
+      tl.from("#arrow1", { scaleX: 0, opacity: 0, duration: 0.45, ease: "power2.out" }, 1.35);
+      tl.from("#node2",  { opacity: 0, y: 12, duration: 0.5, ease: "power3.out" }, 1.7);
+      tl.from("#arrow2", { scaleX: 0, opacity: 0, duration: 0.45, ease: "power2.out" }, 2.05);
+      tl.from("#node3",  { opacity: 0, y: 12, duration: 0.5, ease: "power3.out" }, 2.4);
+      tl.from("#arrow3", { scaleX: 0, opacity: 0, duration: 0.45, ease: "power2.out" }, 2.75);
+      tl.from("#node4",  { opacity: 0, y: 12, duration: 0.5, ease: "power3.out" }, 3.1);
+
+      // Brand mark fades in last, subtle
+      tl.from("#brand-mark", { opacity: 0, duration: 0.7, ease: "power2.out" }, 3.7);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
