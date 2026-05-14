@@ -240,6 +240,16 @@ The flow:
 
 5. **Run the generator.** Render the asset to the appropriate `output/` directory.
 
+   **If the validator fails (info-card overflow, future carousel limits, etc.), restructure before dropping content.** The information in the user's post is the point — the layout is what bends to fit it. Try these in order:
+
+   1. **Compress section copy.** Shorter body text in stat-cards, shorter cell content in tables. Information stays; wording tightens.
+   2. **Change column count.** A 2-column stat-grid with 4 items can become a 4-column stat-grid with 4 items (single row, much shorter vertically).
+   3. **Reformat section types.** Same content, different container. A stat-grid with 6 items might fit better as a comparison-table with 6 rows.
+   4. **Merge related sections.** Two thematically-overlapping sections combine into one.
+   5. **Only as a last resort:** drop a section or items, or split into two info-cards. When you go this route, ask the user explicitly: "I tried restructuring and the content still won't fit. The lightest cut would be X — OK to drop it, or do you want a different cut?" Don't silently trim.
+
+   Re-run the validator after each restructure. Loop until it passes or you've genuinely exhausted restructures and have user consent to drop.
+
 6. **Deliver to the user.** Show: the post caption (their text, untouched), the path to the generated asset, and the rendered output inline if possible. Note any doodles generated so they can review.
 
 7. **Save the input JSON alongside the output.** So the user can re-render or tweak without re-deriving the JSON from scratch.

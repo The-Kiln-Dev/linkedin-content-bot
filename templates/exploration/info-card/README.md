@@ -142,7 +142,15 @@ The generator runs `validateInput(input)` before rendering. It computes the pred
 | `comparison-table` | 6 rows | fixed 3 columns |
 | `metrics-rows` | 6 rows | fixed 3 columns |
 
-**Even within the soft limits, the height math may still fail** — three full 6-item sections can't all fit. A typical fitting deck has 2 dense sections, or 3 with moderate density. If you hit the validator, the error message tells you exactly what to cut.
+**Even within the soft limits, the height math may still fail** — three full 6-item sections can't all fit. A typical fitting deck has 2 dense sections, or 3 with moderate density. If you hit the validator, the error message tells you exactly what to do.
+
+**When validation fails, prefer restructuring over dropping content.** The information is the point — the layout is what bends to fit it. Try these in order before reaching for "drop a section":
+
+1. **Compress section copy.** Shorter body text in stat-cards, shorter cell content in tables. The information stays; the wording tightens.
+2. **Change column count.** A 2-column stat-grid with 4 items can become a 4-column stat-grid with 4 items (single row, much shorter vertically). A 4-column can become a 2-column with more rows (taller, but might fit in a different section's budget).
+3. **Reformat section types.** Same content, different container. A stat-grid with 6 items might fit better as a comparison-table with 6 rows. A metrics-rows table might fold into a stat-grid showing the same data as cards.
+4. **Merge related sections.** Two thematically-overlapping sections combine into one. The information from both is preserved; the section count drops.
+5. **Only as a last resort:** drop a section or items, or split into two info-cards. When you go this route, name explicitly what you're dropping and why — don't silently trim.
 
 **Why fail-fast instead of render-and-clip:**
 

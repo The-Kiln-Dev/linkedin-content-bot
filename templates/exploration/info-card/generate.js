@@ -165,9 +165,14 @@ function validateInput(input) {
       `  Cream panel available:    ${available}px\n` +
       `  Overflow by:              ${overshoot}px\n\n` +
       `Section breakdown:\n${breakdown}\n\n` +
-      `Fix: reduce items in the densest section, drop a section, or split into two info-cards. ` +
+      `Fix (prefer restructuring over dropping — keep the information, change the layout):\n` +
+      `  1. Compress section copy. Shorter body text in stat-cards, shorter cell content in tables.\n` +
+      `  2. Change column count. 2-column stat-grid + 4 items → 4-column stat-grid + 4 items is much shorter.\n` +
+      `  3. Reformat section types. A stat-grid can become a comparison-table; metrics-rows can fold into a stat-grid.\n` +
+      `  4. Merge related sections. Two thematically-overlapping sections combine into one without losing content.\n` +
+      `  5. Only as a last resort: drop a section or items, or split into two info-cards.\n\n` +
       `Per-section soft limits: stat-grid ≤6 items, comparison-table ≤6 rows, metrics-rows ≤6 rows. ` +
-      `Even within limits, total content must fit the available cream panel — three full sections of 6 items each will fail.`
+      `Even within those limits, three full 6-item sections won't fit a single card — that's where restructuring saves you.`
     );
   }
 }
