@@ -233,7 +233,7 @@ function buildHtml(slideHtml, deck) {
 
   /* ---------- Shared head ---------- */
   .slide-head {
-    padding: 40px var(--pad) 0;
+    padding: 32px var(--pad);
     display: flex;
     align-items: center;
     justify-content: space-between;
