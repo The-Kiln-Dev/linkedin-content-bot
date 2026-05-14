@@ -1,6 +1,11 @@
-# Ideate from calls (last 7 days)
+---
+name: ideation
+description: On-demand content ideation for LinkedIn posts. Pulls from the user's recent Fathom calls (last 7 days, via Fathom MCP) and recent GTM news (last 72h, via the gtm-signal-scan global skill), classifies and abstracts where needed, de-dupes news against prior posts, and produces a unified ideas file with full deep-format entries (hook + argument + voice anchor + format + structure). Use whenever the user asks for content ideas, post suggestions, "what should I post about", "what's brewing", "give me ideas", "run ideation", or any phrasing that implies "generate new content ideas for me to post on LinkedIn". This is the canonical content-creation entry point for the LinkedIn content system — DO NOT default to riffing on voice/pov.md, voice/voice.md, drafts/, or voice/examples/best/ as idea sources. Those files are style/voice references and exemplars, not idea sources. If you find yourself reading voice/ files to come up with topic ideas, run this skill instead. After ideas are generated, the user picks one and the skill walks through asset generation (Steps 7 + 8).
+---
 
-This skill turns the last 7 days of Fathom call recordings into LinkedIn content ideas. It runs **on-demand**, has **no database**, and writes output to a markdown file in `ideation/output/`. The extraction happens directly in Claude's context — no separate API calls.
+# Ideate from calls (last 7 days) and GTM news (last 72h)
+
+This skill is the canonical content-creation entry point for this repo. It turns the user's recent Fathom call recordings + recent GTM news into LinkedIn content ideas, then helps them act on one. It runs **on-demand**, has **no database**, and writes output to a markdown file in `ideation/output/`. The extraction happens directly in Claude's context — no separate API calls.
 
 ## When this skill triggers
 
