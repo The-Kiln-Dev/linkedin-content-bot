@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en" data-resolution="custom-1080x1350">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        background: #000;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      :root {
+        --grad-from: #FB923C;
+        --grad-to:   #818CF8;
+        --ink:       #0a0a0a;
+        --ink-soft:  #2a2620;
+        --cream:     #F5F4EB;
+        --cream-2:   #EDE6D3;
+        --white:     #FFFFFF;
+        --muted:     #6e685e;
+        --muted-2:   #9c958a;
+        --rule:      rgba(0,0,0,0.1);
+        --rule-soft: rgba(0,0,0,0.06);
+        --frame:     50px;
+
+        /* Two-line chart palette */
+        --line-fail:    #B45309;   /* deeper orange - the line that fails */
+        --line-survive: #4F46E5;   /* indigo - the line that survives */
+      }
+
+      /* Outer gradient frame */
+      .frame {
+        width: 1080px;
+        height: 1350px;
+        position: relative;
+        background: linear-gradient(135deg, var(--grad-from) 0%, var(--grad-to) 100%);
+        padding: var(--frame);
+        overflow: hidden;
+      }
+      .frame::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url('assets/texture-topographic.png');
+        background-size: 50% 50%;
+        background-repeat: repeat;
+        mix-blend-mode: multiply;
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Cream interior */
+      .interior {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background: var(--cream);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 32px 44px 26px;
+      }
+
+      /* ============ Top bar ============ */
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 0 0 auto;
+      }
+      .kiln-lockup { height: 36px; width: auto; }
+      .meta-badge {
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .meta-badge::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        background: var(--grad-from);
+        border-radius: 50%;
+      }
+
+      /* ============ Title block ============ */
+      .title-block {
+        margin-top: 20px;
+        flex: 0 0 auto;
+      }
+      .eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--grad-from);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .post-title {
+        font-family: 'Fraunces', Georgia, serif;
+        font-weight: 500;
+        font-variation-settings: "SOFT" 80, "opsz" 96;
+        font-size: 58px;
+        line-height: 1.02;
+        letter-spacing: -0.018em;
+        color: var(--ink);
+      }
+      .post-title .emph {
+        font-style: italic;
+        color: var(--grad-from);
+      }
+      .post-sub {
+        font-family: 'Inter', sans-serif;
+        font-size: 17px;
+        line-height: 1.45;
+        color: var(--muted);
+        margin-top: 12px;
+        max-width: 820px;
+      }
+
+      /* ============ Chart stage ============ */
+      .chart-wrap {
+        flex: 1 1 auto;
+        margin-top: 18px;
+        min-height: 0;
+        position: relative;
+      }
+      .chart-svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      /* ============ Verdict ============ */
+      .verdict {
+        margin-top: 14px;
+        padding: 16px 22px;
+        background: var(--ink);
+        color: var(--white);
+        border-radius: 12px;
+        font-family: 'Fraunces', Georgia, serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 1.35;
+        flex: 0 0 auto;
+      }
+      .verdict .label {
+        display: inline-block;
+        font-family: 'Inter', sans-serif;
+        font-style: normal;
+        font-weight: 800;
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--grad-from);
+        margin-right: 12px;
+        vertical-align: middle;
+      }
+
+      /* ============ Footer ============ */
+      .footer-rule {
+        height: 1px;
+        background: var(--rule);
+        margin-top: 14px;
+        flex: 0 0 auto;
+      }
+      .footer {
+        padding-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Inter', sans-serif;
+        font-size: 12.5px;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        flex: 0 0 auto;
+      }
+      .footer .author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .author-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--grad-from);
+        border-radius: 50%;
+      }
+      .footer .url { font-weight: 600; color: var(--ink); }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="1"
+      data-width="1080"
+      data-height="1350"
+    >
+      <div class="frame">
+        <div class="interior">
+
+          <!-- Top bar -->
+          <div class="top-bar">
+            <img class="kiln-lockup" src="assets/kiln-lockup-black.png" alt="The Kiln">
+            <div class="meta-badge">Field Notes · 2026</div>
+          </div>
+
+          <!-- Title -->
+          <div class="title-block">
+            <div class="eyebrow">Patrick's take · CRM strategy</div>
+            <h1 class="post-title">AI-first CRMs hit a<br><em class="emph">Series B wall</em></h1>
+            <p class="post-sub">What the new-wave CRMs nail at seed. What breaks when you actually need to scale.</p>
+          </div>
+
+          <!-- Chart: structured SVG.
+               Coordinate system is the chart grid. Every label, gridline, line, and logo placement
+               is computed from the same coordinate origin. -->
+          <div class="chart-wrap">
+            <svg class="chart-svg" viewBox="0 0 980 540" preserveAspectRatio="xMidYMid meet">
+              <!-- ====== Chart geometry ======
+                   Plot area: x = 130 to 940 (810 wide)
+                              y = 30  to 440 (410 tall)
+                   X-axis ticks (5 stages): evenly spaced at 130, 332, 535, 737, 940
+                   Y-axis ticks (5 capability tiers): at y = 440, 358, 276, 194, 112, 30
+                   The wall sits between Series A (x=332) and Series B (x=535), centered around x=535
+              -->
+
+              <defs>
+                <!-- Soft fill behind the survive line -->
+                <linearGradient id="survive-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"  stop-color="#818CF8" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#818CF8" stop-opacity="0.0"/>
+                </linearGradient>
+                <!-- Fail line dashed pattern symbolism -->
+                <pattern id="wall-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="6" stroke="#FB923C" stroke-width="3" stroke-opacity="0.22"/>
+                </pattern>
+              </defs>
+
+              <!-- Plot area frame (subtle) -->
+              <rect x="130" y="30" width="810" height="410" fill="#FFFFFF" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+
+              <!-- Horizontal gridlines (y axis capability tiers) -->
+              <line x1="130" y1="440" x2="940" y2="440" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+              <line x1="130" y1="358" x2="940" y2="358" stroke="rgba(0,0,0,0.06)" stroke-width="1" stroke-dasharray="2 4"/>
+              <line x1="130" y1="276" x2="940" y2="276" stroke="rgba(0,0,0,0.06)" stroke-width="1" stroke-dasharray="2 4"/>
+              <line x1="130" y1="194" x2="940" y2="194" stroke="rgba(0,0,0,0.06)" stroke-width="1" stroke-dasharray="2 4"/>
+              <line x1="130" y1="112" x2="940" y2="112" stroke="rgba(0,0,0,0.06)" stroke-width="1" stroke-dasharray="2 4"/>
+
+              <!-- Y-axis capability tier labels (right-aligned to x=120, vertically centered on each gridline) -->
+              <g font-family="Inter, sans-serif" fill="#6e685e" text-anchor="end">
+                <text x="120" y="444" font-size="13" font-weight="600">Contacts + companies</text>
+                <text x="120" y="362" font-size="13" font-weight="600">Sequences + workflows</text>
+                <text x="120" y="280" font-size="13" font-weight="600">Custom views + reports</text>
+                <text x="120" y="198" font-size="13" font-weight="600">Hierarchy + custom objects</text>
+                <text x="120" y="116" font-size="13" font-weight="600">Routing + permissions</text>
+              </g>
+
+              <!-- Y-axis section header -->
+              <text x="130" y="18" font-family="Inter, sans-serif" font-size="10" font-weight="800" fill="#9c958a" letter-spacing="2">CAPABILITY NEEDED ↑</text>
+
+              <!-- ============ The Wall ============
+                   A vertical highlighted band at x=535 (the Series B tick),
+                   spanning above the AI-first line's stopping point. -->
+              <rect x="525" y="30" width="20" height="190" fill="url(#wall-hatch)"/>
+              <line x1="535" y1="30"  x2="535" y2="220" stroke="#FB923C" stroke-width="2.5" stroke-dasharray="4 4"/>
+              <line x1="535" y1="220" x2="535" y2="240" stroke="#FB923C" stroke-width="2.5"/>
+
+              <!-- "SERIES B WALL" floating label, near the top of the wall band -->
+              <g transform="translate(545, 56)">
+                <rect x="0" y="-18" width="156" height="32" rx="6" fill="#0a0a0a"/>
+                <text x="12" y="3" font-family="Inter, sans-serif" font-size="10.5" font-weight="800" fill="#FB923C" letter-spacing="1.6">SERIES B WALL</text>
+                <line x1="0" y1="9" x2="156" y2="9" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                <text x="12" y="22" font-family="Inter, sans-serif" font-size="9.5" font-weight="500" fill="#ECE5D3">Where new tools stop scaling</text>
+              </g>
+
+              <!-- ============ Survive line (Established CRMs) ============
+                   Smooth curve from Seed (130, 425) to IPO (940, 50).
+                   Faint fill below the line. -->
+              <path d="M 130 425 Q 230 380 332 320 T 535 195 T 737 105 L 940 60 L 940 440 L 130 440 Z"
+                    fill="url(#survive-fill)" stroke="none"/>
+              <path d="M 130 425 Q 230 380 332 320 T 535 195 T 737 105 L 940 60"
+                    stroke="#4F46E5" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <!-- Survive line data points -->
+              <g>
+                <circle cx="130" cy="425" r="5" fill="#4F46E5" stroke="#fff" stroke-width="2"/>
+                <circle cx="332" cy="320" r="5" fill="#4F46E5" stroke="#fff" stroke-width="2"/>
+                <circle cx="535" cy="195" r="5" fill="#4F46E5" stroke="#fff" stroke-width="2"/>
+                <circle cx="737" cy="105" r="5" fill="#4F46E5" stroke="#fff" stroke-width="2"/>
+                <circle cx="940" cy="60"  r="6" fill="#4F46E5" stroke="#fff" stroke-width="2"/>
+              </g>
+
+              <!-- ============ Fail line (AI-first CRMs) ============
+                   Rises through Seed and Series A, hits the wall at Series B.
+                   After Series B, dashed flat line shows it stopped scaling. -->
+              <path d="M 130 425 Q 230 395 332 340 T 525 240"
+                    stroke="#B45309" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Crashed line after the wall: dashed/faded to show it failed -->
+              <path d="M 545 240 L 940 240"
+                    stroke="#B45309" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="3 7" opacity="0.45"/>
+
+              <!-- Fail line data points -->
+              <g>
+                <circle cx="130" cy="425" r="5" fill="#B45309" stroke="#fff" stroke-width="2"/>
+                <circle cx="332" cy="340" r="5" fill="#B45309" stroke="#fff" stroke-width="2"/>
+                <circle cx="525" cy="240" r="7" fill="#B45309" stroke="#fff" stroke-width="2.5"/>
+                <!-- An "X" at the crash point to emphasize the wall -->
+                <g transform="translate(525, 240)" stroke="#fff" stroke-width="2" stroke-linecap="round">
+                  <line x1="-3" y1="-3" x2="3" y2="3"/>
+                  <line x1="-3" y1="3"  x2="3" y2="-3"/>
+                </g>
+              </g>
+
+              <!-- ============ Tool logos at endpoints ============ -->
+
+              <!-- AI-first endpoint cluster (near x=525, y=240) -->
+              <g transform="translate(420, 250)">
+                <rect x="0" y="0" width="98" height="56" rx="8" fill="#FFFFFF" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+                <text x="49" y="14" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" font-weight="800" fill="#9c958a" letter-spacing="1.4">STOPS HERE</text>
+                <image href="assets/logos/attio-icon.png" x="14" y="22" width="26" height="26"/>
+                <image href="assets/logos/folk-icon.png"  x="58" y="22" width="26" height="26"/>
+              </g>
+
+              <!-- Established endpoint cluster (near x=940, y=60) -->
+              <g transform="translate(820, 18)">
+                <rect x="0" y="0" width="118" height="64" rx="8" fill="#FFFFFF" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+                <text x="59" y="15" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" font-weight="800" fill="#9c958a" letter-spacing="1.4">SCALES TO IPO</text>
+                <image href="assets/logos/salesforce-icon.png" x="14" y="24" width="32" height="32"/>
+                <image href="assets/logos/hubspot-icon.png"    x="68" y="24" width="32" height="32"/>
+              </g>
+
+              <!-- ============ X-axis ticks + stage labels ============ -->
+              <g font-family="Inter, sans-serif">
+                <!-- Tick marks -->
+                <line x1="130" y1="440" x2="130" y2="448" stroke="#6e685e" stroke-width="1"/>
+                <line x1="332" y1="440" x2="332" y2="448" stroke="#6e685e" stroke-width="1"/>
+                <line x1="535" y1="440" x2="535" y2="448" stroke="#FB923C" stroke-width="2"/>
+                <line x1="737" y1="440" x2="737" y2="448" stroke="#6e685e" stroke-width="1"/>
+                <line x1="940" y1="440" x2="940" y2="448" stroke="#6e685e" stroke-width="1"/>
+
+                <!-- Stage labels -->
+                <g font-size="13" font-weight="700" fill="#0a0a0a" text-anchor="middle">
+                  <text x="130" y="468">Seed</text>
+                  <text x="332" y="468">Series A</text>
+                  <text x="535" y="468" fill="#B45309">Series B</text>
+                  <text x="737" y="468">Series C</text>
+                  <text x="940" y="468">IPO</text>
+                </g>
+
+                <!-- Stage range subtext -->
+                <g font-size="9.5" font-weight="500" fill="#9c958a" text-anchor="middle">
+                  <text x="130" y="484">~$0-2M ARR</text>
+                  <text x="332" y="484">~$2-10M</text>
+                  <text x="535" y="484" fill="#B45309" font-weight="700">~$10-30M ARR</text>
+                  <text x="737" y="484">~$30-100M</text>
+                  <text x="940" y="484">$100M+</text>
+                </g>
+              </g>
+
+              <!-- X-axis section header (left, with arrow) -->
+              <text x="130" y="510" font-family="Inter, sans-serif" font-size="10" font-weight="800" fill="#9c958a" letter-spacing="2">COMPANY STAGE →</text>
+
+              <!-- ============ Inline line legend below the chart, centered ============ -->
+              <g transform="translate(330, 524)" font-family="Inter, sans-serif">
+                <!-- Survive entry -->
+                <line x1="0"  y1="0" x2="22" y2="0" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="11" cy="0" r="3.5" fill="#4F46E5" stroke="#fff" stroke-width="1.5"/>
+                <text x="30" y="4" font-size="11.5" font-weight="700" fill="#0a0a0a">Established CRMs</text>
+
+                <!-- Separator -->
+                <text x="160" y="4" font-size="11.5" fill="#9c958a">·</text>
+
+                <!-- Fail entry -->
+                <line x1="170" y1="0" x2="192" y2="0" stroke="#B45309" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 3"/>
+                <circle cx="181" cy="0" r="3.5" fill="#B45309" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="4" font-size="11.5" font-weight="700" fill="#0a0a0a">AI-first CRMs</text>
+              </g>
+
+            </svg>
+          </div>
+
+          <!-- Verdict -->
+          <div class="verdict">
+            <span class="label">My rule</span>Sub-Series A, try the new tool. Past that, just go HubSpot or Salesforce and skip the migration pain.
+          </div>
+
+          <!-- Footer -->
+          <div class="footer-rule"></div>
+          <div class="footer">
+            <div class="author">
+              <span class="author-dot"></span>
+              <span>Patrick Spychalski</span>
+            </div>
+            <span class="url">thekiln.com</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

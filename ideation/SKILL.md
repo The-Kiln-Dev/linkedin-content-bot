@@ -127,11 +127,13 @@ Structure:
 
 <1–2 sentences naming the opinion marker, the specific anchor (named tool, named team member, dollar amount), or the voice move that makes it distinctly his rather than a generic GTM-blog post.>
 
-**Format:** <carousel / info-card / GIF / not-sure-yet> — <one-line reasoning>
+**Asset type:** <tabular | thematic> — <one-line reasoning>
+**Format:** <carousel / info-card / freeform / GIF / not-sure-yet> — <one-line reasoning>
 
 **Structure:**
-- <if carousel: slide-by-slide outline (cover + content slides + CTA)>
-- <if info-card: section types and what each contains>
+- <if tabular carousel: slide-by-slide outline (cover + content slides + CTA)>
+- <if tabular info-card: section types and what each contains>
+- <if thematic freeform: the metaphor + the geometry sketch (what's the X/Y reference, what are the structural elements, what are the anchor points)>
 - <if GIF: the single visual beat>
 
 **Source:** <meeting title>, <YYYY-MM-DD>, with <participant first names>
@@ -152,7 +154,8 @@ Structure:
 
 <1–2 sentences naming the opinion marker / voice anchor.>
 
-**Format:** <carousel / info-card / GIF / not-sure-yet> — <reasoning>
+**Asset type:** <tabular | thematic> — <one-line reasoning>
+**Format:** <carousel / info-card / freeform / GIF / not-sure-yet> — <reasoning>
 
 **Structure:**
 - <outline appropriate to format>
@@ -176,7 +179,8 @@ Structure:
 
 <1–2 sentences naming the opinion marker / voice anchor.>
 
-**Format:** <carousel / info-card / GIF / not-sure-yet> — <reasoning>
+**Asset type:** <tabular | thematic> — <one-line reasoning>
+**Format:** <carousel / info-card / freeform / GIF / not-sure-yet> — <reasoning>
 
 **Structure:**
 - <outline appropriate to format>
@@ -185,6 +189,17 @@ Structure:
 **Citation:** <article headline> — <url>
 **Compliance note:** Public news, no abstraction required. Verify the URL and any quoted stats before posting.
 ```
+
+### Classifying tabular vs thematic
+
+For every idea, decide which asset type fits before writing the structure:
+
+- **Tabular** — content is a list of N principles, rows of comparisons, or a cheat sheet. The post is "here's a clean list." Route to `templates/exploration/carousel/` (multi-slide) or `templates/exploration/info-card/` (single dense card).
+- **Thematic** — content has a visual metaphor that conveys the argument. The graphic IS the canvas, structured by the metaphor. Route to `templates/freeform/`. **Read `templates/freeform/design.md` BEFORE composing** — it captures hard-won rules.
+
+**Heuristic:** if the post's title/hook contains a concrete physical thing (wall, iceberg, ladder, map, river, factory, foundation, ceiling, bridge, gate, pyramid, chart), it's almost certainly thematic. If the post is "N tips/principles/learnings" or a roundup, it's tabular. When in doubt, thematic produces a stronger LinkedIn asset — but only if you can name the geometry up front.
+
+If you mark an idea **thematic**, the `Structure` field must include the geometry sketch (what's the X/Y reference, what are the structural elements, what are the anchor points). If you can't articulate the geometry, the idea isn't ready for thematic treatment — fall back to tabular.
 
 If a group is empty (e.g. no news items had angles worth surfacing this run), omit that section entirely rather than showing a heading with nothing under it.
 
@@ -204,16 +219,19 @@ After the chat summary, ask the user two questions:
 
 1. **Which idea do you want to act on?** Reference by title or hook.
 2. **Do you want me to write the post, or give you a longer treatment so you can write it yourself?**
-   - **"Write the post"** → produce the LinkedIn caption (following voice rules) AND the JSON input file for the chosen format AND run the appropriate generator (`templates/exploration/carousel/generate.js`, `templates/exploration/info-card/generate.js`, or for GIFs hand off to the HyperFrames skill).
+   - **"Write the post"** → produce the LinkedIn caption (following voice rules) AND the asset. Route based on the idea's classified Asset type:
+     - **Tabular** → JSON input + run `templates/exploration/info-card/generate.js` or `templates/exploration/carousel/generate.js`
+     - **Thematic** → custom SVG composition in `templates/freeform/index.html` + `npx hyperframes snapshot --at 0`. **READ `templates/freeform/design.md` FIRST** — non-negotiables are in there.
+     - **GIF** → hand off to the HyperFrames skill
    - **"Describe it more"** → expand the argument section into 4–6 paragraphs with reasoning + examples + possible objections + 2–3 alternative hooks + 2–3 alternative format approaches. Stop short of writing the post itself.
 
 Wait for the user's answer. Don't generate the post unprompted.
 
 If they pick "write the post":
 - Generate the LinkedIn caption first (200–400 words typically, depending on idea density)
-- Generate the JSON input for the chosen visual asset, following the schema in `templates/exploration/<format>/inputs/*.json`
-- For carousels with concept-specific doodles needed, also call `lib/gen-doodle.js` to generate them
-- Run the generator
+- For **tabular**: generate the JSON input for the chosen visual asset, following the schema in `templates/exploration/<format>/inputs/*.json`. For carousels with concept-specific doodles needed, also call `lib/gen-doodle.js` per slide.
+- For **thematic**: build the custom SVG composition. Define the geometry first (per `templates/freeform/design.md`), then anchor every text/logo to that geometry. Source brand logos via the strategies in `design.md` (Google favicon → subdomain hits → Wikipedia → gilbarbara). Use Recraft API sparingly — only when the metaphor genuinely benefits from atmospheric/painterly treatment (most don't).
+- Run the generator / snapshot
 - Show the user the rendered output and the caption together
 
 If they pick "describe it more":
@@ -228,18 +246,21 @@ This step is triggered when the user returns with a finished LinkedIn post — e
 
 The flow:
 
-1. **Read the post.** Identify its shape:
-   - Single declarative statement, one beat → likely **GIF** or single info-card
-   - List of N points with explanations → likely **carousel** (one slide per point)
-   - Dense stats / comparisons / benchmarks → likely **info-card**
-   - Story / narrative with one central insight → likely **GIF** or single info-card
+1. **Read the post.** Identify its shape AND whether it's tabular or thematic:
+   - **Thematic** — contains a concrete physical metaphor (wall, iceberg, pyramid, ladder, river, map, etc.) that the visual should embody → `templates/freeform/`
+   - **Tabular, single dense card** — dense stats / comparisons / benchmarks, no central metaphor → **info-card**
+   - **Tabular, multi-slide narrative** — list of N points with explanations → **carousel** (one slide per point)
+   - **Single beat, motion benefits** → **GIF**
+   - **Story / narrative with one central insight** → likely **GIF** or single info-card
 
 2. **Confirm or infer the format.**
    - If you had recommended a format in Step 4 for the same idea, default to that.
    - If the post diverges significantly from the original idea, re-assess based on the post's actual shape.
-   - Surface your inference to the user briefly ("This reads like a 4-slide carousel — confirm or pick a different format?"). Wait for confirmation if there's ambiguity. Don't wait if it's obvious.
+   - Surface your inference to the user briefly ("This reads like a thematic post with a wall metaphor — going to build a custom diagram in `templates/freeform/`. Sound right?"). Wait for confirmation if there's ambiguity. Don't wait if it's obvious.
 
-3. **Build the JSON input.** Construct the input file for the chosen generator (`templates/exploration/carousel/`, `templates/exploration/info-card/`, or handoff to HyperFrames for animations). Use the post's actual phrasing in the JSON — don't paraphrase. The italic-emphasis hook from the post becomes the cover-slide title; the body points become content slides; the final line becomes the CTA hook.
+3. **Build the asset.**
+   - **For tabular** (info-card / carousel): construct the JSON input following the schema in `templates/exploration/<format>/inputs/*.json`. Use the post's actual phrasing — don't paraphrase. Italic-emphasis hook from the post becomes the cover-slide title; body points become content slides; final line becomes the CTA hook.
+   - **For thematic** (freeform): read `templates/freeform/design.md` FIRST. Then sketch the geometry, build the SVG diagram, anchor every text/logo to its coordinates. Source brand logos via the strategies in `design.md`. Use Recraft sparingly. Iterate via `npx hyperframes snapshot --at 0` until tight.
 
 4. **Generate concept-specific doodles if needed.** If the chosen format is a carousel and the deck has slides that need doodles the brand inventory doesn't cover, call `templates/exploration/carousel/lib/gen-doodle.js` per slide with a content-matched concept.
 

@@ -26,10 +26,25 @@ Style files inform the *voice* of generated content; they're not the content sou
 
 Follow Steps 7 and 8 of `ideation/SKILL.md`. After the user picks an idea, they'll say either:
 
-- **"Write the post"** → you generate the LinkedIn caption + the JSON input + run the appropriate generator (`templates/exploration/carousel/`, `templates/exploration/info-card/`, or hand off to HyperFrames). You deliver the rendered asset and the caption together.
+- **"Write the post"** → you generate the LinkedIn caption + the asset. Route the asset to the right generator based on whether the idea is **tabular** or **thematic** (see below).
 - **"Describe it more"** → you give a longer treatment (argument expanded, alternative hooks, alternative format approaches), the user writes the post offline, and they return with finished text. At that point, Step 8 takes their text and generates the asset.
 
-If the asset generator's validator fails (info-card content overflow, etc.), **restructure content to preserve information before dropping anything**. Try in order: compress copy → change column count → reformat section types → merge related sections. Only as a last resort drop content, and only with explicit user consent. The information is the point; the layout bends to fit it.
+### Tabular vs thematic routing
+
+For each post-asset generation, classify the idea first:
+
+- **Tabular** → content is a list of N principles, rows of comparisons, or a cheat sheet. The post is "here's a clean list."
+  - **Route to:** `templates/exploration/info-card/` (or `templates/exploration/carousel/` for multi-slide narratives)
+  - These are template generators: JSON in → PNG out
+
+- **Thematic** → content has a visual metaphor that conveys the argument (plumbing → pipes, iceberg → depth, wall → barrier, hub → control center, chart → growth-over-time). The post is "here's a thing you have to see." The graphic IS the canvas — its structure dictated by the metaphor.
+  - **Route to:** `templates/freeform/`
+  - Read `templates/freeform/design.md` BEFORE starting — it contains non-negotiables that took a lot of iteration to settle, plus a worked example.
+  - Critical principle: **build the metaphor's geometry in SVG first, then anchor every text/logo to that geometry** (never freehand HTML percentages).
+
+**Default heuristic:** if the post's title/hook contains a concrete physical thing (wall, iceberg, ladder, map, river, factory, foundation, ceiling, bridge, gate), it's probably thematic. If the post is "N tips for X" or "M things I learned", it's tabular. When in doubt, thematic produces a stronger LinkedIn asset.
+
+If the info-card validator fails (content overflow, etc.), **restructure content to preserve information before dropping anything**. Try in order: compress copy → change column count → reformat section types → merge related sections. Only as a last resort drop content, and only with explicit user consent. The information is the point; the layout bends to fit it.
 
 ## Voice rules (apply to every generated piece)
 
@@ -43,28 +58,36 @@ Per `voice/voice.md` and the top-level README. Non-negotiable across all output:
 
 ## Brand direction
 
-Carousels and info-cards default to the **exploration** direction (gradient frame + topographic texture, Fraunces italic-emphasis, cream/white panels, single-accent discipline). Per-format defaults live in `brand/README.md` — that file is the source of truth.
+Carousels, info-cards, AND freeform thematic compositions default to the **exploration** direction (gradient frame + topographic texture, Fraunces italic-emphasis, cream interior, single-accent discipline). Per-format defaults live in `brand/README.md`.
 
-The visual language across both generators is locked: same gradient frame, same Fraunces serif, same italic-emphasis-on-key-phrase pattern, same single-accent-color rule. Don't deviate from these in generated assets.
+The visual language across ALL generators is locked: same gradient frame, same Fraunces serif, same italic-emphasis-on-key-phrase pattern, same single-accent-color rule. Don't deviate. In particular, when building a freeform thematic asset, do NOT copy other creators' aesthetics wholesale (dark space backgrounds, bold sans-serif titles, etc.) — adapt structural patterns from elsewhere but always render in the Kiln's exploration brand.
+
+**No chrome on any generated asset:** no "Patrick's take" eyebrow, no "Field Notes · 2026" meta-badge in the top-right, no "My Rule" verdict bar at the bottom, no "Illustration · Recraft" credits, no patronizing captions. Keep only: Kiln lockup, title, subtitle, the diagram itself, footer with author + URL. The visual should carry the conclusion; if it can't, the visual isn't doing its job.
 
 ## Repo orientation
 
 ```
 ideation/                      ← Content idea generation (the entry point)
-  SKILL.md                     ← The flow Claude follows
+  SKILL.md                     ← The flow Claude follows (classifies tabular vs thematic)
   prompts/                     ← Internal-call / external-call / news extraction prompts
   config/allowed-tools.json    ← Whitelist of company/tool names allowed in abstracted output
 
 templates/
-  exploration/carousel/        ← Multi-slide PNG generator (default for carousels)
+  exploration/carousel/        ← Multi-slide PNG generator (default for tabular carousels)
   exploration/info-card/       ← Single dense PNG generator (with validateInput pre-flight)
+                                 — for tabular cheat-sheet / comparison-row content
+  freeform/                    ← Custom SVG composition system for THEMATIC posts
+                                 — the graphic IS the canvas, structured by a metaphor
+                                 — design.md inside has full workflow + non-negotiables
   legacy/carousel/             ← Alternate b&w direction (not default; explicit opt-in)
 
-animations/                    ← HyperFrames GIF/MP4 (separate workflow)
+animations/                    ← HyperFrames GIF/MP4 (separate workflow, for animated assets)
 
-brand/                         ← Visual language rules
+brand/                         ← Visual language rules (exploration + legacy directions)
 voice/                         ← Style + tone references (NOT idea sources)
 drafts/                        ← In-progress Patrick-authored drafts
 ```
 
 The whole user-facing flow is one folder (`ideation/`) and two messages: ask for ideas, then say "write the post for idea N".
+
+**For thematic posts, read `templates/freeform/design.md` before composing anything.** It captures hard-won rules about geometry-first placement, brand discipline, and what NOT to include. Skipping it re-introduces failure modes.

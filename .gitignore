@@ -21,6 +21,16 @@ templates/exploration/info-card/output/
 templates/legacy/carousel/output/
 **/.tmp-render*.html
 
+# Freeform composition transient state
+# - snapshots/ is HyperFrames' working dir (rewritten each `hyperframes snapshot`)
+# - output/ contains the per-post finals (tracked — they're the deliverables)
+# - iterations/ keeps per-round artifacts locally; we only commit the final HTML
+#   snapshots (useful as a template library), not the per-round PNGs (too heavy)
+# - cached brand logos in assets/logos/ are tracked so we don't re-fetch every run
+templates/freeform/snapshots/
+templates/freeform/.tmp-*
+templates/freeform/iterations/*.png
+
 # Ideation outputs are per-user, per-run — personal artifacts, not repo content
 ideation/output/*
 !ideation/output/.gitkeep
