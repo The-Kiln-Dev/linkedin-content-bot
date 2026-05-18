@@ -1,0 +1,40 @@
+{
+  "canvas": { "width": 1080, "height": 1350 },
+  "gradient_variant": "orange_indigo",
+  "header": {
+    "title_roman": "Most 'GTM automation'",
+    "title_italic": "is plumbing",
+    "subtitle": "The work nobody scopes. The part that decides if any of it works."
+  },
+  "sections": [
+    {
+      "type": "stat-grid",
+      "number": 1,
+      "title_roman": "The split every",
+      "title_italic": "SOW gets wrong",
+      "columns": 2,
+      "items": [
+        { "n": 1, "title": "What gets pitched", "body": "The campaign build. The shiny Clay table. The agent. The dashboard." },
+        { "n": 2, "title": "What actually matters", "body": "The plumbing underneath. The wiring that decides if anything lands." }
+      ]
+    },
+    {
+      "type": "stat-grid",
+      "number": 2,
+      "title_roman": "What the plumbing",
+      "title_italic": "actually covers",
+      "columns": 2,
+      "items": [
+        { "n": 1, "title": "CRM field architecture", "body": "Parent-child rules, dedup logic, undocumented custom objects from 3 years ago." },
+        { "n": 2, "title": "Sequencer connectivity", "body": "Mailbox config, warmup pools, unsubscribes, deliverability hygiene." },
+        { "n": 3, "title": "Write-back rules", "body": "Where data lands, what format, who owns the field, what happens on conflict." },
+        { "n": 4, "title": "Identity resolution", "body": "Matching across Salesforce, HubSpot, and the warehouse when half the emails are stale." }
+      ]
+    }
+  ],
+  "doodle": "curl-cluster.png",
+  "footer": {
+    "left": "Patrick Spychalski",
+    "right": "thekiln.com"
+  }
+}
