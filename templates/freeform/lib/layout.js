@@ -276,42 +276,142 @@
 
   /** After all placement, iterate the registry and confirm each text's rendered
    *  bbox fits inside its shape's bounds at that y. Logs warnings for overflows.
-   *  Returns { placed, overflows } counts. */
-  function validate() {
+   *  Returns { placed, overflows, details } where details is an array of every
+   *  text element's check result (useful for debug overlay rendering). */
+  /** Validate placed text fits its shape.
+   *  opts.margin: tolerance for strict mathematical overflow (default 0.5px)
+   *  opts.aestheticPadding: minimum visual breathing room required between
+   *      text edge and shape edge (default 0; pass e.g. 18 to flag text
+   *      that fits the curve but visually crowds it).
+   *  Returns { placed, overflows, details }. */
+  function validate(opts) {
+    opts = opts || {};
+    const margin = opts.margin || 0.5;
+    const aestheticPadding = opts.aestheticPadding || 0;
+    const details = [];
     let overflows = 0;
     for (const entry of registry) {
       try {
         const bbox = entry.el.getBBox();
         const bounds = entry.shape.boundsAtY(entry.y);
         if (!bounds) {
-          console.warn(`[layout-validate] "${entry.line}" — no bounds at y=${entry.y}`);
+          details.push({ ...entry, status: 'no-bounds', bbox });
           overflows++;
+          console.warn(`[layout-validate] "${entry.line}" — no bounds at y=${entry.y}`);
           continue;
         }
-        // bbox.x is the leftmost render position; bbox.x + bbox.width is rightmost
         const leftEdge  = bbox.x;
         const rightEdge = bbox.x + bbox.width;
-        if (leftEdge < bounds.left - 0.5 || rightEdge > bounds.right + 0.5) {
+        // Hard math overflow
+        const leftOverHard  = leftEdge  < bounds.left  - margin;
+        const rightOverHard = rightEdge > bounds.right + margin;
+        // Aesthetic crowding (within padding distance of the edge)
+        const leftCrowd  = leftEdge  < bounds.left  + aestheticPadding;
+        const rightCrowd = rightEdge > bounds.right - aestheticPadding;
+        const leftOver  = leftOverHard  || leftCrowd;
+        const rightOver = rightOverHard || rightCrowd;
+        const overflow  = leftOver || rightOver;
+        const slack = {
+          left:  leftEdge  - bounds.left,
+          right: bounds.right - rightEdge,
+        };
+        details.push({
+          line: entry.line, label: entry.label, y: entry.y,
+          bbox: { x: leftEdge, width: bbox.width, right: rightEdge },
+          bounds, overflow, leftOver, rightOver, leftOverHard, rightOverHard, slack,
+        });
+        if (overflow) {
+          overflows++;
           console.warn(
-            `[layout-validate] OVERFLOW: "${entry.line}"` +
+            `[layout-validate] ${leftOverHard||rightOverHard ? 'OVERFLOW' : 'CROWDING'}: "${entry.line}"` +
             (entry.label ? ` (in ${entry.label})` : '') +
             ` rendered at [${leftEdge.toFixed(1)}, ${rightEdge.toFixed(1)}]` +
-            ` but shape bounds at y=${entry.y} are [${bounds.left.toFixed(1)}, ${bounds.right.toFixed(1)}]`
+            ` slack [L:${slack.left.toFixed(1)}, R:${slack.right.toFixed(1)}]` +
+            ` (need ${aestheticPadding}px)`
           );
-          overflows++;
         }
       } catch (e) {
         // getBBox can fail off-DOM; skip silently
       }
     }
-    console.log(`[layout-validate] ${registry.length} text elements checked, ${overflows} overflows`);
-    return { placed: registry.length, overflows };
+    console.log(`[layout-validate] ${registry.length} text elements checked, ${overflows} overflows (aestheticPadding=${aestheticPadding}px)`);
+    return { placed: registry.length, overflows, details };
+  }
+
+  /** Render a debug overlay into the given SVG: dashed rectangles for each
+   *  placed text's bbox (green if it fits its shape, red if it overflows).
+   *  Use during development to verify placement visually in the snapshot. */
+  function drawDebug(svgRoot, opts) {
+    const result = validate(opts);
+    for (const d of result.details) {
+      if (!d.bounds || !d.bbox) continue;
+      const r = document.createElementNS(SVG_NS, 'rect');
+      r.setAttribute('x', d.bbox.x);
+      r.setAttribute('y', d.y - 14);
+      r.setAttribute('width',  d.bbox.width);
+      r.setAttribute('height', 18);
+      r.setAttribute('fill', 'none');
+      r.setAttribute('stroke', d.overflow ? '#ef4444' : '#10b981');
+      r.setAttribute('stroke-width', '1');
+      r.setAttribute('stroke-dasharray', '2 2');
+      svgRoot.appendChild(r);
+
+      // Also draw the shape bounds at this y as a thicker line
+      const line = document.createElementNS(SVG_NS, 'line');
+      line.setAttribute('x1', d.bounds.left);
+      line.setAttribute('y1', d.y + 6);
+      line.setAttribute('x2', d.bounds.right);
+      line.setAttribute('y2', d.y + 6);
+      line.setAttribute('stroke', d.overflow ? '#ef4444' : '#10b981');
+      line.setAttribute('stroke-width', '1.5');
+      line.setAttribute('opacity', '0.5');
+      svgRoot.appendChild(line);
+    }
+    // Summary + list of overflows — drawn LARGE on a white panel so it's
+    // readable in the snapshot. Comment out drawDebug for production renders.
+    const panel = document.createElementNS(SVG_NS, 'rect');
+    panel.setAttribute('x', 0);
+    panel.setAttribute('y', 0);
+    panel.setAttribute('width', 980);
+    panel.setAttribute('height', 14 + 30 + result.details.filter(d => d.overflow).length * 26);
+    panel.setAttribute('fill', '#ffffff');
+    panel.setAttribute('opacity', '0.95');
+    svgRoot.insertBefore(panel, svgRoot.firstChild);
+
+    const t = document.createElementNS(SVG_NS, 'text');
+    t.setAttribute('x', 12);
+    t.setAttribute('y', 30);
+    t.setAttribute('font-family', 'monospace');
+    t.setAttribute('font-size', '20');
+    t.setAttribute('font-weight', '700');
+    t.setAttribute('fill', result.overflows > 0 ? '#ef4444' : '#10b981');
+    t.textContent = `[layout debug] ${result.placed} placed, ${result.overflows} overflow`;
+    svgRoot.appendChild(t);
+
+    let row = 0;
+    for (const d of result.details) {
+      if (!d.overflow) continue;
+      const l = document.createElementNS(SVG_NS, 'text');
+      l.setAttribute('x', 12);
+      l.setAttribute('y', 56 + row * 26);
+      l.setAttribute('font-family', 'monospace');
+      l.setAttribute('font-size', '17');
+      l.setAttribute('fill', '#ef4444');
+      const dir = d.leftOver && d.rightOver ? 'BOTH' : (d.leftOver ? 'LEFT' : 'RIGHT');
+      const overshoot = d.leftOver
+        ? (d.bounds.left - d.bbox.x).toFixed(0)
+        : (d.bbox.right - d.bounds.right).toFixed(0);
+      l.textContent = `${dir} +${overshoot}px @y${d.y}: "${d.line.slice(0, 36)}"`;
+      svgRoot.appendChild(l);
+      row++;
+    }
+    return result;
   }
 
   function clearRegistry() { registry.length = 0; }
 
   global.Layout = {
     Circle, Pocket, Intersection, Trapezoid, Rect, Sector,
-    placeText, placeLine, validate, clearRegistry, registry,
+    placeText, placeLine, validate, drawDebug, clearRegistry, registry,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

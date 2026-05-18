@@ -263,11 +263,12 @@
       // ============ Lens / overlap (the seam — hybrid architecture) ============
       // The dark chip + "THE SEAM" label live above the lens region (rendered as static SVG).
       // The text inside the lens goes here, anchored to the lens' centroid at each row.
+      // Tuned to fit with 18px aesthetic padding inside a max ~190px-wide lens.
       Layout.placeText(SVG, lens, [
         'Hybrid',
         'architecture',
       ], {
-        centerY: 462, lineHeight: 26, fontSize: 22, fontWeight: 500,
+        centerY: 468, lineHeight: 24, fontSize: 19, fontWeight: 500,
         fontFamily: 'Fraunces, Georgia, serif', fill: '#0a0a0a',
         label: 'lens-headline',
       });
@@ -275,18 +276,13 @@
         'Claude orchestrates',
         'Clay executes',
       ], {
-        centerY: 522, lineHeight: 17, fontSize: 11.5, fontWeight: 600,
+        centerY: 528, lineHeight: 18, fontSize: 11.5, fontWeight: 600,
         fill: '#2a2620', label: 'lens-sub',
       });
-      Layout.placeText(SVG, lens, [
-        'WHERE WINS LIVE',
-      ], {
-        centerY: 562, lineHeight: 14, fontSize: 10.5, fontWeight: 800,
-        fill: '#B45309', letterSpacing: '1.8', label: 'lens-eyebrow',
-      });
 
-      // Run validation after all placement — logs any text that overflows its shape.
-      Layout.validate();
+      // Validate that all placed text fits its shape with 18px aesthetic breathing room.
+      // Warnings (if any) go to the browser console; the snapshot stays clean.
+      Layout.validate({ aestheticPadding: 18 });
 
       // HyperFrames contract: empty paused timeline.
       window.__timelines = window.__timelines || {};
