@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1350" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="lib/layout.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,11 +27,9 @@
         --cream:     #F5F4EB;
         --white:     #FFFFFF;
         --muted:     #6e685e;
-        --muted-2:   #9c958a;
         --rule:      rgba(0,0,0,0.1);
         --accent:    #FB923C;
         --indigo:    #4F46E5;
-        --indigo-soft: #818CF8;
         --frame:     50px;
       }
 
@@ -67,18 +66,10 @@
         padding: 32px 44px 26px;
       }
 
-      .top-bar {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex: 0 0 auto;
-      }
+      .top-bar { display: flex; justify-content: flex-start; align-items: center; flex: 0 0 auto; }
       .kiln-lockup { height: 36px; width: auto; }
 
-      .title-block {
-        margin-top: 20px;
-        flex: 0 0 auto;
-      }
+      .title-block { margin-top: 20px; flex: 0 0 auto; }
       .post-title {
         font-family: 'Fraunces', Georgia, serif;
         font-weight: 500;
@@ -88,10 +79,7 @@
         letter-spacing: -0.018em;
         color: var(--ink);
       }
-      .post-title .emph {
-        font-style: italic;
-        color: var(--accent);
-      }
+      .post-title .emph { font-style: italic; color: var(--accent); }
       .post-sub {
         font-family: 'Inter', sans-serif;
         font-size: 17px;
@@ -109,18 +97,9 @@
         display: flex;
         align-items: stretch;
       }
-      .stage-svg {
-        width: 100%;
-        height: 100%;
-        display: block;
-      }
+      .stage-svg { width: 100%; height: 100%; display: block; }
 
-      .footer-rule {
-        height: 1px;
-        background: var(--rule);
-        margin-top: 14px;
-        flex: 0 0 auto;
-      }
+      .footer-rule { height: 1px; background: var(--rule); margin-top: 14px; flex: 0 0 auto; }
       .footer {
         padding-top: 12px;
         display: flex;
@@ -161,21 +140,10 @@
           </div>
 
           <!-- Stage: Venn diagram.
-               Geometry:
-                 Card center x: 490
-                 Card center y (vertical center of stage): 470
-                 Circle radius R: 235
-                 Distance between centers D: 280 (gives ~30% overlap width)
-                 Left circle center  (Clay):         (490 - 140, 470) = (350, 470)
-                 Right circle center (Claude Code):  (490 + 140, 470) = (630, 470)
-                 Overlap horizontal span: x = 395 to 585 (190 wide)
-                 Each circle's "outer pocket" (non-overlap centroid):
-                   Left:   ~ (210, 470)
-                   Right:  ~ (770, 470)
-                 Overlap centroid: (490, 470)
-                 All text labels and logos derived from these constants. -->
+               All text is positioned by the layout library at DOM-ready, so positions
+               adapt to the actual circle geometry instead of being free-handed. -->
           <div class="stage">
-            <svg class="stage-svg" viewBox="0 0 980 920" preserveAspectRatio="xMidYMid meet">
+            <svg id="stage" class="stage-svg" viewBox="0 0 980 920" preserveAspectRatio="xMidYMid meet">
 
               <defs>
                 <linearGradient id="left-fill" x1="0" y1="0" x2="1" y2="1">
@@ -186,13 +154,8 @@
                   <stop offset="0%" stop-color="#FB923C" stop-opacity="0.22"/>
                   <stop offset="100%" stop-color="#B45309" stop-opacity="0.10"/>
                 </linearGradient>
-
-                <!-- Clip paths so we can color the overlap explicitly without depending on blend modes -->
                 <clipPath id="clip-left">
                   <circle cx="350" cy="470" r="235"/>
-                </clipPath>
-                <clipPath id="clip-right">
-                  <circle cx="630" cy="470" r="235"/>
                 </clipPath>
               </defs>
 
@@ -200,77 +163,36 @@
               <circle cx="350" cy="470" r="235" fill="url(#left-fill)" stroke="#4F46E5" stroke-width="2.5"/>
               <!-- Right circle (Claude Code / agentic) -->
               <circle cx="630" cy="470" r="235" fill="url(#right-fill)" stroke="#FB923C" stroke-width="2.5"/>
-
-              <!-- Overlap region (the seam): right circle clipped by left circle's area.
-                   Drawn as a highlighted orange fill on top to make the seam the visual focal point. -->
+              <!-- Overlap region (the seam) highlighted -->
               <g clip-path="url(#clip-left)">
                 <circle cx="630" cy="470" r="235" fill="#FB923C" fill-opacity="0.32" stroke="none"/>
               </g>
-              <!-- Strong outline around the lens (drawn as both circles' arcs overlap is implied by the two stroked circles above) -->
 
-              <!-- ============ Header labels ABOVE each circle ============ -->
+              <!-- Header labels above each circle -->
               <text x="350" y="190" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#4F46E5" letter-spacing="2.4">DETERMINISTIC</text>
               <text x="630" y="190" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#FB923C" letter-spacing="2.4">AGENTIC</text>
 
-              <!-- Tool name + logo at each circle's outer "pocket" (the deepest non-overlap area) -->
-              <!-- Clay: x=160, y=470 — outer-left of Clay circle -->
+              <!-- Tool name + logo chips above each circle -->
               <g transform="translate(140, 234)">
                 <rect x="0" y="0" width="86" height="36" rx="6" fill="#FFFFFF" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
                 <image href="assets/logos/clay-icon.png" x="6" y="6" width="24" height="24"/>
                 <text x="38" y="22" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#0a0a0a">Clay</text>
               </g>
-              <!-- Claude Code: x=820, y=234 — outer-right -->
               <g transform="translate(754, 234)">
                 <rect x="0" y="0" width="120" height="36" rx="6" fill="#FFFFFF" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
                 <image href="assets/logos/anthropic-icon.png" x="6" y="6" width="24" height="24"/>
                 <text x="38" y="22" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#0a0a0a">Claude Code</text>
               </g>
 
-              <!-- ============ Left-only content (Clay / deterministic) ============
-                   Positioned in the outer-left pocket. Anchored to (180, 470) ± offsets.
-                   Use ~30-40px line spacing, anchor middle. -->
-              <g font-family="Inter, sans-serif" text-anchor="middle">
-                <text x="180" y="378" font-size="14" font-weight="700" fill="#0a0a0a">Tech-stack lookups</text>
-                <text x="180" y="416" font-size="14" font-weight="700" fill="#0a0a0a">Bulk enrichment</text>
-                <text x="180" y="454" font-size="14" font-weight="700" fill="#0a0a0a">CRM write-back</text>
-                <text x="180" y="492" font-size="14" font-weight="700" fill="#0a0a0a">High-volume scoring</text>
+              <!-- Dark chip behind the seam label (static, doesn't depend on shape geometry) -->
+              <rect x="425" y="395" width="130" height="32" rx="6" fill="#0a0a0a"/>
+              <text x="490" y="416" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#FB923C" letter-spacing="2.2">THE SEAM</text>
 
-                <text x="180" y="530" font-size="11" font-weight="700" fill="#4F46E5" letter-spacing="1.6">CHEAP · DETERMINISTIC</text>
-                <text x="180" y="550" font-size="11" font-weight="700" fill="#4F46E5" letter-spacing="1.6">AUDITABLE · FAST</text>
-              </g>
+              <!-- Bottom italic punchline -->
+              <text x="490" y="800" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">"The wins are at the seams,</text>
+              <text x="490" y="830" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">not at the maximalist ends."</text>
 
-              <!-- ============ Right-only content (Claude Code / agentic) ============
-                   Positioned in the outer-right pocket. Anchored to (800, 470). -->
-              <g font-family="Inter, sans-serif" text-anchor="middle">
-                <text x="800" y="378" font-size="14" font-weight="700" fill="#0a0a0a">Lead sourcing w/ judgment</text>
-                <text x="800" y="416" font-size="14" font-weight="700" fill="#0a0a0a">Custom outreach copy</text>
-                <text x="800" y="454" font-size="14" font-weight="700" fill="#0a0a0a">Multi-step routing</text>
-                <text x="800" y="492" font-size="14" font-weight="700" fill="#0a0a0a">Document understanding</text>
-
-                <text x="800" y="530" font-size="11" font-weight="700" fill="#B45309" letter-spacing="1.6">REASONING · JUDGMENT</text>
-                <text x="800" y="550" font-size="11" font-weight="700" fill="#B45309" letter-spacing="1.6">FUZZY INPUTS · CREATIVE</text>
-              </g>
-
-              <!-- ============ The Seam (the overlap, the focal point) ============
-                   Centered at (490, 470). -->
-              <g text-anchor="middle">
-                <!-- Dark callout chip behind the seam label for contrast against the orange overlap fill -->
-                <rect x="425" y="395" width="130" height="32" rx="6" fill="#0a0a0a"/>
-                <text x="490" y="416" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#FB923C" letter-spacing="2.2">THE SEAM</text>
-
-                <text x="490" y="450" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">Hybrid</text>
-                <text x="490" y="475" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">architecture</text>
-
-                <text x="490" y="510" font-family="Inter, sans-serif" font-size="11.5" font-weight="600" fill="#2a2620">Claude orchestrates</text>
-                <text x="490" y="527" font-family="Inter, sans-serif" font-size="11.5" font-weight="600" fill="#2a2620">Clay executes</text>
-
-                <text x="490" y="552" font-family="Inter, sans-serif" font-size="10.5" font-weight="800" fill="#B45309" letter-spacing="1.8">WHERE WINS LIVE →</text>
-              </g>
-
-              <!-- ============ Bottom rule line: the punchline ============ -->
-              <text x="490" y="770" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">"The wins are at the seams,</text>
-              <text x="490" y="800" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">not at the maximalist ends."</text>
-
+              <!-- Pocket text is injected by layout.js at DOM-ready (see the inline JS at end of body). -->
             </svg>
           </div>
 
@@ -289,9 +211,87 @@
     </div>
 
     <script>
+    (function () {
+      'use strict';
+      // ============ Geometry definitions ============
+      // Single source of truth: change these and every label moves correctly.
+      var SVG = document.getElementById('stage');
+
+      var leftCircle  = new Layout.Circle(350, 470, 235);
+      var rightCircle = new Layout.Circle(630, 470, 235);
+
+      var leftPocket  = new Layout.Pocket(leftCircle, [rightCircle]);
+      var rightPocket = new Layout.Pocket(rightCircle, [leftCircle]);
+      var lens        = new Layout.Intersection(leftCircle, rightCircle);
+
+      // ============ Left pocket (Clay / deterministic) ============
+      Layout.placeText(SVG, leftPocket, [
+        'Tech-stack lookups',
+        'Bulk enrichment',
+        'CRM write-back',
+        'High-volume scoring',
+      ], {
+        centerY: 440, lineHeight: 32, fontSize: 14, fontWeight: 700,
+        fill: '#0a0a0a', label: 'leftPocket-workflows',
+      });
+      Layout.placeText(SVG, leftPocket, [
+        'CHEAP · DETERMINISTIC',
+        'AUDITABLE · FAST',
+      ], {
+        centerY: 580, lineHeight: 18, fontSize: 11, fontWeight: 700,
+        fill: '#4F46E5', letterSpacing: '1.6', label: 'leftPocket-tags',
+      });
+
+      // ============ Right pocket (Claude Code / agentic) ============
+      Layout.placeText(SVG, rightPocket, [
+        'Lead sourcing w/ judgment',
+        'Custom outreach copy',
+        'Multi-step routing',
+        'Document understanding',
+      ], {
+        centerY: 440, lineHeight: 32, fontSize: 14, fontWeight: 700,
+        fill: '#0a0a0a', label: 'rightPocket-workflows',
+      });
+      Layout.placeText(SVG, rightPocket, [
+        'REASONING · JUDGMENT',
+        'FUZZY INPUTS · CREATIVE',
+      ], {
+        centerY: 580, lineHeight: 18, fontSize: 11, fontWeight: 700,
+        fill: '#B45309', letterSpacing: '1.6', label: 'rightPocket-tags',
+      });
+
+      // ============ Lens / overlap (the seam — hybrid architecture) ============
+      // The dark chip + "THE SEAM" label live above the lens region (rendered as static SVG).
+      // The text inside the lens goes here, anchored to the lens' centroid at each row.
+      Layout.placeText(SVG, lens, [
+        'Hybrid',
+        'architecture',
+      ], {
+        centerY: 462, lineHeight: 26, fontSize: 22, fontWeight: 500,
+        fontFamily: 'Fraunces, Georgia, serif', fill: '#0a0a0a',
+        label: 'lens-headline',
+      });
+      Layout.placeText(SVG, lens, [
+        'Claude orchestrates',
+        'Clay executes',
+      ], {
+        centerY: 522, lineHeight: 17, fontSize: 11.5, fontWeight: 600,
+        fill: '#2a2620', label: 'lens-sub',
+      });
+      Layout.placeText(SVG, lens, [
+        'WHERE WINS LIVE',
+      ], {
+        centerY: 562, lineHeight: 14, fontSize: 10.5, fontWeight: 800,
+        fill: '#B45309', letterSpacing: '1.8', label: 'lens-eyebrow',
+      });
+
+      // Run validation after all placement — logs any text that overflows its shape.
+      Layout.validate();
+
+      // HyperFrames contract: empty paused timeline.
       window.__timelines = window.__timelines || {};
-      const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    })();
     </script>
   </body>
 </html>

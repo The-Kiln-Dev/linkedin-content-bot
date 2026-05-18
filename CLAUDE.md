@@ -39,8 +39,9 @@ For each post-asset generation, classify the idea first:
 
 - **Thematic** → content has a visual metaphor that conveys the argument (plumbing → pipes, iceberg → depth, wall → barrier, hub → control center, chart → growth-over-time). The post is "here's a thing you have to see." The graphic IS the canvas — its structure dictated by the metaphor.
   - **Route to:** `templates/freeform/`
-  - Read `templates/freeform/design.md` BEFORE starting — it contains non-negotiables that took a lot of iteration to settle, plus a worked example.
+  - Read `templates/freeform/design.md` BEFORE starting — it contains non-negotiables that took a lot of iteration to settle, plus worked examples.
   - Critical principle: **build the metaphor's geometry in SVG first, then anchor every text/logo to that geometry** (never freehand HTML percentages).
+  - **MANDATORY for any text inside a non-rectangular shape** (circle, lens/Venn, trapezoid, sector, polygon): use `templates/freeform/lib/layout.js`. Hand-placing text inside curved shapes always fails because the shape's width varies by Y. The library models each shape, computes per-row centroids, and runs a validation pass that catches any overflow before snapshotting. Rectangles can use direct coordinates; everything else must go through the library.
 
 **Default heuristic:** if the post's title/hook contains a concrete physical thing (wall, iceberg, ladder, map, river, factory, foundation, ceiling, bridge, gate), it's probably thematic. If the post is "N tips for X" or "M things I learned", it's tabular. When in doubt, thematic produces a stronger LinkedIn asset.
 

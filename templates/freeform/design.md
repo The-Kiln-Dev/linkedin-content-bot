@@ -69,7 +69,11 @@ This is the core technique. **Never** position with HTML percentages (`bottom: 2
 2. Use SVG `<text>`, `<image>`, and `<g transform="translate(x,y)">` to place every label, logo, and annotation
 3. Every coordinate is computed from the same origin
 
-When you change the plot area's left edge from `x=130` to `x=230`, you have to update every downstream coordinate (X ticks, line endpoints, wall position, logo cluster positions, legend x). That's correct — the cascade reflects the structural relationship. Over time, consider extracting geometry constants into JS variables (`const PLOT_X = 230; const X_TICKS = [230, 408, 585, 763, 940]`) so a single edit moves the whole chart.
+For shapes with a **constant width** (rectangles, single circles where you only care about vertical centering), hardcoding coordinates is fine.
+
+For shapes with **width that varies with Y** — circles (text inside, not just on top), lens/Venn regions, trapezoids, sectors, polygons — **use `lib/layout.js`**. Hand-placing text inside these shapes always fails because the shape's width varies by row. The library models each shape (`Circle`, `Pocket`, `Intersection`, `Trapezoid`, `Rect`, `Sector`), computes `boundsAtY(y) → {left, right, center, width}` for each row, places text at the row's true centroid via `placeText()`, and validates that the rendered bounding box fits via `validate()`. See "The layout library" section below for the API.
+
+When you change the plot area's left edge from `x=130` to `x=230`, you have to update every downstream coordinate (X ticks, line endpoints, wall position, logo cluster positions, legend x). That's correct — the cascade reflects the structural relationship. Geometry constants are best defined at the top of the inline script as JS variables (`const X_TICKS = [230, 408, 585, 763, 940]`) so a single edit moves the whole chart.
 
 ### 5. Aspect ratio match (no letterboxing)
 
@@ -77,19 +81,21 @@ The SVG `viewBox` aspect ratio should match the `.chart-wrap` container's aspect
 
 Roughly: container height = card interior height − (top bar + title block + footer). For a Kiln 1080×1350 card, that's typically 1186 − ~340 = ~840px of chart height with ~890px of width.
 
-### 6. Verify all text fits inside the viewBox
+### 6. Verify all text fits inside the viewBox AND inside its containing shape
 
-A common failure: Y-axis labels right-aligned to a small X coordinate extend leftward outside the viewBox and get clipped. Before snapshotting, compute the leftmost render position of the longest label:
+Two distinct failure modes:
+
+**(a) Text clipped by the viewBox.** Y-axis labels right-aligned to a small X coordinate extend leftward outside the viewBox and get clipped. Before snapshotting, compute the leftmost render position of the longest label:
 
 ```
 leftmost_x = label_x_position − (label_width_at_font_size)
 ```
 
-For 14px Inter, "Hierarchy + custom objects" is ~195px wide. If labels end at `x=120`, longest extends to `x=−75` — clipped. Either:
-- Shift the plot area right (this is usually correct)
-- Increase the viewBox width
-- Use `<tspan>` to wrap labels across multiple lines
-- Shorten labels (last resort — sacrifices clarity)
+For 14px Inter, "Hierarchy + custom objects" is ~195px wide. If labels end at `x=120`, longest extends to `x=−75` — clipped. Either shift the plot area right (usually correct), increase the viewBox width, wrap labels across multiple lines via `<tspan>`, or shorten labels (last resort).
+
+**(b) Text inside a non-rectangular shape overflows the shape's edge.** Even if the text fits in the viewBox, it can still overflow a circle, lens, or trapezoid because those shapes have width that varies by Y. A text element anchored at `x=180` with `text-anchor="middle"` and width 130 spans `x=115 → x=245`. If the containing circle only spans `x=134 → x=566` at that Y, the text leaks past the left edge by 19px.
+
+**Use `lib/layout.js` for all text inside non-rectangular shapes.** It computes the correct centroid per row and runs a validation pass that prints any overflows to the browser console. See "The layout library" section below.
 
 ### 7. Think about the concept before placing text
 
@@ -119,8 +125,70 @@ The workflow is the same regardless of metaphor:
 
 1. Sketch the geometry on paper (or mentally): what are the structural elements, where are the anchor points?
 2. Build the geometry in SVG with explicit coordinates (polygons, paths, circles, lines)
-3. Compute anchor points for each piece of content (centroids, edges, intersections, tick positions)
-4. Place every text and logo as `<text>` / `<image>` inside the same SVG using those anchor coordinates
+3. **For shapes with width that varies by Y (circle, lens, trapezoid, sector, polygon): use `lib/layout.js`** to place text inside them. Don't hand-compute centroids per row — the library does it correctly.
+4. For shapes with constant width (rectangle), place text directly with SVG coordinates.
+5. Always call `Layout.validate()` at the end to catch any overflows before the snapshot.
+
+---
+
+## The layout library (`lib/layout.js`)
+
+**The problem it solves:** hand-placing text inside non-rectangular shapes always fails because the shape's width varies by Y. A text element anchored at `x=180` with `text-anchor="middle"` and width 130 spans `x=115 → x=245`. If the containing circle's chord at that Y only spans `x=134 → x=566`, the text leaks past the left edge by 19px. This is a category error, not a typo — it happens every time hand-placement is used inside a curved boundary.
+
+**The solution:** model each shape, compute its bounds at each row of text, place text at the row's true centroid, validate after placement.
+
+### API
+
+Include the library: `<script src="lib/layout.js"></script>` in `<head>`. Use it from an IIFE'd `<script>` at the end of `<body>`:
+
+```html
+<script>
+(function () {
+  'use strict';
+  var SVG = document.getElementById('stage');
+
+  // Define geometry — single source of truth for the diagram
+  var leftCircle  = new Layout.Circle(350, 470, 235);
+  var rightCircle = new Layout.Circle(630, 470, 235);
+  var leftPocket  = new Layout.Pocket(leftCircle, [rightCircle]);
+  var rightPocket = new Layout.Pocket(rightCircle, [leftCircle]);
+  var lens        = new Layout.Intersection(leftCircle, rightCircle);
+
+  // Place text in each region. Each line lands at its row's true center.
+  Layout.placeText(SVG, leftPocket, [
+    'Tech-stack lookups', 'Bulk enrichment', 'CRM write-back', 'High-volume scoring',
+  ], { centerY: 440, lineHeight: 32, fontSize: 14, fontWeight: 700, label: 'leftPocket-workflows' });
+
+  // Run validation — logs any overflows to browser console
+  Layout.validate();
+
+  // HF contract
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = gsap.timeline({ paused: true });
+})();
+</script>
+```
+
+### Shapes supported
+
+- **`Circle(cx, cy, r)`** — single circle
+- **`Pocket(inside, outsideArr)`** — inside one shape, outside zero or more others (e.g., left lobe of a Venn = `Pocket(leftCircle, [rightCircle])`)
+- **`Intersection(...shapes)`** — inside ALL shapes (e.g., the Venn lens = `Intersection(leftCircle, rightCircle)`)
+- **`Trapezoid({ topY, botY, topLeftX, topRightX, botLeftX, botRightX })`** — pyramid layers
+- **`Rect(x, y, w, h)`** — for completeness
+- **`Sector(cx, cy, r, a1, a2)`** — pie slice / radial wedge
+
+### Functions
+
+- **`placeText(svgRoot, shape, lines, opts)`** — creates SVG `<text>` elements for each line, anchored at the shape's centroid for that row. Returns array of created elements. Options: `centerY`, `lineHeight`, `padding`, `fontFamily`, `fontSize`, `fontWeight`, `textAnchor`, `fill`, `letterSpacing`, `group`, `label`.
+- **`placeLine(svgRoot, shape, line, opts)`** — single-line convenience.
+- **`validate()`** — iterates every text placed by the library, calls `getBBox()` on each, compares to the shape's bounds at that Y, logs any overflows. Returns `{ placed, overflows }`.
+
+### Lint gotcha
+
+HF's StaticGuard scans the HTML source with a script-tag regex. If your SVG contains a comment with the literal text `<script>` (e.g., as a TODO note), the regex treats everything after that comment as a script and tries to parse the rest of the HTML as JS — the error reads "Unexpected identifier 'body'" because it hits `<body>`. Avoid writing `<script>` inside SVG comments.
+
+---
 
 If you can't articulate the geometry up front, the metaphor isn't ready to render yet — go back to step 1.
 
