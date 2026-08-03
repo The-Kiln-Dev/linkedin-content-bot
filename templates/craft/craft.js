@@ -299,7 +299,7 @@ function svg(w, h, inner, opts) {
   return `<svg${cls}${style} width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><defs>${roughDefs()}</defs>${inner}</svg>`;
 }
 
-module.exports = {
+const CRAFT = {
   rngFromString,
   roughDefs,
   grainCss,
@@ -316,3 +316,7 @@ module.exports = {
   markerHighlight,
   glazeDipPath,
 };
+
+/* Node (generators) and browser (freeform / animation compositions) */
+if (typeof module !== 'undefined' && module.exports) module.exports = CRAFT;
+if (typeof window !== 'undefined') window.Craft = CRAFT;

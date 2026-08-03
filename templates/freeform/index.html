@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=1080, height=1350" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <script src="lib/layout.js"></script>
+    <script src="lib/craft.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
@@ -23,97 +24,137 @@
       :root {
         --grad-from: #FB923C;
         --grad-to:   #818CF8;
-        --ink:       #0a0a0a;
-        --cream:     #F5F4EB;
-        --white:     #FFFFFF;
-        --muted:     #6e685e;
-        --rule:      rgba(0,0,0,0.1);
         --accent:    #FB923C;
-        --indigo:    #4F46E5;
-        --frame:     50px;
+        --ink:       #231F20;
+        --paper:     #F5EFE2;
+        --muted:     #6B645A;
+        --rule:      rgba(35,31,32,0.16);
       }
 
       .frame {
         width: 1080px;
         height: 1350px;
         position: relative;
-        background: linear-gradient(135deg, var(--grad-from) 0%, var(--grad-to) 100%);
-        padding: var(--frame);
+        background: var(--paper);
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      /* paper grain (background-image injected via JS) + vignette */
+      .frame::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0.2;
+        mix-blend-mode: multiply;
+        pointer-events: none;
+        z-index: 40;
       }
       .frame::before {
         content: '';
         position: absolute;
         inset: 0;
+        background: radial-gradient(ellipse 130% 120% at 50% 42%, transparent 62%, rgba(120,90,40,0.05) 100%);
+        pointer-events: none;
+        z-index: 39;
+      }
+
+      .glaze { position: absolute; top: 0; left: 0; width: 1080px; height: 90px; z-index: 1; }
+      .glaze-fill { position: absolute; inset: 0; background: linear-gradient(115deg, var(--grad-from) 0%, var(--grad-to) 100%); }
+      .glaze-tex {
+        position: absolute; inset: 0;
         background-image: url('assets/texture-topographic.png');
         background-size: 50% 50%;
-        background-repeat: repeat;
         mix-blend-mode: multiply;
         opacity: 0.5;
-        pointer-events: none;
-        z-index: 1;
       }
 
-      .interior {
+      .head {
         position: relative;
-        z-index: 2;
-        width: 100%;
-        height: 100%;
-        background: var(--cream);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        padding: 32px 44px 26px;
+        z-index: 10;
+        padding: 56px 64px 0;
       }
-
-      .top-bar { display: flex; justify-content: flex-start; align-items: center; flex: 0 0 auto; }
-      .kiln-lockup { height: 36px; width: auto; }
-
-      .title-block { margin-top: 20px; flex: 0 0 auto; }
-      .post-title {
+      .lockup { height: 38px; width: auto; display: block; margin-bottom: 28px; }
+      .title {
         font-family: 'Fraunces', Georgia, serif;
         font-weight: 500;
         font-variation-settings: "SOFT" 80, "opsz" 96;
-        font-size: 54px;
-        line-height: 1.02;
-        letter-spacing: -0.018em;
+        font-size: 62px;
+        line-height: 1.06;
+        letter-spacing: -0.012em;
         color: var(--ink);
       }
-      .post-title .emph { font-style: italic; color: var(--accent); }
-      .post-sub {
-        font-family: 'Inter', sans-serif;
-        font-size: 17px;
-        line-height: 1.45;
-        color: var(--muted);
-        margin-top: 12px;
-        max-width: 820px;
-      }
-
-      .stage {
-        flex: 1 1 auto;
-        margin-top: 14px;
-        min-height: 0;
+      .title .em {
         position: relative;
-        display: flex;
-        align-items: stretch;
+        font-style: italic;
+        font-weight: 540;
+        white-space: nowrap;
       }
-      .stage-svg { width: 100%; height: 100%; display: block; }
+      .title .em svg { position: absolute; left: -2%; bottom: -0.12em; width: 104%; height: 0.16em; }
+      .sub {
+        font-family: 'Inter', sans-serif;
+        font-size: 19px;
+        line-height: 1.4;
+        color: var(--muted);
+        margin-top: 14px;
+      }
 
-      .footer-rule { height: 1px; background: var(--rule); margin-top: 14px; flex: 0 0 auto; }
-      .footer {
-        padding-top: 12px;
+      .stage-wrap {
+        position: relative;
+        z-index: 10;
+        flex: 1;
+        padding: 18px 50px 0 50px;
+        min-height: 0;
+      }
+      #stage { width: 100%; height: 100%; display: block; }
+
+      .foot {
+        position: relative;
+        z-index: 10;
+        padding: 0 64px 34px;
+      }
+      .foot-line { display: block; width: 100%; height: 12px; margin-bottom: 8px; }
+      .foot-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .foot-right { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.06em; }
+
+      text { user-select: none; }
+      .axis-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        fill: var(--ink);
+      }
+      .axis-sub {
         font-family: 'Inter', sans-serif;
         font-size: 12.5px;
-        color: var(--muted);
-        letter-spacing: 0.04em;
-        flex: 0 0 auto;
+        font-weight: 500;
+        fill: var(--muted);
       }
-      .footer .author { display: flex; align-items: center; gap: 10px; }
-      .author-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
-      .footer .url { font-weight: 600; color: var(--ink); }
+      .tier-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        fill: var(--muted);
+      }
+      .hand-note-svg {
+        font-family: 'Caveat', cursive;
+        font-size: 30px;
+        font-weight: 600;
+        fill: var(--ink);
+      }
+      .legend-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        fill: var(--ink);
+      }
     </style>
   </head>
   <body>
@@ -126,168 +167,148 @@
       data-height="1350"
     >
       <div class="frame">
-        <div class="interior">
+        <div class="glaze">
+          <div class="glaze-fill" id="glaze-fill"></div>
+          <div class="glaze-tex" id="glaze-tex"></div>
+        </div>
 
-          <!-- Top bar -->
-          <div class="top-bar">
-            <img class="kiln-lockup" src="assets/kiln-lockup-black.png" alt="The Kiln">
+        <div class="head">
+          <img class="lockup" src="assets/kiln-lockup-black.png" alt="The Kiln" />
+          <h1 class="title">AI-first CRMs hit a <span class="em" id="em-phrase">Series B wall</span></h1>
+          <p class="sub">What the new-wave CRMs nail at seed. What breaks when you actually need to scale.</p>
+        </div>
+
+        <div class="stage-wrap">
+          <svg id="stage" viewBox="0 0 980 880" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+
+        <div class="foot">
+          <svg class="foot-line" id="foot-line" viewBox="0 0 952 12" preserveAspectRatio="none"></svg>
+          <div class="foot-row">
+            <span>Patrick Spychalski</span>
+            <span class="foot-right">thekiln.com</span>
           </div>
-
-          <!-- Title -->
-          <div class="title-block">
-            <h1 class="post-title">Don't make everything agentic.<br>The wins live <em class="emph">at the seam</em>.</h1>
-            <p class="post-sub">A lot of GTM workflows are cheaper and better in Clay than in Claude Code, even when Claude Code can technically do them. The right architecture uses both.</p>
-          </div>
-
-          <!-- Stage: Venn diagram.
-               All text is positioned by the layout library at DOM-ready, so positions
-               adapt to the actual circle geometry instead of being free-handed. -->
-          <div class="stage">
-            <svg id="stage" class="stage-svg" viewBox="0 0 980 920" preserveAspectRatio="xMidYMid meet">
-
-              <defs>
-                <linearGradient id="left-fill" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#818CF8" stop-opacity="0.22"/>
-                  <stop offset="100%" stop-color="#4F46E5" stop-opacity="0.10"/>
-                </linearGradient>
-                <linearGradient id="right-fill" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#FB923C" stop-opacity="0.22"/>
-                  <stop offset="100%" stop-color="#B45309" stop-opacity="0.10"/>
-                </linearGradient>
-                <clipPath id="clip-left">
-                  <circle cx="350" cy="470" r="235"/>
-                </clipPath>
-              </defs>
-
-              <!-- Left circle (Clay / deterministic) -->
-              <circle cx="350" cy="470" r="235" fill="url(#left-fill)" stroke="#4F46E5" stroke-width="2.5"/>
-              <!-- Right circle (Claude Code / agentic) -->
-              <circle cx="630" cy="470" r="235" fill="url(#right-fill)" stroke="#FB923C" stroke-width="2.5"/>
-              <!-- Overlap region (the seam) highlighted -->
-              <g clip-path="url(#clip-left)">
-                <circle cx="630" cy="470" r="235" fill="#FB923C" fill-opacity="0.32" stroke="none"/>
-              </g>
-
-              <!-- Header labels above each circle -->
-              <text x="350" y="190" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#4F46E5" letter-spacing="2.4">DETERMINISTIC</text>
-              <text x="630" y="190" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#FB923C" letter-spacing="2.4">AGENTIC</text>
-
-              <!-- Tool name + logo chips above each circle -->
-              <g transform="translate(140, 234)">
-                <rect x="0" y="0" width="86" height="36" rx="6" fill="#FFFFFF" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
-                <image href="assets/logos/clay-icon.png" x="6" y="6" width="24" height="24"/>
-                <text x="38" y="22" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#0a0a0a">Clay</text>
-              </g>
-              <g transform="translate(754, 234)">
-                <rect x="0" y="0" width="120" height="36" rx="6" fill="#FFFFFF" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
-                <image href="assets/logos/anthropic-icon.png" x="6" y="6" width="24" height="24"/>
-                <text x="38" y="22" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#0a0a0a">Claude Code</text>
-              </g>
-
-              <!-- Dark chip behind the seam label (static, doesn't depend on shape geometry) -->
-              <rect x="425" y="395" width="130" height="32" rx="6" fill="#0a0a0a"/>
-              <text x="490" y="416" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#FB923C" letter-spacing="2.2">THE SEAM</text>
-
-              <!-- Bottom italic punchline -->
-              <text x="490" y="800" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">"The wins are at the seams,</text>
-              <text x="490" y="830" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#0a0a0a">not at the maximalist ends."</text>
-
-              <!-- Pocket text is injected by layout.js at DOM-ready (see the inline JS at end of body). -->
-            </svg>
-          </div>
-
-          <!-- Footer -->
-          <div class="footer-rule"></div>
-          <div class="footer">
-            <div class="author">
-              <span class="author-dot"></span>
-              <span>Patrick Spychalski</span>
-            </div>
-            <span class="url">thekiln.com</span>
-          </div>
-
         </div>
       </div>
     </div>
 
     <script>
-    (function () {
-      'use strict';
-      // ============ Geometry definitions ============
-      // Single source of truth: change these and every label moves correctly.
-      var SVG = document.getElementById('stage');
+      (function () {
+        'use strict';
+        var C = window.Craft;
+        var rng = C.rngFromString('series-b-wall-v2');
+        var SVG = document.getElementById('stage');
 
-      var leftCircle  = new Layout.Circle(350, 470, 235);
-      var rightCircle = new Layout.Circle(630, 470, 235);
+        function put(el, html) { el.insertAdjacentHTML('beforeend', html); }
+        function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
 
-      var leftPocket  = new Layout.Pocket(leftCircle, [rightCircle]);
-      var rightPocket = new Layout.Pocket(rightCircle, [leftCircle]);
-      var lens        = new Layout.Intersection(leftCircle, rightCircle);
+        /* ---- paper grain on the frame (::after background needs a JS-injected rule) ---- */
+        var style = document.createElement('style');
+        style.textContent = '.frame::after { background-image: ' + C.grainCss() + '; }';
+        document.head.appendChild(style);
 
-      // ============ Left pocket (Clay / deterministic) ============
-      Layout.placeText(SVG, leftPocket, [
-        'Tech-stack lookups',
-        'Bulk enrichment',
-        'CRM write-back',
-        'High-volume scoring',
-      ], {
-        centerY: 440, lineHeight: 32, fontSize: 14, fontWeight: 700,
-        fill: '#0a0a0a', label: 'leftPocket-workflows',
-      });
-      Layout.placeText(SVG, leftPocket, [
-        'CHEAP · DETERMINISTIC',
-        'AUDITABLE · FAST',
-      ], {
-        centerY: 580, lineHeight: 18, fontSize: 11, fontWeight: 700,
-        fill: '#4F46E5', letterSpacing: '1.6', label: 'leftPocket-tags',
-      });
+        /* ---- glaze dip clip ---- */
+        var dip = C.glazeDipPath(rng, 1080, 34, { waves: 7, amp: 8 });
+        document.getElementById('glaze-fill').style.clipPath = "path('" + dip + "')";
+        document.getElementById('glaze-tex').style.clipPath = "path('" + dip + "')";
 
-      // ============ Right pocket (Claude Code / agentic) ============
-      Layout.placeText(SVG, rightPocket, [
-        'Lead sourcing w/ judgment',
-        'Custom outreach copy',
-        'Multi-step routing',
-        'Document understanding',
-      ], {
-        centerY: 440, lineHeight: 32, fontSize: 14, fontWeight: 700,
-        fill: '#0a0a0a', label: 'rightPocket-workflows',
-      });
-      Layout.placeText(SVG, rightPocket, [
-        'REASONING · JUDGMENT',
-        'FUZZY INPUTS · CREATIVE',
-      ], {
-        centerY: 580, lineHeight: 18, fontSize: 11, fontWeight: 700,
-        fill: '#B45309', letterSpacing: '1.6', label: 'rightPocket-tags',
-      });
+        /* ---- title emphasis mark ---- */
+        document.getElementById('em-phrase').insertAdjacentHTML('beforeend',
+          '<svg viewBox="0 0 300 24" preserveAspectRatio="none">' +
+          C.handLine(rng, 4, 10, 296, 8, { amp: 2.6, width: 7, filter: null, stroke: 'var(--accent)' }) +
+          C.handLine(rng, 10, 17, 280, 16, { amp: 2.2, width: 5.5, filter: null, stroke: 'var(--accent)', opacity: 0.75 }) +
+          '</svg>');
 
-      // ============ Lens / overlap (the seam — hybrid architecture) ============
-      // The dark chip + "THE SEAM" label live above the lens region (rendered as static SVG).
-      // The text inside the lens goes here, anchored to the lens' centroid at each row.
-      // Tuned to fit with 18px aesthetic padding inside a max ~190px-wide lens.
-      Layout.placeText(SVG, lens, [
-        'Hybrid',
-        'architecture',
-      ], {
-        centerY: 468, lineHeight: 24, fontSize: 19, fontWeight: 500,
-        fontFamily: 'Fraunces, Georgia, serif', fill: '#0a0a0a',
-        label: 'lens-headline',
-      });
-      Layout.placeText(SVG, lens, [
-        'Claude orchestrates',
-        'Clay executes',
-      ], {
-        centerY: 528, lineHeight: 18, fontSize: 11.5, fontWeight: 600,
-        fill: '#2a2620', label: 'lens-sub',
-      });
+        /* ---- footer line ---- */
+        put(document.getElementById('foot-line'),
+          C.handLine(rng, 2, 6, 950, 6, { amp: 1.6, width: 2.2, opacity: 0.5, filter: null }));
 
-      // Validate that all placed text fits its shape with 18px aesthetic breathing room.
-      // Warnings (if any) go to the browser console; the snapshot stays clean.
-      Layout.validate({ aestheticPadding: 18 });
+        /* =========================================================
+           GEOMETRY — single source of truth (design.md worked example)
+           ========================================================= */
+        var PLOT = { x0: 230, x1: 940, y0: 760, y1: 130 };
+        var X_TICKS = [230, 408, 585, 763, 940];
+        var X_LABELS = [['Seed', '~$0-2M ARR'], ['Series A', '~$2-10M'], ['Series B', '~$10-30M ARR'], ['Series C', '~$30-100M'], ['IPO', '$100M+']];
+        var Y_TIERS = [760, 602.5, 445, 287.5, 130];
+        var Y_LABELS = ['Contacts + companies', 'Sequences + workflows', 'Custom views + reports', 'Hierarchy + custom objects', 'Routing + permissions'];
+        var WALL_X = 585;
+        var CRASH = { x: 575, y: 520 };
 
-      // HyperFrames contract: empty paused timeline.
-      window.__timelines = window.__timelines || {};
-      window.__timelines["main"] = gsap.timeline({ paused: true });
-    })();
+        put(SVG, '<defs>' + C.roughDefs() + '</defs>');
+
+        /* ---- gridlines + axis labels (precise: they carry data) ---- */
+        Y_TIERS.forEach(function (y, i) {
+          put(SVG, '<line x1="' + PLOT.x0 + '" y1="' + y + '" x2="' + PLOT.x1 + '" y2="' + y +
+            '" stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 5"/>');
+          put(SVG, '<text class="tier-label" x="' + (PLOT.x0 - 14) + '" y="' + (y + 4) + '" text-anchor="end">' + esc(Y_LABELS[i]) + '</text>');
+        });
+        X_TICKS.forEach(function (x, i) {
+          var hot = i === 2;
+          put(SVG, '<line x1="' + x + '" y1="' + PLOT.y0 + '" x2="' + x + '" y2="' + (PLOT.y0 + 8) +
+            '" stroke="' + (hot ? 'var(--accent)' : 'var(--muted)') + '" stroke-width="' + (hot ? 2.5 : 1.5) + '"/>');
+          put(SVG, '<text class="axis-label" x="' + x + '" y="' + (PLOT.y0 + 32) + '" text-anchor="middle"' + (hot ? ' fill="var(--accent)"' : '') + '>' + esc(X_LABELS[i][0]) + '</text>');
+          put(SVG, '<text class="axis-sub" x="' + x + '" y="' + (PLOT.y0 + 52) + '" text-anchor="middle">' + esc(X_LABELS[i][1]) + '</text>');
+        });
+
+        put(SVG, '<text class="axis-sub" x="' + PLOT.x0 + '" y="' + (PLOT.y1 - 26) + '" style="font-family:JetBrains Mono,monospace;letter-spacing:0.14em;font-size:12px;" fill="var(--muted)">CAPABILITY NEEDED &#8593;</text>');
+
+        /* ---- data lines (precise: they ARE the argument) ---- */
+        var estD = 'M 230 760 C 320 700, 380 640, 460 560 C 560 460, 640 360, 720 280 C 800 205, 880 165, 940 145';
+        put(SVG, '<path d="' + estD + '" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>');
+        var aiD = 'M 230 760 C 330 718, 430 665, 495 618 C 532 590, 558 552, 575 520';
+        put(SVG, '<path d="' + aiD + '" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>');
+        put(SVG, '<path d="M 595 520 L 940 516" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.65"/>');
+
+        /* ---- THE WALL: hand-hatched band (chrome → hand-drawn) ---- */
+        var wallTop = 240, wallBot = 760;
+        put(SVG, C.handLine(rng, WALL_X - 9, wallTop, WALL_X - 9, wallBot, { amp: 2.2, width: 4.5, stroke: 'var(--accent)' }));
+        put(SVG, C.handLine(rng, WALL_X + 9, wallTop + 6, WALL_X + 9, wallBot, { amp: 2.2, width: 4.5, stroke: 'var(--accent)' }));
+        for (var hy = wallTop + 12; hy < wallBot - 6; hy += 26) {
+          put(SVG, C.handLine(rng, WALL_X - 8, hy + 14, WALL_X + 8, hy, { amp: 1, width: 3, stroke: 'var(--accent)', opacity: 0.75, filter: null }));
+        }
+
+        /* ---- hand circle around the crash point + data dot ---- */
+        put(SVG, '<circle cx="' + CRASH.x + '" cy="' + CRASH.y + '" r="7" fill="var(--accent)"/>');
+        put(SVG, C.handCircle(rng, CRASH.x - 2, CRASH.y + 2, 34, 30, { width: 4.5, stroke: 'var(--ink)' }));
+
+        /* ---- Caveat callout + hand arrow pointing at the crash ---- */
+        put(SVG, '<text class="hand-note-svg" x="272" y="360" transform="rotate(-3 272 360)">migration conversations<tspan x="272" dy="34">start right about here</tspan></text>');
+        put(SVG, C.handArrow(rng, 480, 410, 552, 492, { width: 3.6, stroke: 'var(--ink)', head: 15, curve: -26 }));
+
+        /* ---- logo chips: hand-boxed ---- */
+        function chip(x, y, img) {
+          put(SVG, C.handBox(rng, x, y, 54, 54, { width: 3, overshoot: 4, amp: 1.6, filter: null }));
+          put(SVG, '<image href="assets/logos/' + img + '" x="' + (x + 8) + '" y="' + (y + 8) + '" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>');
+        }
+        chip(438, 580, 'attio-icon.png');
+        chip(506, 588, 'folk-icon.png');
+        put(SVG, '<text class="axis-sub" x="499" y="676" text-anchor="middle" style="font-family:JetBrains Mono,monospace;letter-spacing:0.12em;font-size:11.5px;">STOPS HERE</text>');
+        chip(790, 88, 'salesforce-icon.png');
+        chip(858, 82, 'hubspot-icon.png');
+        put(SVG, '<text class="axis-sub" x="851" y="66" text-anchor="middle" style="font-family:JetBrains Mono,monospace;letter-spacing:0.12em;font-size:11.5px;">SCALES TO IPO</text>');
+
+        /* ---- legend: hand dashes ---- */
+        var LY = 856;
+        put(SVG, C.handLine(rng, 300, LY, 344, LY, { amp: 1.2, width: 4.5, stroke: 'var(--ink)', filter: null }));
+        put(SVG, '<text class="legend-label" x="356" y="' + (LY + 5) + '">Established CRMs</text>');
+        put(SVG, C.handLine(rng, 560, LY, 604, LY, { amp: 1.2, width: 4.5, stroke: 'var(--accent)', filter: null }));
+        put(SVG, '<text class="legend-label" x="616" y="' + (LY + 5) + '">AI-first CRMs</text>');
+
+        /* ---- validation: nothing outside the viewBox ---- */
+        var bad = 0;
+        SVG.querySelectorAll('text').forEach(function (t) {
+          var b = t.getBBox();
+          if (b.x < 0 || b.x + b.width > 980 || b.y < 0 || b.y + b.height > 880) {
+            console.warn('OUT OF VIEWBOX:', t.textContent, JSON.stringify(b));
+            bad++;
+          }
+        });
+        console.log('viewBox check:', bad === 0 ? 'all text inside' : bad + ' overflows');
+
+        /* HF contract */
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = gsap.timeline({ paused: true });
+      })();
     </script>
   </body>
 </html>

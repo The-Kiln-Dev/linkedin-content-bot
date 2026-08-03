@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en" data-resolution="custom-1080x1350">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="lib/craft.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        background: #000;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      :root {
+        --grad-from: #FB923C;
+        --grad-to:   #818CF8;
+        --accent:    #FB923C;
+        --ink:       #231F20;
+        --paper:     #F5EFE2;
+        --muted:     #6B645A;
+        --rule:      rgba(35,31,32,0.16);
+      }
+
+      .frame {
+        width: 1080px;
+        height: 1350px;
+        position: relative;
+        background: var(--paper);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .frame::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0.2;
+        mix-blend-mode: multiply;
+        pointer-events: none;
+        z-index: 40;
+      }
+      .frame::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 130% 120% at 50% 42%, transparent 62%, rgba(120,90,40,0.05) 100%);
+        pointer-events: none;
+        z-index: 39;
+      }
+
+      .glaze { position: absolute; top: 0; left: 0; width: 1080px; height: 90px; z-index: 1; }
+      .glaze-fill { position: absolute; inset: 0; background: linear-gradient(115deg, var(--grad-from) 0%, var(--grad-to) 100%); }
+      .glaze-tex {
+        position: absolute; inset: 0;
+        background-image: url('assets/texture-topographic.png');
+        background-size: 50% 50%;
+        mix-blend-mode: multiply;
+        opacity: 0.5;
+      }
+
+      .head { position: relative; z-index: 10; padding: 56px 64px 0; }
+      .lockup { height: 38px; width: auto; display: block; margin-bottom: 28px; }
+      .title {
+        font-family: 'Fraunces', Georgia, serif;
+        font-weight: 500;
+        font-variation-settings: "SOFT" 80, "opsz" 96;
+        font-size: 62px;
+        line-height: 1.06;
+        letter-spacing: -0.012em;
+        color: var(--ink);
+      }
+      .title .em { position: relative; font-style: italic; font-weight: 540; white-space: nowrap; }
+      .title .em svg { position: absolute; left: -2%; bottom: -0.12em; width: 104%; height: 0.16em; }
+      .sub { font-family: 'Inter', sans-serif; font-size: 19px; line-height: 1.4; color: var(--muted); margin-top: 14px; }
+
+      .stage-wrap { position: relative; z-index: 10; flex: 1; padding: 18px 50px 0 50px; min-height: 0; }
+      #stage { width: 100%; height: 100%; display: block; }
+
+      .foot { position: relative; z-index: 10; padding: 0 64px 34px; }
+      .foot-line { display: block; width: 100%; height: 12px; margin-bottom: 8px; }
+      .foot-row { display: flex; justify-content: space-between; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); }
+      .foot-right { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.06em; }
+
+      text { user-select: none; }
+      .axis-label { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink); }
+      .axis-sub { font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--muted); }
+      .tier-label { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; fill: var(--muted); }
+      .hand-note-svg { font-family: 'Caveat', cursive; font-size: 30px; font-weight: 600; fill: var(--ink); }
+      .legend-label { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink); }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      class="clip"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8"
+      data-track-index="0"
+      data-width="1080"
+      data-height="1350"
+    >
+      <div class="frame">
+        <div class="glaze">
+          <div class="glaze-fill" id="glaze-fill"></div>
+          <div class="glaze-tex" id="glaze-tex"></div>
+        </div>
+
+        <div class="head" id="head">
+          <img class="lockup" src="assets/kiln-lockup-black.png" alt="The Kiln" />
+          <h1 class="title">AI-first CRMs hit a <span class="em" id="em-phrase">Series B wall</span></h1>
+          <p class="sub">What the new-wave CRMs nail at seed. What breaks when you actually need to scale.</p>
+        </div>
+
+        <div class="stage-wrap">
+          <svg id="stage" viewBox="0 0 980 880" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+
+        <div class="foot" id="foot">
+          <svg class="foot-line" id="foot-line" viewBox="0 0 952 12" preserveAspectRatio="none"></svg>
+          <div class="foot-row">
+            <span>Patrick Spychalski</span>
+            <span class="foot-right">thekiln.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        'use strict';
+        var C = window.Craft;
+        var rng = C.rngFromString('series-b-wall-v2');
+        var SVG = document.getElementById('stage');
+
+        function put(el, html) { el.insertAdjacentHTML('beforeend', html); }
+        function g(id) { return '<g id="' + id + '">'; }
+        function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+        var style = document.createElement('style');
+        style.textContent = '.frame::after { background-image: ' + C.grainCss() + '; }';
+        document.head.appendChild(style);
+
+        var dip = C.glazeDipPath(rng, 1080, 34, { waves: 7, amp: 8 });
+        document.getElementById('glaze-fill').style.clipPath = "path('" + dip + "')";
+        document.getElementById('glaze-tex').style.clipPath = "path('" + dip + "')";
+
+        document.getElementById('em-phrase').insertAdjacentHTML('beforeend',
+          '<svg viewBox="0 0 300 24" preserveAspectRatio="none"><g id="em-mark">' +
+          C.handLine(rng, 4, 10, 296, 8, { amp: 2.6, width: 7, filter: null, stroke: 'var(--accent)' }) +
+          C.handLine(rng, 10, 17, 280, 16, { amp: 2.2, width: 5.5, filter: null, stroke: 'var(--accent)', opacity: 0.75 }) +
+          '</g></svg>');
+
+        put(document.getElementById('foot-line'),
+          C.handLine(rng, 2, 6, 950, 6, { amp: 1.6, width: 2.2, opacity: 0.5, filter: null }));
+
+        /* ---- geometry (identical to the static composition) ---- */
+        var PLOT = { x0: 230, x1: 940, y0: 760, y1: 130 };
+        var X_TICKS = [230, 408, 585, 763, 940];
+        var X_LABELS = [['Seed', '~$0-2M ARR'], ['Series A', '~$2-10M'], ['Series B', '~$10-30M ARR'], ['Series C', '~$30-100M'], ['IPO', '$100M+']];
+        var Y_TIERS = [760, 602.5, 445, 287.5, 130];
+        var Y_LABELS = ['Contacts + companies', 'Sequences + workflows', 'Custom views + reports', 'Hierarchy + custom objects', 'Routing + permissions'];
+        var WALL_X = 585;
+        var CRASH = { x: 575, y: 520 };
+
+        put(SVG, '<defs>' + C.roughDefs() + '</defs>');
+
+        var grid = [g('grid')];
+        Y_TIERS.forEach(function (y, i) {
+          grid.push('<line x1="' + PLOT.x0 + '" y1="' + y + '" x2="' + PLOT.x1 + '" y2="' + y + '" stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 5"/>');
+          grid.push('<text class="tier-label" x="' + (PLOT.x0 - 14) + '" y="' + (y + 4) + '" text-anchor="end">' + esc(Y_LABELS[i]) + '</text>');
+        });
+        X_TICKS.forEach(function (x, i) {
+          var hot = i === 2;
+          grid.push('<line x1="' + x + '" y1="' + PLOT.y0 + '" x2="' + x + '" y2="' + (PLOT.y0 + 8) + '" stroke="' + (hot ? 'var(--accent)' : 'var(--muted)') + '" stroke-width="' + (hot ? 2.5 : 1.5) + '"/>');
+          grid.push('<text class="axis-label" x="' + x + '" y="' + (PLOT.y0 + 32) + '" text-anchor="middle"' + (hot ? ' fill="var(--accent)"' : '') + '>' + esc(X_LABELS[i][0]) + '</text>');
+          grid.push('<text class="axis-sub" x="' + x + '" y="' + (PLOT.y0 + 52) + '" text-anchor="middle">' + esc(X_LABELS[i][1]) + '</text>');
+        });
+        grid.push('<text class="axis-sub" x="' + PLOT.x0 + '" y="' + (PLOT.y1 - 26) + '" style="font-family:JetBrains Mono,monospace;letter-spacing:0.14em;font-size:12px;" fill="var(--muted)">CAPABILITY NEEDED &#8593;</text>');
+        grid.push('</g>');
+        put(SVG, grid.join(''));
+
+        put(SVG, g('est-line') + '<path id="est-path" d="M 230 760 C 320 700, 380 640, 460 560 C 560 460, 640 360, 720 280 C 800 205, 880 165, 940 145" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/></g>');
+        put(SVG, g('ai-line') + '<path id="ai-path" d="M 230 760 C 330 718, 430 665, 495 618 C 532 590, 558 552, 575 520" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/></g>');
+        put(SVG, g('flatline') + '<path d="M 595 520 L 940 516" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.65"/></g>');
+
+        var wall = [g('wall')];
+        var wallTop = 240, wallBot = 760;
+        wall.push(C.handLine(rng, WALL_X - 9, wallTop, WALL_X - 9, wallBot, { amp: 2.2, width: 4.5, stroke: 'var(--accent)' }));
+        wall.push(C.handLine(rng, WALL_X + 9, wallTop + 6, WALL_X + 9, wallBot, { amp: 2.2, width: 4.5, stroke: 'var(--accent)' }));
+        for (var hy = wallTop + 12; hy < wallBot - 6; hy += 26) {
+          wall.push(C.handLine(rng, WALL_X - 8, hy + 14, WALL_X + 8, hy, { amp: 1, width: 3, stroke: 'var(--accent)', opacity: 0.75, filter: null }));
+        }
+        wall.push('</g>');
+        put(SVG, wall.join(''));
+
+        put(SVG, g('crash-dot') + '<circle cx="' + CRASH.x + '" cy="' + CRASH.y + '" r="7" fill="var(--accent)"/></g>');
+        put(SVG, g('crash-ring') + C.handCircle(rng, CRASH.x - 2, CRASH.y + 2, 34, 30, { width: 4.5, stroke: 'var(--ink)' }) + '</g>');
+
+        put(SVG, g('note') + '<text class="hand-note-svg" x="272" y="360" transform="rotate(-3 272 360)">migration conversations<tspan x="272" dy="34">start right about here</tspan></text>' +
+          C.handArrow(rng, 480, 410, 552, 492, { width: 3.6, stroke: 'var(--ink)', head: 15, curve: -26 }) + '</g>');
+
+        function chip(buf, x, y, img) {
+          buf.push(C.handBox(rng, x, y, 54, 54, { width: 3, overshoot: 4, amp: 1.6, filter: null }));
+          buf.push('<image href="assets/logos/' + img + '" x="' + (x + 8) + '" y="' + (y + 8) + '" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>');
+        }
+        var ai = [g('ai-cluster')];
+        chip(ai, 438, 580, 'attio-icon.png');
+        chip(ai, 506, 588, 'folk-icon.png');
+        ai.push('<text class="axis-sub" x="499" y="676" text-anchor="middle" style="font-family:JetBrains Mono,monospace;letter-spacing:0.12em;font-size:11.5px;">STOPS HERE</text>');
+        ai.push('</g>');
+        put(SVG, ai.join(''));
+
+        var est = [g('est-cluster')];
+        chip(est, 790, 88, 'salesforce-icon.png');
+        chip(est, 858, 82, 'hubspot-icon.png');
+        est.push('<text class="axis-sub" x="851" y="66" text-anchor="middle" style="font-family:JetBrains Mono,monospace;letter-spacing:0.12em;font-size:11.5px;">SCALES TO IPO</text>');
+        est.push('</g>');
+        put(SVG, est.join(''));
+
+        var LY = 856;
+        put(SVG, g('legend') +
+          C.handLine(rng, 300, LY, 344, LY, { amp: 1.2, width: 4.5, stroke: 'var(--ink)', filter: null }) +
+          '<text class="legend-label" x="356" y="' + (LY + 5) + '">Established CRMs</text>' +
+          C.handLine(rng, 560, LY, 604, LY, { amp: 1.2, width: 4.5, stroke: 'var(--accent)', filter: null }) +
+          '<text class="legend-label" x="616" y="' + (LY + 5) + '">AI-first CRMs</text>' +
+          '</g>');
+
+        /* =========================================================
+           TIMELINE — Ink & Kiln motion: restrained eases, opacity +
+           small translates, stroke draw-ons. No overshoots, no scale
+           on text, no rotation entrances.
+           ========================================================= */
+        function drawOn(tl, sel, dur, at, ease) {
+          document.querySelectorAll(sel).forEach(function (p) {
+            if (!p.getTotalLength) return;
+            var len = p.getTotalLength();
+            p.style.strokeDasharray = len + ' ' + len;
+            p.style.strokeDashoffset = len;
+            tl.to(p, { strokeDashoffset: 0, duration: dur, ease: ease || 'power2.inOut' }, at);
+          });
+        }
+        function fadeUp(tl, sel, at, dur) {
+          tl.fromTo(sel, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: dur || 0.5, ease: 'power2.out' }, at);
+        }
+        function fadeIn(tl, sel, at, dur) {
+          tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: dur || 0.4, ease: 'power2.out' }, at);
+        }
+
+        var tl = gsap.timeline({ paused: true });
+
+        fadeUp(tl, '#head', 0.1, 0.6);
+        drawOn(tl, '#em-mark path', 0.5, 0.55, 'power2.out');
+        fadeIn(tl, '#foot', 0.4, 0.6);
+        fadeIn(tl, '#grid', 0.6, 0.7);
+
+        drawOn(tl, '#est-path', 1.6, 1.1, 'power2.inOut');
+        tl.set('#est-cluster', { opacity: 0 }, 0);
+        fadeUp(tl, '#est-cluster', 2.5, 0.5);
+
+        drawOn(tl, '#ai-path', 1.5, 1.5, 'power2.inOut');
+
+        tl.set('#wall path', { opacity: 0 }, 0);
+        tl.to('#wall path', { opacity: 1, duration: 0.06, stagger: 0.028, ease: 'none' }, 2.95);
+
+        tl.set('#crash-dot', { opacity: 0 }, 0);
+        fadeIn(tl, '#crash-dot', 3.15, 0.2);
+        drawOn(tl, '#crash-ring path', 0.55, 3.35, 'power2.inOut');
+
+        tl.set('#flatline', { opacity: 0 }, 0);
+        fadeIn(tl, '#flatline', 3.7, 0.5);
+
+        tl.set('#ai-cluster', { opacity: 0 }, 0);
+        fadeUp(tl, '#ai-cluster', 4.0, 0.5);
+
+        tl.set('#note', { opacity: 0 }, 0);
+        fadeUp(tl, '#note', 4.5, 0.55);
+
+        tl.set('#legend', { opacity: 0 }, 0);
+        fadeIn(tl, '#legend', 5.1, 0.5);
+
+        /* hold to 8s */
+        tl.to({}, { duration: Math.max(0, 8 - tl.duration()) });
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
