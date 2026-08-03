@@ -98,7 +98,7 @@ This is **Step 8 of `ideation/SKILL.md`** — read that section in full and foll
 1. Read the post. Identify its shape (single beat → GIF/info-card; N points → carousel; dense data → info-card; narrative → GIF).
 2. Confirm or infer the format. Surface inference briefly; don't wait if obvious.
 3. Build the JSON input using the **post's actual phrasing** — italic-emphasis hook becomes cover title; body points become content slides; final line becomes CTA hook.
-4. Generate concept-specific doodles if needed (`templates/exploration/carousel/lib/gen-doodle.js`).
+4. Generate concept-specific spots if needed (`templates/exploration/carousel/lib/gen-spot.js` — Recraft brand style; `gen-doodle.js` is the OpenAI fallback).
 5. Run the generator. **If the validator fails, restructure before dropping content** — see "When the validator fails" below.
 6. Deliver: post caption (their text, untouched) + path to the generated asset + rendered output inline.
 7. Save the input JSON alongside the output so the user can re-render.
@@ -189,7 +189,7 @@ The info-card generator has a pre-flight `validateInput` step that fails if cont
 
 ### Brand direction (binary — never mix)
 
-- **Carousels + info-cards → `exploration`** (default). Gradient frame + topographic texture, Fraunces italic-emphasis, cream/white panels, single-accent discipline.
+- **Carousels + info-cards → `exploration`** (default), v2 "Ink & Kiln" execution: grained paper canvas, glaze-dip gradient band, hand-drawn ink structure (`templates/craft/craft.js`), Fraunces scale drama with hand-marked emphasis, thick marker spots. See the v2 note atop `brand/brand-exploration.md`.
 - **Animations → `legacy`** (default). Clean editorial register, no 3D icons in motion, no doodles in motion.
 - Per-format defaults live in `brand/README.md` — that file is the source of truth.
 - **Only use assets from the matching direction folder.** Don't pull an `exploration/` doodle into a `legacy/` template.
@@ -203,7 +203,7 @@ The info-card generator has a pre-flight `validateInput` step that fails if cont
 | Describing a product or UI | Website screenshot (`templates/legacy/carousel/lib/screenshot-site.js`) |
 | A list of systems or integrations | Tool-card row or scattered-logo layout |
 | A process or sequence of steps | Flowchart |
-| Abstract concepts (power, trust, speed) | Generated 3D illustration (legacy) or doodle accent (exploration) |
+| Abstract concepts (power, trust, speed) | Generated 3D illustration (legacy) or thick marker spot via `lib/gen-spot.js` (exploration) |
 | A verdict, tradeoff, decision moment | Generated 3D illustration |
 | Cover / CTA | 3D icon + doodle flanking (carousel) OR clean editorial (animation) |
 

@@ -4,65 +4,143 @@
   "slides": [
     {
       "type": "content",
-      "step_label": "VARIANT A \u2014 SCATTERED",
+      "step_label": "VARIANT A - SCATTERED",
       "headline": "Here's where it gets tricky.",
       "body": "Can enterprise really trust a Claude-built workflow with their systems of record? Personally, I don't think so.",
       "logos_layout": "scattered",
       "background_doodle": "cursive-swoop.png",
       "logos": [
-        { "src": "captures/logos/snowflake.com.png", "left": 70,  "top": 40,  "width": 280, "rotate": -4 },
-        { "src": "captures/logos/gong.io.png",       "left": 560, "top": 180, "width": 320, "rotate": 3 },
-        { "src": "captures/logos/salesloft.com.png", "left": 200, "top": 440, "width": 260, "rotate": -6 }
+        {
+          "src": "captures/logos/snowflake.com.png",
+          "left": 70,
+          "top": 40,
+          "width": 280,
+          "rotate": -4
+        },
+        {
+          "src": "captures/logos/gong.io.png",
+          "left": 560,
+          "top": 180,
+          "width": 320,
+          "rotate": 3
+        },
+        {
+          "src": "captures/logos/salesloft.com.png",
+          "left": 200,
+          "top": 440,
+          "width": 260,
+          "rotate": -6
+        }
       ]
     },
     {
       "type": "content",
-      "step_label": "VARIANT B \u2014 TILTED NOTES",
+      "step_label": "VARIANT B - TILTED NOTES",
       "headline": "Here's where it gets tricky.",
       "body": "Can enterprise really trust a Claude-built workflow with their systems of record? Personally, I don't think so.",
       "logos_layout": "notes",
       "logos": [
-        { "src": "captures/logos/snowflake.com.png", "rotate": -5 },
-        { "src": "captures/logos/gong.io.png",       "rotate": 3  },
-        { "src": "captures/logos/salesloft.com.png", "rotate": -3 }
+        {
+          "src": "captures/logos/snowflake.com.png",
+          "rotate": -5
+        },
+        {
+          "src": "captures/logos/gong.io.png",
+          "rotate": 3
+        },
+        {
+          "src": "captures/logos/salesloft.com.png",
+          "rotate": -3
+        }
       ]
     },
     {
       "type": "content",
-      "step_label": "VARIANT C \u2014 DIAGONAL PATH",
+      "step_label": "VARIANT C - DIAGONAL PATH",
       "headline": "Here's where it gets tricky.",
       "body": "Can enterprise really trust a Claude-built workflow with their systems of record? Personally, I don't think so.",
       "logos_layout": "path",
       "background_doodle": "wavy-arrow.png",
       "logos": [
-        { "src": "captures/logos/snowflake.com.png", "left": 80,  "top": 40,  "width": 220, "rotate": -4 },
-        { "src": "captures/logos/gong.io.png",       "left": 400, "top": 240, "width": 280, "rotate": 2  },
-        { "src": "captures/logos/salesloft.com.png", "left": 720, "top": 460, "width": 240, "rotate": 5  }
+        {
+          "src": "captures/logos/snowflake.com.png",
+          "left": 80,
+          "top": 40,
+          "width": 220,
+          "rotate": -4
+        },
+        {
+          "src": "captures/logos/gong.io.png",
+          "left": 400,
+          "top": 240,
+          "width": 280,
+          "rotate": 2
+        },
+        {
+          "src": "captures/logos/salesloft.com.png",
+          "left": 720,
+          "top": 460,
+          "width": 240,
+          "rotate": 5
+        }
       ]
     },
     {
       "type": "content",
-      "step_label": "VARIANT D \u2014 HERO + SATELLITES",
+      "step_label": "VARIANT D - HERO + SATELLITES",
       "headline": "Here's where it gets tricky.",
       "body": "Can enterprise really trust a Claude-built workflow with their systems of record? Personally, I don't think so.",
       "logos_layout": "hero",
       "logos": [
-        { "src": "captures/logos/gong.io.png",       "emphasis": "primary" },
-        { "src": "captures/logos/snowflake.com.png", "left": "40px",   "top": "40px",    "width": 220, "rotate": -3 },
-        { "src": "captures/logos/salesloft.com.png", "right": "40px",  "bottom": "40px", "width": 220, "rotate": 3 }
+        {
+          "src": "captures/logos/gong.io.png",
+          "emphasis": "primary"
+        },
+        {
+          "src": "captures/logos/snowflake.com.png",
+          "left": "40px",
+          "top": "40px",
+          "width": 220,
+          "rotate": -3
+        },
+        {
+          "src": "captures/logos/salesloft.com.png",
+          "right": "40px",
+          "bottom": "40px",
+          "width": 220,
+          "rotate": 3
+        }
       ]
     },
     {
       "type": "content",
-      "step_label": "VARIANT E \u2014 DOODLE INTEGRATED",
+      "step_label": "VARIANT E - DOODLE INTEGRATED",
       "headline": "Here's where it gets tricky.",
       "body": "Can enterprise really trust a Claude-built workflow with their systems of record? Personally, I don't think so.",
       "logos_layout": "integrated",
       "background_doodle": "labyrinth.png",
       "logos": [
-        { "src": "captures/logos/snowflake.com.png", "left": 40,  "top": 60,   "width": 240, "rotate": -4 },
-        { "src": "captures/logos/gong.io.png",       "right": 40, "top": 60,   "width": 260, "rotate": 3 },
-        { "src": "captures/logos/salesloft.com.png", "left": 320, "bottom": 60, "width": 240, "rotate": -2 }
+        {
+          "src": "captures/logos/snowflake.com.png",
+          "left": 40,
+          "top": 60,
+          "width": 240,
+          "rotate": -4
+        },
+        {
+          "src": "captures/logos/gong.io.png",
+          "right": 40,
+          "top": 60,
+          "width": 260,
+          "rotate": 3
+        },
+        {
+          "src": "captures/logos/salesloft.com.png",
+          "left": 320,
+          "bottom": 60,
+          "width": 240,
+          "rotate": -2
+        }
       ]
     }
   ]

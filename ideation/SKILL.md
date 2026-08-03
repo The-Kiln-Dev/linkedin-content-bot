@@ -229,7 +229,7 @@ Wait for the user's answer. Don't generate the post unprompted.
 
 If they pick "write the post":
 - Generate the LinkedIn caption first (200–400 words typically, depending on idea density)
-- For **tabular**: generate the JSON input for the chosen visual asset, following the schema in `templates/exploration/<format>/inputs/*.json`. For carousels with concept-specific doodles needed, also call `lib/gen-doodle.js` per slide.
+- For **tabular**: generate the JSON input for the chosen visual asset, following the schema in `templates/exploration/<format>/inputs/*.json`. For carousels with concept-specific spots needed, also call `lib/gen-spot.js` (Recraft brand style; `gen-doodle.js` is the OpenAI fallback) per slide.
 - For **thematic**: build the custom SVG composition. Define the geometry first (per `templates/freeform/design.md`), then anchor every text/logo to that geometry. Source brand logos via the strategies in `design.md` (Google favicon → subdomain hits → Wikipedia → gilbarbara). Use Recraft API sparingly — only when the metaphor genuinely benefits from atmospheric/painterly treatment (most don't).
 - Run the generator / snapshot
 - Show the user the rendered output and the caption together
@@ -262,7 +262,7 @@ The flow:
    - **For tabular** (info-card / carousel): construct the JSON input following the schema in `templates/exploration/<format>/inputs/*.json`. Use the post's actual phrasing — don't paraphrase. Italic-emphasis hook from the post becomes the cover-slide title; body points become content slides; final line becomes the CTA hook.
    - **For thematic** (freeform): read `templates/freeform/design.md` FIRST. Then sketch the geometry, build the SVG diagram, anchor every text/logo to its coordinates. Source brand logos via the strategies in `design.md`. Use Recraft sparingly. Iterate via `npx hyperframes snapshot --at 0` until tight.
 
-4. **Generate concept-specific doodles if needed.** If the chosen format is a carousel and the deck has slides that need doodles the brand inventory doesn't cover, call `templates/exploration/carousel/lib/gen-doodle.js` per slide with a content-matched concept.
+4. **Generate concept-specific spots if needed.** If the chosen format is a carousel and the deck has slides that need spots the brand inventory doesn't cover, call `templates/exploration/carousel/lib/gen-spot.js` per slide with a content-matched concept (thick marker style is enforced by the custom Recraft style).
 
 5. **Run the generator.** Render the asset to the appropriate `output/` directory.
 

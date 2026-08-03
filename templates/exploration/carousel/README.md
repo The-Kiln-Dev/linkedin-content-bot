@@ -1,128 +1,110 @@
-# Exploration carousel generator
+# Ink & Kiln carousel generator
 
-JSON-driven multi-slide PNG generator for LinkedIn carousels — the **default carousel direction** for the repo. Renders cover/content/CTA slides at 1080×1350 using the exploration visual language: gradient frame, topographic texture, Fraunces italic-emphasis headlines, two-tone white/cream interior, single-accent discipline, small monoline doodles.
+JSON-driven multi-slide PNG generator for LinkedIn carousels — the **default carousel direction** for the repo. Renders slides at 1080×1350 in the Ink & Kiln visual language (see `docs/asset-redesign-2026-08.md` for the rationale):
+
+- **Warm paper canvas** with visible grain, full bleed — no white panel, no gradient fence
+- **Glaze dip** — one wavy-edged gradient band per slide (topographic texture overlaid); deep on cover/CTA, slim and alternating edges on interior slides
+- **Hand-drawn ink structure** from `templates/craft/craft.js`: seeded wobbly underlines, circles, arrows, boxes, checks — every render wobbles differently, deterministically per slide
+- **Fraunces with real scale drama** — up to ~156px covers, ~300px stat numerals; italic emphasis gets a hand mark (underline / circle / highlight)
+- **Marker spot illustrations** — thick-stroke brand doodles or Recraft-generated spots. Thin-line icons are banned.
+- **Slide archetypes, not one skeleton** — each slide type carries its own composition
 
 From repo root (deps installed once at root via `npm install`):
 
 ```
-npm run render:carousel -- templates/exploration/carousel/inputs/sample-outbound.json
-open templates/exploration/carousel/output/sample-outbound/*.png
+npm run render:carousel -- templates/exploration/carousel/inputs/craft-proof.json
+open templates/exploration/carousel/output/craft-proof/*.png
 ```
 
-Or directly:
+## The archetype roster
 
-```
-node templates/exploration/carousel/generate.js templates/exploration/carousel/inputs/sample-outbound.json
-```
+| Type | Composition | Use for |
+|---|---|---|
+| `cover` | Deep glaze dip top, poster-scale title with hand-marked emphasis, spot bottom-right, optional Caveat hand-note with swipe arrow | Slide 1 |
+| `point` | Hand-circled Fraunces numeral, title with marked emphasis, body, spot (side alternates via `flip`) | One idea per slide |
+| `big-number` | Mono kicker label, giant Fraunces stat (up to 300px), double marker underline, context line | The stat that carries the post |
+| `quote` | Oversized accent quote glyph, large Fraunces italic, hand-dash attribution | Pull quotes, aphorisms |
+| `list` | Marked title + hand-check bullets with wobbly dividers | 2–4 quick items on one slide |
+| `diagram` | Hand-drawn boxes + curved accent arrows, vertical flow | Processes, funnels (≤4 nodes) |
+| `cta` | Deep glaze dip bottom, title, hand-boxed button with curved arrow pointing into it, spot | Last slide |
 
-Either form works — the generator resolves input paths from your current working directory.
+**Art-direction rule: no two adjacent slides use the same archetype unless the content is a genuine series (e.g. persona 1/2/3 as `point` slides — fine, the `flip` alternation and per-slide seeds keep them from twinning).** A good 7-slide deck touches 4+ archetypes. If content doesn't fit any archetype, add a new renderer (see "System, not template" below) — don't bend the content.
 
-## System, not template
-
-**This generator ships three slide types — cover, content, CTA — as a starting set, not a closed list.** Different decks have different content shapes, and the right move is often to add a new slide-type renderer rather than forcing content into one of the existing three.
-
-Cases where you'd add a new slide type:
-- **Tool comparison** → `comparison-2up` (logos + stat rows side-by-side)
-- **Workflow / process** → `flowchart` (steps connected by arrows, on cream)
-- **Pull quote** → `quote` (full-bleed Fraunces italic statement)
-- **Screenshot + caption** → `screenshot` (real product capture with subtitle below)
-- **Tools used** → `logo-grid` (named tool cards in a grid)
-- **Big stat** → `stat-hero` (one giant accent-colored number with a one-line story)
-
-The shared chassis (gradient frame, Fraunces, cream/white panels, italic-emphasis, single-accent color) holds the deck together visually. The layout-per-slide is open.
-
-**How to add a slide type:**
-
-1. Write a `renderMyType(slide, ctx)` function in `generate.js` that returns the slide's inner HTML.
-2. Add a CSS block for the new type to the inline `<style>` in `buildHtml()`.
-3. Add a `case 'my-type':` branch in `renderSlide()`.
-4. Use it in an input JSON: `{ "type": "my-type", ... }`.
-
-That's it. The renderer is intentionally small per type so new types are cheap to add.
-
-## When to use vs other formats
-
-| Format | Tool | Output | When |
-|---|---|---|---|
-| **Carousel (default)** | **this folder** | **5–7 PNGs (1080×1350)** | **Multi-slide narrative posts** |
-| Carousel (legacy direction) | `../../legacy/carousel/` | Same | Editorial b&w + 3D icons treatment. Use when the deck wants the cleaner editorial register. |
-| Single info-card | `../info-card/` | 1 tall PNG | Dense data / patterns / principles in one feed-readable image. |
-| Standalone motion | `../../../animations/` | GIF / MP4 | One beat that benefits from motion. |
-
-## Visual language (don't break)
-
-Per `../../../brand/brand-exploration.md`:
-
-- **Gradient frame** (~50px) with topographic texture overlaid via `mix-blend-mode: multiply` at ~55%. Texture asset: `brand/assets/exploration/texture-topographic.png`.
-- **Two-tone interior:** white top-panel (logo + step label) over a cream body panel. Some slide types (cover, CTA) use white throughout.
-- **Fraunces serif** for all headlines and titles, with **italic-emphasis on one key phrase** colored in the gradient `from` value. This is the signature voice move.
-- **Inter sans** for body, step labels, footer, button text.
-- **Single accent color** throughout the interior — only the gradient `from` value is reused (numbered circles, italic emphasis, button hover states). No second hue for emphasis.
-- **Kiln lockup top-left** of every slide. The "Patrick + photo" badge is **legacy-only** and never appears here.
-- **Small monoline doodles** as supporting visuals — from `brand/assets/exploration/doodles/` (curated inventory) or `generated/<deck-name>/` (AI-generated, per-deck). Both use `mix-blend-mode: multiply` to blend cleanly onto cream.
-- **Doodle placement on content slides.** The doodle is **vertically centered in the cream space between the bottom of the body paragraph and the bottom of the cream panel** — not pinned just below the body. Implemented via `flex: 1` + `align-items: center` on `.content-visual`. Don't switch to a fixed `margin-top` — it pulls the doodle toward the upper-middle of the slide and reads as a mid-slide orphan.
-- **Page indicator** (`02 / 05`) in the footer of every slide so the swipe sequence is obvious.
-
-## Gradient variants
-
-Pick one variant per deck from `brand/colors-exploration.json` via `gradient_variant`. Default `orange_indigo`.
-
-| Variant | From → To |
-|---|---|
-| `orange_indigo` | `#FB923C` → `#818CF8` |
-| `teal_amber` | `#0F766E` → `#F59E0B` |
-| `fuchsia_blue` | `#E879F9` → `#3B82F6` |
-| `indigo_slate` | `#A5B4FC` → `#64748B` |
-| `rose_violet` | `#FB7185` → `#A78BFA` |
-
-Rotate across posts for variety. Never mix variants within one deck.
-
-## Input schema
+## Input schema (v2)
 
 ```jsonc
 {
-  "deck_name": "sample-outbound",
-  "canvas": { "width": 1080, "height": 1350 },
-  "gradient_variant": "orange_indigo",
+  "deck_name": "craft-proof",
+  "gradient_variant": "orange_indigo",   // one per deck, from brand/colors-exploration.json
   "author": "Patrick Spychalski",
+  "seed": "optional-string",             // change to re-roll all hand wobble
   "slides": [
-    { "type": "cover",   "category": "GUIDE",   "title_roman": "...", "title_italic": "...", "subtitle": "...", "doodle": "..." },
-    { "type": "content", "step_label": "SHIFT 1", "title_roman": "...", "title_italic": "...", "body": "...", "doodle": "..." },
-    { "type": "cta",     "title_roman": "...", "title_italic": "...", "subtitle": "...", "button_text": "Book a chat →", "doodle": "..." }
+    { "type": "cover", "kicker": "HIRING",
+      "title": "Three personas for hiring a *GTM engineer*",   // *asterisks* = emphasis span
+      "subtitle": "...", "spot": "magnifying-glass.png",
+      "note": "the third one surprised me",                    // optional Caveat hand-note
+      "mark": "highlight" },                                   // underline | circle | highlight | none
+
+    { "type": "point", "num": 1, "kicker": "PERSONA 1",
+      "title": "The ex-SDR who *taught themselves Clay*",
+      "body": "...", "spot": "lightning-bolt.png", "flip": false },
+
+    { "type": "big-number", "kicker": "THE MATH", "label": "Manual hours replaced",
+      "stat": "640+", "context": "...", "note": "real client number" },
+
+    { "type": "quote", "quote": "...", "attribution": "..." },
+
+    { "type": "list", "title": "What to *screen for*",
+      "items": [ { "label": "...", "sub": "..." } ] },
+
+    { "type": "diagram", "title": "Our *actual* hiring loop",
+      "nodes": [ { "label": "Portfolio screen", "sub": "show us a real workflow" } ] },
+
+    { "type": "cta", "title": "Stealing this *playbook?*",
+      "subtitle": "...", "button_text": "Follow Patrick", "spot": "paper-airplane.png" }
   ]
 }
 ```
 
-### Doodle paths
+Emphasis: wrap the key phrase in `*asterisks*` inside `title` / `context` / `quote`. It renders as Fraunces italic with a hand mark. Keep it to one phrase per title. v1 inputs (`title_roman` / `title_italic`, types `content`) still render via a compat mapping.
 
-`doodle` resolves in two locations, in order:
+The generator warns on overflow (`WARN slide N: possible overflow`) — treat any warning as a failure and shorten copy or split the slide.
 
-1. **Brand inventory:** `brand/assets/exploration/doodles/<name>` — e.g. `"envelope.png"`. Use for generic concepts the brand library already covers.
-2. **Per-deck generated:** `generated/<deck-name>/<name>.png` — e.g. `"generated/sample-outbound/handshake.png"`. Use for concept-specific doodles generated via `lib/gen-doodle.js`.
+## Spot illustrations
 
-## Generating per-deck doodles
+`spot` resolves from, in order: `brand/assets/exploration/doodles/`, `generated/`, `generated/<any-deck>/`.
 
-For decks where the brand inventory doesn't have a doodle that matches a slide's content (e.g. "warm intros" needs a handshake, not an envelope), generate one via gpt-image-1 using the existing brand doodles as style references:
-
-```
-# requires OPENAI_API_KEY in .env at repo root
-node lib/gen-doodle.js \
-  --concept "two clasped hands forming a handshake icon" \
-  --out generated/sample-outbound/handshake.png
-```
-
-The prompt automatically prefixes a style preamble that enforces monoline / single-stroke / wobbly / black-on-white / no-fill / pure-line constraints. All 10 brand doodles are passed as reference images by default.
-
-Cost: ~$0.17 per high-quality 1024×1024 generation. Generated outputs land in `generated/<deck-name>/` and are committed alongside the deck so re-renders are stable.
-
-**Style drift caveat:** AI-generated doodles tend to come out slightly cleaner / more icon-set-y than the existing brand inventory (which is wobblier / more napkin-sketch). If you're mixing generated and brand-inventory doodles within one deck, expect a small style discontinuity. To minimize: regenerate with a wobblier-style prompt ("uneven stroke width, hand-drawn imperfections, drawn quickly with a felt-tip marker"), or pick all doodles from one source.
-
-## Worked example
-
-`inputs/sample-outbound.json` → 5-slide deck on outbound-in-2026 patterns. Uses all three slide types and three AI-generated doodles (handshake / lightning-bolt / sequence-dots). Re-render:
+Generate new concepts with the **Recraft brand style** (default — thick marker strokes matching the brand doodles):
 
 ```
-node generate.js inputs/sample-outbound.json
+node lib/gen-spot.js --concept "magnifying glass" --out generated/<deck>/magnifying-glass.png
 ```
 
-Output in `output/sample-outbound/`.
+- Style id lives in `brand/recraft-style.json` (custom style trained on the brand doodles). ~$0.04/generation.
+- Describe the subject as a THING ("magnifying glass", "wrench"). Never put numbers or percentages in the concept — Recraft renders them literally.
+- Fallback if Recraft is unavailable: `lib/gen-doodle.js` (OpenAI, needs `OPENAI_API_KEY`). Ask it for "thick marker strokes" explicitly — its defaults come out thinner than brand weight.
+- **Ban: thin-line icon-set glyphs.** If a generated spot comes back thin or fussy, regenerate. The spot should look like it was drawn in three seconds with a fat marker by someone confident.
+
+## Gradient variants
+
+One per deck via `gradient_variant`; rotate across posts. `orange_indigo` (default), `teal_amber`, `fuchsia_blue`, `indigo_slate`, `rose_violet` — hexes in `brand/colors-exploration.json`. The gradient's `from` value is the accent everywhere (marks, arrows, checks, ring numbers). Never a second hue.
+
+## System, not template
+
+The archetype roster is a starting set, not a closed list. When a deck needs a layout the roster doesn't cover (tool comparison, screenshot + caption, logo grid…):
+
+1. Write `renderMyType(slide, ctx)` in `generate.js` returning the slide's inner HTML — use `ctx.rng` + `craft.*` for every structural line so it stays in the hand language.
+2. Add its CSS block to `buildHtml()`.
+3. Register it in `RENDERERS`.
+
+Keep the chassis: paper, grain, glaze dip, chrome top/foot, Fraunces + Inter + JetBrains Mono + Caveat, single accent. Everything inside is open.
+
+## When to use vs other formats
+
+| Format | Tool | When |
+|---|---|---|
+| **Carousel (this)** | this folder | Multi-slide narrative posts |
+| Single info-card | `../info-card/` | Dense data / patterns in one image |
+| Freeform thematic | `../../freeform/` | The visual metaphor IS the argument |
+| Animation | `../../../animations/` | One beat that benefits from motion |
+| Legacy carousel | `../../legacy/carousel/` | Explicit opt-in only |

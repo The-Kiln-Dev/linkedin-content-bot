@@ -1,13 +1,14 @@
 #!/usr/bin/env node
-/* Exploration-direction info-card → single PNG via Puppeteer.
+/* Ink & Kiln info-card → single PNG via Puppeteer.
 
-   Visual language per ../../brand/brand-exploration.md:
-     - gradient frame (~60px) with topographic texture overlay (multiply ~55%)
-     - white top panel (logo + Fraunces title with italic-emphasis + subtitle)
-     - cream body panel containing numbered sections separated by hairlines
-     - sections rendered in pure typography on cream (no flat color section beds)
-     - small monoline doodle accent bottom-right
-     - footer strip at the base of the cream panel
+   Visual language per ../../brand/brand-exploration.md (v2 — Ink & Kiln):
+     - warm paper canvas with grain, full bleed; shallow glaze dip at the top edge
+     - Fraunces title with italic emphasis + hand marker underline
+     - hand-circled section numbers, wobbly ink section dividers
+     - stat cards as hand-drawn ink boxes on paper (no white cards)
+     - tables stay typographically crisp (data wants precision); the hand
+       lives in the chrome around them
+     - marker doodle accent bottom-right, hand-lined footer
 
    Usage:
      node generate.js inputs/outreach-cheatsheet.json
@@ -17,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const craft = require('../../craft/craft.js');
 
 const ROOT = __dirname;
 const BRAND_DIR = path.resolve(ROOT, '..', '..', '..', 'brand');
@@ -38,7 +40,7 @@ const GRADIENTS = JSON.parse(
 const LAYOUT = {
   frame: 50,
   headerPanel: {
-    paddingY: 44 + 36,
+    paddingY: 56 + 36,
     logoBlock: 42 + 26,
     titleLineHeight: 64 * 1.05,
     titleLinesMax: 2,
@@ -49,8 +51,8 @@ const LAYOUT = {
   },
   section: {
     paddingY: 4 + 4,
-    headRow: 36 + 18,
-    borderTop: 1,
+    headRow: 40 + 18,
+    borderTop: 14,
     interGap: 28,
   },
   statGrid: {
@@ -200,8 +202,9 @@ function textureUrl() {
 
 /* ---------- section title with italic emphasis ---------- */
 
-function renderSectionHead(s) {
-  const numHtml = `<span class="section-num">${s.number}</span>`;
+function renderSectionHead(s, rng) {
+  const ring = craft.svg(44, 44, craft.handCircle(rng, 22, 22, 17, 16, { width: 3.4, stroke: 'var(--accent)', filter: null, drift: 0.05 }), { class: 'section-num-ring' });
+  const numHtml = `<span class="section-num">${ring}<span class="section-num-digit">${s.number}</span></span>`;
   const titleHtml = `
     <h2 class="section-title">
       <span class="roman">${esc(s.title_roman)}</span>
@@ -213,24 +216,28 @@ function renderSectionHead(s) {
 
 /* ---------- section types ---------- */
 
-function renderStatGrid(s) {
+function renderStatGrid(s, rng) {
   const cols = s.columns || 2;
-  const items = s.items.map((it) => `
+  const items = s.items.map((it) => {
+    const box = `<svg class="stat-card-box" viewBox="0 0 320 140" preserveAspectRatio="none">${craft.handBox(rng, 6, 6, 308, 128, { width: 2.6, overshoot: 4, amp: 2, filter: null })}</svg>`;
+    return `
     <div class="stat-card">
+      ${box}
       <span class="stat-card-num">${it.n}</span>
       <div class="stat-card-title">${esc(it.title)}</div>
       <div class="stat-card-body">${escAllowB(it.body)}</div>
     </div>
-  `).join('');
+  `;
+  }).join('');
   return `
     <section class="section">
-      ${renderSectionHead(s)}
+      ${renderSectionHead(s, rng)}
       <div class="stat-grid" style="grid-template-columns:repeat(${cols}, 1fr);">${items}</div>
     </section>
   `;
 }
 
-function renderComparisonTable(s) {
+function renderComparisonTable(s, rng) {
   const head = s.columns.map((h) => `<div class="ct-head">${esc(h)}</div>`).join('');
   const body = s.rows.map((row) => {
     const cells = row.map((cell, j) => {
@@ -243,7 +250,7 @@ function renderComparisonTable(s) {
   }).join('');
   return `
     <section class="section">
-      ${renderSectionHead(s)}
+      ${renderSectionHead(s, rng)}
       <div class="ct">
         <div class="ct-row ct-head-row">${head}</div>
         ${body}
@@ -252,7 +259,7 @@ function renderComparisonTable(s) {
   `;
 }
 
-function renderMetricsRows(s) {
+function renderMetricsRows(s, rng) {
   const head = s.columns.map((h) => `<div class="mr-head">${esc(h)}</div>`).join('');
   const body = s.rows.map((row) => {
     const cells = row.map((cell, j) => {
@@ -265,7 +272,7 @@ function renderMetricsRows(s) {
   }).join('');
   return `
     <section class="section">
-      ${renderSectionHead(s)}
+      ${renderSectionHead(s, rng)}
       <div class="mr">
         <div class="mr-row mr-head-row">${head}</div>
         ${body}
@@ -274,44 +281,60 @@ function renderMetricsRows(s) {
   `;
 }
 
-function renderSection(s) {
+function renderSection(s, rng, i) {
+  const divider = i > 0
+    ? craft.svg(968, 14, craft.handLine(rng, 2, 7, 966, 7 + (rng() * 4 - 2), { amp: 1.6, width: 2, opacity: 0.4 }), { class: 'section-divider' })
+    : '';
+  let body;
   switch (s.type) {
-    case 'stat-grid': return renderStatGrid(s);
-    case 'comparison-table': return renderComparisonTable(s);
-    case 'metrics-rows': return renderMetricsRows(s);
+    case 'stat-grid': body = renderStatGrid(s, rng); break;
+    case 'comparison-table': body = renderComparisonTable(s, rng); break;
+    case 'metrics-rows': body = renderMetricsRows(s, rng); break;
     default: throw new Error(`Unknown section type: ${s.type}`);
   }
+  return divider + body;
 }
 
-function renderHeader(h) {
+function renderHeader(h, rng) {
+  const mark = `<svg class="emph-mark" viewBox="0 0 300 24" preserveAspectRatio="none">${
+    craft.handLine(rng, 4, 10, 296, 8 + (rng() * 6 - 3), { amp: 2.6, width: 7, filter: null, stroke: 'var(--accent)' }) +
+    craft.handLine(rng, 10, 17, 262 + rng() * 30, 16 + (rng() * 4 - 2), { amp: 2.2, width: 5.5, filter: null, stroke: 'var(--accent)', opacity: 0.75 })
+  }</svg>`;
   return `
     <header class="page-head">
       <img class="logo-lockup" src="${logoUrl()}" alt="The Kiln">
       <h1 class="page-title">
         <span class="roman">${esc(h.title_roman)}</span>
-        ${h.title_italic ? ` <em class="emph">${esc(h.title_italic)}</em>` : ''}
+        ${h.title_italic ? ` <em class="emph">${esc(h.title_italic)}${mark}</em>` : ''}
       </h1>
       ${h.subtitle ? `<p class="page-sub">${esc(h.subtitle)}</p>` : ''}
     </header>
   `;
 }
 
-function renderFooter(f) {
+function renderFooter(f, rng) {
   if (!f) return '';
+  const line = craft.svg(968, 12, craft.handLine(rng, 2, 6, 966, 6 + (rng() * 4 - 2), { amp: 1.6, width: 2.2, opacity: 0.5 }), { class: 'foot-line' });
   return `
     <footer class="page-foot">
-      <span>${esc(f.left || '')}</span>
-      <span>${esc(f.right || '')}</span>
+      ${line}
+      <div class="page-foot-row">
+        <span>${esc(f.left || '')}</span>
+        <span class="foot-right">${esc(f.right || '')}</span>
+      </div>
     </footer>
   `;
 }
 
-function buildHtml(input) {
+function buildHtml(input, inputName) {
   const w = (input.canvas && input.canvas.width) || DEFAULT_WIDTH;
   const h = (input.canvas && input.canvas.height) || DEFAULT_HEIGHT;
   const grad = resolveGradient(input.gradient_variant || 'orange_indigo');
-  const sectionsHtml = input.sections.map(renderSection).join('\n');
+  const rng = craft.rngFromString(input.seed || inputName || 'info-card');
+  const sectionsHtml = input.sections.map((sec, i) => renderSection(sec, rng, i)).join('\n');
   const doodle = input.doodle ? doodleUrl(input.doodle) : null;
+  const doodleRot = (rng() * 12 - 6).toFixed(1);
+  const glazeD = craft.glazeDipPath(rng, w, 34, { waves: 7, amp: 8 });
 
   return `<!doctype html>
 <html>
@@ -319,41 +342,55 @@ function buildHtml(input) {
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,30..100;1,9..144,400..700,30..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --grad-from: ${grad.from};
     --grad-to: ${grad.to};
-    --ink: #000000;
-    --cream: #F5F4EB;
-    --white: #FFFFFF;
-    --rule: rgba(0,0,0,0.12);
-    --muted: #5a544a;
+    --accent: ${grad.from};
+    --ink: #231F20;
+    --paper: #F5EFE2;
+    --rule: rgba(35,31,32,0.16);
+    --muted: #6B645A;
     --frame: 50px;
     --pad: 56px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: ${w}px; height: ${h}px; margin: 0; background: #111; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+  html, body { width: ${w}px; height: ${h}px; margin: 0; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
 
   .card {
     width: ${w}px;
     height: ${h}px;
     position: relative;
-    background: linear-gradient(90deg, var(--grad-from) 0%, var(--grad-to) 100%);
-    padding: var(--frame);
+    background: var(--paper);
     overflow: hidden;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: ${craft.grainCss()};
+    opacity: 0.2;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 40;
   }
   .card::before {
     content: '';
     position: absolute;
     inset: 0;
+    background: radial-gradient(ellipse 130% 120% at 50% 42%, transparent 62%, rgba(120,90,40,0.05) 100%);
+    pointer-events: none;
+    z-index: 39;
+  }
+  .glaze { position: absolute; top: 0; left: 0; width: ${w}px; height: 90px; z-index: 1; }
+  .glaze-fill { position: absolute; inset: 0; background: linear-gradient(115deg, var(--grad-from) 0%, var(--grad-to) 100%); }
+  .glaze-tex {
+    position: absolute; inset: 0;
     background-image: url('${textureUrl()}');
     background-size: 50% 50%;
-    background-repeat: repeat;
     mix-blend-mode: multiply;
-    opacity: 0.55;
-    pointer-events: none;
-    z-index: 1;
+    opacity: 0.5;
   }
   .inner {
     position: relative;
@@ -364,17 +401,16 @@ function buildHtml(input) {
     flex-direction: column;
   }
 
-  /* ---------- Top panel (white) ---------- */
+  /* ---------- Header (on paper) ---------- */
   .page-head {
-    background: var(--white);
-    padding: 44px var(--pad) 36px;
+    padding: 56px var(--pad) 36px;
     flex: 0 0 auto;
   }
   .logo-lockup {
-    height: 42px;
+    height: 38px;
     width: auto;
     display: block;
-    margin-bottom: 26px;
+    margin-bottom: 28px;
   }
   .page-title {
     font-family: 'Fraunces', Georgia, serif;
@@ -386,10 +422,13 @@ function buildHtml(input) {
     color: var(--ink);
   }
   .page-title .emph {
+    position: relative;
     font-style: italic;
-    font-weight: 500;
-    color: var(--grad-from);
+    font-weight: 540;
+    color: var(--ink);
+    white-space: nowrap;
   }
+  .emph-mark { position: absolute; left: -2%; bottom: -0.12em; width: 104%; height: 0.16em; pointer-events: none; }
   .page-sub {
     font-family: 'Inter', sans-serif;
     font-size: 18px;
@@ -398,14 +437,11 @@ function buildHtml(input) {
     line-height: 1.4;
   }
 
-  /* ---------- Body panel (cream) ----------
-     Top-aligned natural flow. Sections take their actual content height
-     (no flex:1), separated by a consistent gap. Leftover space sits at
-     the bottom before the footer — reads as natural padding regardless
-     of section count (2 sections vs 3 vs anything else). Pre-render
-     validation (validateInput) guarantees total natural content fits. */
+  /* ---------- Body (paper, natural flow) ----------
+     Top-aligned natural flow. Sections take their actual content height,
+     separated by a consistent gap. Pre-render validation (validateInput)
+     guarantees total natural content fits. */
   .body {
-    background: var(--cream);
     padding: 30px var(--pad) 24px;
     flex: 1;
     position: relative;
@@ -421,26 +457,28 @@ function buildHtml(input) {
     display: flex;
     flex-direction: column;
     padding: 4px 0 4px;
-    border-top: 1px solid var(--rule);
     overflow: hidden;
     flex: 0 0 auto;
   }
-  .section:first-child { border-top: none; padding-top: 0; }
+  .section-divider { display: block; width: 100%; height: 14px; margin-bottom: -14px; flex: 0 0 auto; }
 
-  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .section-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
   .section-num {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--grad-from);
-    color: var(--white);
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
+    width: 40px;
+    height: 40px;
     flex: 0 0 auto;
+  }
+  .section-num-ring { position: absolute; inset: -2px; width: 44px; height: 44px; }
+  .section-num-digit {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--ink);
   }
   .section-title {
     font-family: 'Fraunces', Georgia, serif;
@@ -453,41 +491,30 @@ function buildHtml(input) {
   }
   .section-title .emph {
     font-style: italic;
-    font-weight: 500;
-    color: var(--grad-from);
+    font-weight: 540;
+    color: var(--accent);
   }
 
-  /* ---------- Stat grid (white sub-cards on cream) ----------
-     grid-auto-rows uses a fixed minimum so cards have a predictable height
-     and the section's content size is deterministic (which is what
-     validateInput predicts against). Cards can grow taller if content
-     forces it, but the typical case lands at minHeight exactly. */
+  /* ---------- Stat grid (hand-drawn ink boxes on paper) ---------- */
   .stat-grid {
     display: grid;
-    gap: 12px;
+    gap: 14px;
     grid-auto-rows: minmax(130px, auto);
   }
   .stat-card {
-    background: var(--white);
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    padding: 18px 20px 20px;
+    position: relative;
+    padding: 18px 22px 20px;
     display: flex;
     flex-direction: column;
   }
+  .stat-card-box { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .stat-card-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 1.5px solid var(--grad-from);
-    color: var(--grad-from);
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 10px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--accent);
+    margin-bottom: 8px;
   }
   .stat-card-title {
     font-family: 'Inter', sans-serif;
@@ -505,10 +532,7 @@ function buildHtml(input) {
   }
   .stat-card-body b { color: var(--ink); font-weight: 700; }
 
-  /* ---------- Comparison table (typography on cream) ----------
-     Natural row heights (no justify-content:space-between) so each section's
-     height is predictable for validateInput. Body-level space-between
-     handles vertical rhythm at the panel level instead. */
+  /* ---------- Comparison table (typography stays crisp) ---------- */
   .ct { display: flex; flex-direction: column; }
   .ct-row {
     display: grid;
@@ -521,9 +545,10 @@ function buildHtml(input) {
   }
   .ct-head-row { border-top: none; padding-top: 0; padding-bottom: 6px; }
   .ct-head {
-    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
   }
@@ -533,10 +558,9 @@ function buildHtml(input) {
     color: var(--ink);
   }
   .ct-first { font-weight: 600; }
-  .ct-impact { color: var(--grad-from); font-weight: 700; }
+  .ct-impact { color: var(--accent); font-weight: 700; }
 
-  /* ---------- Metrics rows (typography on cream) ----------
-     Same rationale as .ct above: natural row heights, body-level rhythm. */
+  /* ---------- Metrics rows ---------- */
   .mr { display: flex; flex-direction: column; }
   .mr-row {
     display: grid;
@@ -549,9 +573,10 @@ function buildHtml(input) {
   }
   .mr-head-row { border-top: none; padding-top: 0; padding-bottom: 6px; }
   .mr-head {
-    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
   }
@@ -561,43 +586,48 @@ function buildHtml(input) {
     color: var(--ink);
   }
   .mr-first { font-weight: 600; }
-  .mr-impact { color: var(--grad-from); font-weight: 700; }
+  .mr-impact { color: var(--accent); font-weight: 700; }
 
   /* ---------- Doodle accent ---------- */
   .doodle-accent {
     position: absolute;
     right: var(--pad);
-    bottom: 52px;
-    width: 88px;
+    bottom: 58px;
+    width: 110px;
     height: auto;
-    opacity: 0.85;
+    opacity: 0.9;
+    mix-blend-mode: multiply;
     pointer-events: none;
   }
 
   /* ---------- Footer ---------- */
-  .page-foot {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--rule);
+  .page-foot { margin-top: auto; padding-top: 16px; flex: 0 0 auto; }
+  .foot-line { display: block; width: 100%; height: 12px; margin-bottom: 8px; }
+  .page-foot-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-family: 'Inter', sans-serif;
-    font-size: 12.5px;
-    letter-spacing: 0.05em;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
     color: var(--muted);
-    flex: 0 0 auto;
   }
+  .foot-right { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.06em; }
 </style>
 </head>
 <body>
   <div class="card">
+    <div class="glaze">
+      <div class="glaze-fill" style="clip-path: path('${glazeD}');"></div>
+      <div class="glaze-tex" style="clip-path: path('${glazeD}');"></div>
+    </div>
     <div class="inner">
-      ${renderHeader(input.header)}
+      ${renderHeader(input.header, rng)}
       <div class="body">
         ${sectionsHtml}
-        ${doodle ? `<img class="doodle-accent" src="${doodle}" alt="">` : ''}
-        ${renderFooter(input.footer)}
+        ${doodle ? `<img class="doodle-accent" style="transform: rotate(${doodleRot}deg);" src="${doodle}" alt="">` : ''}
+        ${renderFooter(input.footer, rng)}
       </div>
     </div>
   </div>
@@ -627,7 +657,7 @@ async function main() {
   const w = (input.canvas && input.canvas.width) || DEFAULT_WIDTH;
   const h = (input.canvas && input.canvas.height) || DEFAULT_HEIGHT;
 
-  const html = buildHtml(input);
+  const html = buildHtml(input, path.basename(inputArg, '.json'));
   const tmpHtml = path.join(ROOT, '.tmp-render.html');
   fs.writeFileSync(tmpHtml, html);
 

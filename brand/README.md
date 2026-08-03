@@ -7,7 +7,7 @@ We maintain two parallel brand directions. Every piece of generated content pick
 When generating a LinkedIn asset, specify one direction:
 
 - **`legacy`** — the cleaner, content-forward, editorial direction. White backgrounds, bold sans-serif headlines, 3D illustrated icons, hand-drawn doodles as hero-scale elements. Author-attributed with the "Patrick + photo" badge on cover and CTA slides.
-- **`exploration`** — the newer atmospheric direction. Gradient borders with topographic texture, Lora italic serif headlines, hand-drawn monoline doodles as small accents, cream inner panels.
+- **`exploration`** — the newer craft direction ("Ink & Kiln", v2 as of Aug 2026). Warm grained paper canvas, one wavy "glaze dip" gradient band with topographic texture, Fraunces italic-emphasis with hand-drawn marks, seeded hand-drawn ink structure (arrows, circles, underlines), thick marker doodles as spot illustrations. See the v2 note at the top of `brand-exploration.md`.
 
 ## Default direction by format
 

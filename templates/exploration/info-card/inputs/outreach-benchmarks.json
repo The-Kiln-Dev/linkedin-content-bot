@@ -1,0 +1,52 @@
+{
+  "canvas": {
+    "width": 1080,
+    "height": 1350
+  },
+  "gradient_variant": "orange_indigo",
+  "header": {
+    "title_roman": "Outreach benchmarks",
+    "title_italic": "to hold yourself to",
+    "subtitle": "The numbers behind the top 1% of campaigns."
+  },
+  "sections": [
+    {
+      "type": "metrics-rows",
+      "number": 1,
+      "title_roman": "Benchmarks",
+      "title_italic": "to hold yourself to",
+      "columns": [
+        "Metric",
+        "Top benchmark",
+        "Priority"
+      ],
+      "rows": [
+        [
+          "Acceptance rate",
+          "40-55%",
+          "High"
+        ],
+        [
+          "Reply rate",
+          "18-27%",
+          "High"
+        ],
+        [
+          "Positive reply",
+          "8-12%",
+          "High"
+        ],
+        [
+          "Bounce / error",
+          "<3%",
+          "Low"
+        ]
+      ]
+    }
+  ],
+  "doodle": "paper-airplane.png",
+  "footer": {
+    "left": "Patrick Spychalski",
+    "right": "thekiln.com"
+  }
+}

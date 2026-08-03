@@ -4,6 +4,19 @@ A newer visual direction being explored specifically for LinkedIn post templates
 
 Color values live in `colors-exploration.json` — edit there to change colors without touching this doc. Any of the 5 variants is valid; rotate across posts for variety.
 
+
+> **v2 (August 2026): "Ink & Kiln" execution — current for all generated assets.**
+> The identity below (Fraunces + italic emphasis, the 5 gradients, cream, the lockup) is unchanged, but the *execution* evolved. Generated assets no longer use the uniform gradient frame + white/cream panel. Current spec:
+>
+> - **Paper, not panel.** Warm cream paper `#F5EFE2` with visible grain across the whole canvas. Ink is warm near-black `#231F20` (matches the doodles), muted text `#6B645A`.
+> - **Glaze dip, not frame.** The gradient + topographic texture survives as one wavy-edged dipped band per asset (like a pot dipped in glaze) — deep on covers/CTAs, slim elsewhere; edge position varies, the deck's gradient stays constant.
+> - **Ink structure.** Dividers, arrows, circles, underlines, boxes, checks are hand-drawn (seeded wobble via `templates/craft/craft.js`). Italic emphasis = italic + a hand mark (marker underline / circle / highlight swipe), not just a color swap.
+> - **Scale drama.** Fraunces display range up to ~156px titles and ~300px stat numerals. JetBrains Mono for kickers and page counts, Caveat for rare handwritten asides.
+> - **Marker spots, never thin-line icons.** Concept illustrations are thick-marker doodles: brand inventory or Recraft custom style (`brand/recraft-style.json`) via `templates/exploration/carousel/lib/gen-spot.js`.
+> - **Archetypes, not one skeleton.** Slide/section layout varies by what the content is (see `templates/exploration/carousel/README.md`).
+>
+> The sections below document the v1 exploration language (gradient frame, two-tone interior). They remain accurate for identity (type, color tokens, texture asset) and for any Figma work still on v1 — but generators follow the v2 spec.
+
 ---
 
 ## Identity

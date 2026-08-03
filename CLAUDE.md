@@ -59,9 +59,18 @@ Per `voice/voice.md` and the top-level README. Non-negotiable across all output:
 
 ## Brand direction
 
-Carousels, info-cards, AND freeform thematic compositions default to the **exploration** direction (gradient frame + topographic texture, Fraunces italic-emphasis, cream interior, single-accent discipline). Per-format defaults live in `brand/README.md`.
+Carousels, info-cards, AND freeform thematic compositions default to the **exploration** direction, v2 execution: **"Ink & Kiln"** (see the v2 note atop `brand/brand-exploration.md` and `docs/asset-redesign-2026-08.md`). The shared chassis:
 
-The visual language across ALL generators is locked: same gradient frame, same Fraunces serif, same italic-emphasis-on-key-phrase pattern, same single-accent-color rule. Don't deviate. In particular, when building a freeform thematic asset, do NOT copy other creators' aesthetics wholesale (dark space backgrounds, bold sans-serif titles, etc.) — adapt structural patterns from elsewhere but always render in the Kiln's exploration brand.
+- Warm grained paper canvas (`#F5EFE2`), ink `#231F20` — no white panels, no gradient fence
+- One **glaze dip** per asset (wavy gradient band + topographic texture); deck gradient constant, dip depth/edge varies
+- **Hand-drawn ink structure** from `templates/craft/craft.js` — dividers, arrows, circles, marker underlines, boxes. Seeded wobble: deterministic per slide, different every deck
+- Fraunces with scale drama; italic emphasis carries a hand mark (underline / circle / highlight)
+- **Thick marker spot illustrations only** (brand doodles or `lib/gen-spot.js` Recraft brand style). Thin-line icons are banned everywhere
+- **Slide archetypes** (cover, point, big-number, quote, list, diagram, cta) — pick per slide by content; don't repeat one archetype through a deck unless it's a genuine series
+
+When building a freeform thematic asset, do NOT copy other creators' aesthetics wholesale (dark space backgrounds, bold sans-serif titles, etc.) — adapt structural patterns from elsewhere but always render in the Ink & Kiln language.
+
+**Art-direction step (required for every deck):** before writing the input JSON, pick per slide: archetype, emphasis phrase + mark type, spot concept, and at most one hand-note per deck. Variety is the deliverable — two decks should never look like the same deck refilled.
 
 **No chrome on any generated asset:** no "Patrick's take" eyebrow, no "Field Notes · 2026" meta-badge in the top-right, no "My Rule" verdict bar at the bottom, no "Illustration · Recraft" credits, no patronizing captions. Keep only: Kiln lockup, title, subtitle, the diagram itself, footer with author + URL. The visual should carry the conclusion; if it can't, the visual isn't doing its job.
 

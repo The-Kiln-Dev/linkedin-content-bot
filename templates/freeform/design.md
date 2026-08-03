@@ -28,8 +28,8 @@ These apply to every freeform composition. Skipping any of them re-introduces th
 
 Do **not** copy other creators' aesthetics wholesale (dark space backgrounds, bold sans-serif titles, etc.). Adapt structural patterns from elsewhere, but always render in the Kiln's exploration brand:
 
-- **Cream interior** `#F5F4EB`
-- **Gradient frame** at the edges (`linear-gradient(135deg, var(--grad-from), var(--grad-to))`) with topographic texture overlay (`mix-blend-mode: multiply, opacity 0.5`)
+- **Warm paper canvas** `#F5EFE2` with grain (v2 "Ink & Kiln" — see the v2 note atop `brand/brand-exploration.md`; the earlier cream `#F5F4EB` + full gradient frame is superseded)
+- **Glaze dip instead of frame**: one wavy-edged gradient band (`linear-gradient(115deg, var(--grad-from), var(--grad-to))` + topographic texture at `mix-blend-mode: multiply, opacity 0.5`), clipped by a `glazeDipPath`-style wavy path — top edge by default, slim (~34px) so it never crowds the diagram
 - **Fraunces serif** for headlines, with `font-style: italic` emphasis on the key phrase, colored in `--grad-from` (brand orange `#FB923C`)
 - **Inter** for body, labels, and chart text (400/500/600/700/800 as needed)
 - **Single accent color discipline** — the gradient's `from` value is the accent everywhere (numbered badges, italic emphasis, key axis ticks, callout fills). Don't introduce a second hue for emphasis.
@@ -97,7 +97,19 @@ For 14px Inter, "Hierarchy + custom objects" is ~195px wide. If labels end at `x
 
 **Use `lib/layout.js` for all text inside non-rectangular shapes.** It computes the correct centroid per row and runs a validation pass that prints any overflows to the browser console. See "The layout library" section below.
 
-### 7. Think about the concept before placing text
+### 7. The craft layer — hand-drawn ink over precise geometry
+
+The diagram's DATA stays precise (chart lines, axis positions, plotted points — accuracy is the argument). The CHROME around it goes hand-drawn, using the same vocabulary as the other generators (`templates/craft/craft.js` — port the patterns inline, it's plain SVG):
+
+- Annotation arrows and callout pointers → wobbly `handArrow`-style paths in the accent color, not straight lines with `marker-end`
+- Circles around the key data point → `handCircle` open loops, not perfect `<circle>` outlines
+- The italic emphasis phrase in the title → marker underline or highlight swipe
+- Dividers and the footer rule → jittered `handLine`, not `<line>`
+- Grain overlay on the paper, ink `#231F20`, muted `#6B645A`
+
+Rule of thumb: if a stroke *carries data*, keep it clean. If a stroke *points at, frames, or emphasizes* data, draw it by hand. Cap hand annotations at ~3 per composition.
+
+### 8. Think about the concept before placing text
 
 The text in the diagram has to actually mean something. Made-up labels like "Apex" or "Edge cases" at the top of a capability pyramid don't describe a real capability — they're filler that breaks the reader's trust in the diagram.
 

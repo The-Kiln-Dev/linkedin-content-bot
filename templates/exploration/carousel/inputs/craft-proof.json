@@ -1,0 +1,65 @@
+{
+  "deck_name": "craft-proof",
+  "author": "Patrick Spychalski",
+  "gradient_variant": "orange_indigo",
+  "seed": "craft-proof-v1",
+  "slides": [
+    {
+      "type": "cover",
+      "kicker": "HIRING",
+      "title": "Three personas for hiring a *GTM engineer*",
+      "subtitle": "We've hired a lot of them at The Kiln. Here's what actually works.",
+      "spot": "magnifying-glass.png",
+      "note": "the third one surprised me"
+    },
+    {
+      "type": "point",
+      "num": 1,
+      "kicker": "PERSONA 1",
+      "title": "The ex-SDR who *taught themselves Clay*",
+      "body": "Knows the pain firsthand. Ships scrappy workflows fast. Hire when you need someone who treats every campaign like their own quota depends on it.",
+      "spot": "lightning-bolt.png"
+    },
+    {
+      "type": "big-number",
+      "kicker": "THE MATH",
+      "label": "Manual hours replaced",
+      "stat": "640+",
+      "context": "That's what one GTME's systems replaced in a quarter. The role pays for itself before the second invoice.",
+      "note": "real client number"
+    },
+    {
+      "type": "quote",
+      "kicker": "PERSONA 2",
+      "quote": "Hire the RevOps person who got bored of dashboards and started building.",
+      "attribution": "Every good GTME origin story"
+    },
+    {
+      "type": "list",
+      "kicker": "THE SIGNALS",
+      "title": "What to *screen for*",
+      "items": [
+        { "label": "Shipped systems, not decks", "sub": "Ask what they built last month. Not what they'd build." },
+        { "label": "Tool-agnostic", "sub": "Clay today, something else next year. Loyalty to outcomes." },
+        { "label": "Writes decent copy", "sub": "The workflow is half the job. The message is the other half." }
+      ]
+    },
+    {
+      "type": "diagram",
+      "kicker": "THE FUNNEL",
+      "title": "Our *actual* hiring loop",
+      "nodes": [
+        { "label": "Portfolio screen", "sub": "show us a real workflow" },
+        { "label": "Paid build sprint", "sub": "4 hours, real client problem" },
+        { "label": "Debrief call", "sub": "how they think > what they built" }
+      ]
+    },
+    {
+      "type": "cta",
+      "title": "Stealing this *playbook?*",
+      "subtitle": "Follow for more of how we build GTM systems at The Kiln.",
+      "button_text": "Follow Patrick",
+      "spot": "paper-airplane.png"
+    }
+  ]
+}

@@ -8,7 +8,8 @@
     "render:info-card": "node templates/exploration/info-card/generate.js",
     "render:legacy-carousel": "node templates/legacy/carousel/generate.js",
     "gen:doodle": "node templates/exploration/carousel/lib/gen-doodle.js",
-    "gen:illustration": "node templates/legacy/carousel/lib/gen-illustration.js"
+    "gen:illustration": "node templates/legacy/carousel/lib/gen-illustration.js",
+    "gen:spot": "node templates/exploration/carousel/lib/gen-spot.js"
   },
   "dependencies": {
     "openai": "^6.34.0",

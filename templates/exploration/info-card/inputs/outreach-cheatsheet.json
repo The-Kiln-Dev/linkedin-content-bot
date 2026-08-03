@@ -1,5 +1,8 @@
 {
-  "canvas": { "width": 1080, "height": 1350 },
+  "canvas": {
+    "width": 1080,
+    "height": 1350
+  },
   "gradient_variant": "orange_indigo",
   "header": {
     "title_roman": "LinkedIn outreach,",
@@ -12,12 +15,28 @@
       "number": 1,
       "title_roman": "Principles that",
       "title_italic": "actually move the needle",
-      "columns": 2,
+      "columns": 4,
       "items": [
-        { "n": 1, "title": "Personalization > volume", "body": "ICP-specific copy lifted replies by <b>54.7%</b>." },
-        { "n": 2, "title": "Keep it short", "body": "Messages under 150 chars saw <b>+22%</b> reply rates." },
-        { "n": 3, "title": "Context is king", "body": "Referencing a post or role change = <b>+18%</b> replies." },
-        { "n": 4, "title": "Soft touchpoints first", "body": "Visit + like + follow + connect = <b>+30%</b> acceptance." }
+        {
+          "n": 1,
+          "title": "Personalization > volume",
+          "body": "ICP-specific copy lifted replies by <b>54.7%</b>."
+        },
+        {
+          "n": 2,
+          "title": "Keep it short",
+          "body": "Messages under 150 chars saw <b>+22%</b> reply rates."
+        },
+        {
+          "n": 3,
+          "title": "Context is king",
+          "body": "Referencing a post or role change = <b>+18%</b> replies."
+        },
+        {
+          "n": 4,
+          "title": "Soft touchpoints first",
+          "body": "Visit + like + follow + connect = <b>+30%</b> acceptance."
+        }
       ]
     },
     {
@@ -25,25 +44,32 @@
       "number": 2,
       "title_roman": "Copy that",
       "title_italic": "actually gets replies",
-      "columns": ["Format", "Example", "Lift"],
+      "columns": [
+        "Format",
+        "Example",
+        "Lift"
+      ],
       "rows": [
-        ["Trigger hook", "\"Noticed you're hiring SDRs — what's worked best?\"", "+18.2%"],
-        ["Post reference", "\"Saw your post on PLG. What are you testing?\"", "+19.3%"],
-        ["Peer comparison", "\"Worth sharing what others in your space are doing?\"", "+27.1%"],
-        ["Job change", "\"Saw you joined {{Company}} — how's month one?\"", "+21.5%"]
-      ]
-    },
-    {
-      "type": "metrics-rows",
-      "number": 3,
-      "title_roman": "Benchmarks",
-      "title_italic": "to hold yourself to",
-      "columns": ["Metric", "Top benchmark", "Priority"],
-      "rows": [
-        ["Acceptance rate", "40-55%", "High"],
-        ["Reply rate", "18-27%", "High"],
-        ["Positive reply", "8-12%", "High"],
-        ["Bounce / error", "<3%", "Low"]
+        [
+          "Trigger hook",
+          "\"Noticed you're hiring SDRs - what's worked best?\"",
+          "+18.2%"
+        ],
+        [
+          "Post reference",
+          "\"Saw your post on PLG. What are you testing?\"",
+          "+19.3%"
+        ],
+        [
+          "Peer comparison",
+          "\"Worth sharing what others in your space are doing?\"",
+          "+27.1%"
+        ],
+        [
+          "Job change",
+          "\"Saw you joined {{Company}} - how's month one?\"",
+          "+21.5%"
+        ]
       ]
     }
   ],

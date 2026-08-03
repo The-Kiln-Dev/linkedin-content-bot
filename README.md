@@ -8,13 +8,13 @@ Patrick's LinkedIn content system for The Kiln. Brand assets, voice docs, draft 
 brand/
   README.md                    Binary-switch convention (legacy vs exploration directions)
   brand-legacy.md              Editorial direction — white bg, bold sans, 3D icons, doodles
-  brand-exploration.md         Atmospheric direction — gradients, Lora italic, monoline accents
+  brand-exploration.md         Craft direction (v2 "Ink & Kiln") — grained paper, glaze dip, hand-drawn ink, Fraunces
   specs.md                     Canvas dimensions + asset-resolution rules (applies to both)
   colors-legacy.json
   colors-exploration.json
   assets/
     legacy/                    3D icons, doodles, logos, Patrick photo
-    exploration/               gradients, monoline doodles, topographic texture
+    exploration/               marker doodles, topographic texture, logos
 
 voice/
   voice.md                     Patrick's writing voice (style + structural moves)
@@ -27,10 +27,10 @@ drafts/                        Posts in progress (Patrick-authored)
 templates/
   exploration/                 (default direction)
     carousel/                  Static carousel generator (Node + Puppeteer → PNG)
-                               1080×1350 slides with gradient frame + Fraunces
-                               italic-emphasis + cream/white panels.
+                               1080×1350 slides on grained paper: glaze dip,
+                               hand-drawn ink structure, archetype roster.
                                Slide types are extensible (system, not template).
-                               Includes lib/gen-doodle.js for per-deck AI doodles.
+                               lib/gen-spot.js (Recraft brand style) for per-deck spots.
                                Full docs in its README.
     info-card/                 Single dense info-card generator (Node + Puppeteer → PNG)
                                Gradient frame + Fraunces italic-emphasis + cream body panel.
@@ -70,7 +70,7 @@ These are deliberately separate. GIFs are never embedded in carousels, carousels
 
 ## System, not template
 
-The generators are a content **system**, not a fixed template. Within a single deck, different slides can use different layouts based on what each slide is trying to communicate — a comparison wants a 2-up, a workflow wants a flowchart, a stat wants a hero number. The shared chassis (gradient frame, typography, brand colors) is what holds the deck together visually; the per-slide layout is open.
+The generators are a content **system**, not a fixed template. Within a single deck, different slides can use different layouts based on what each slide is trying to communicate — a comparison wants a 2-up, a workflow wants a flowchart, a stat wants a hero number. The shared chassis (paper + grain, glaze dip, typography, one accent, one hand) is what holds the deck together visually; the per-slide layout is open.
 
 When new content needs a layout the shipped slide types don't cover, the move is to **add a new slide-type renderer** (one small function + a CSS block + a switch case), not to bend the content into an existing type. See `templates/exploration/carousel/README.md` → "System, not template" for the extension pattern.
 
@@ -151,7 +151,7 @@ Claude will pick up the conventions from this README + the per-folder READMEs + 
 These are the constraints that make the output feel like Patrick / The Kiln rather than generic AI content:
 
 ### Brand direction is binary
-Every asset picks `legacy` or `exploration`. **Carousels and info-cards default to `exploration`** (gradient frame, Fraunces italic-emphasis). **Animations default to `legacy`**. Per-format defaults live in `brand/README.md` — that file is the source of truth. Never mix directions within one piece.
+Every asset picks `legacy` or `exploration`. **Carousels and info-cards default to `exploration`** (v2 "Ink & Kiln": grained paper, glaze dip, hand-drawn ink, Fraunces with hand-marked emphasis). **Animations default to `legacy`**. Per-format defaults live in `brand/README.md` — that file is the source of truth. Never mix directions within one piece.
 
 ### Voice rules (hard, override `voice.md`)
 - **No em-dashes (`—`).** Hyphens, commas, parentheses, two sentences — anything but em-dashes. Em-dashes read as AI-generated and Patrick doesn't want them.

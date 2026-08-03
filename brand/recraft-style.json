@@ -1,0 +1,12 @@
+{
+  "_comment": "Recraft custom style for The Kiln's marker-doodle hand language. Created 2026-08-03 from brand/assets/exploration/doodles/ references (paper-airplane, envelope, wave-blob, planet-ring, crown) via POST /v1/styles. The style is private to the Recraft account whose key created it. Used by templates/exploration/carousel/lib/gen-spot.js.",
+  "style_id": "09137b74-36e2-4f99-af2c-9390ea675902",
+  "base_style": "digital_illustration",
+  "references": [
+    "brand/assets/exploration/doodles/paper-airplane.png",
+    "brand/assets/exploration/doodles/envelope.png",
+    "brand/assets/exploration/doodles/wave-blob.png",
+    "brand/assets/exploration/doodles/planet-ring.png",
+    "brand/assets/exploration/doodles/crown.png"
+  ]
+}
