@@ -1,0 +1,20 @@
+{
+  "output_dir": "output/standalone-flowchart",
+  "_note": "Single-image LinkedIn post. Process diagram, standalone format (no STEP label, no cream footer, small Kiln watermark).",
+  "slides": [
+    {
+      "type": "standalone",
+      "headline": "Anatomy of a GTM workflow.",
+      "kicker": "Capture, enrich, score, route. Doesn't matter if you build it in Clay or in Claude Code.",
+      "flowchart": {
+        "orientation": "horizontal",
+        "nodes": [
+          { "label": "Capture", "sub": "Form fill or import" },
+          { "label": "Enrich",  "sub": "Waterfall providers" },
+          { "label": "Score",   "sub": "ICP match" },
+          { "label": "Route",   "sub": "To the right rep" }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kiln Single-Image — Standalone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  /* Standalone single-image post layout.
+     No step-label, no cream footer, no "Next step →".
+     Bigger hero headline, optional muted kicker subtitle, visual centerpiece,
+     and a small Kiln brand watermark in the bottom-right corner. */
+
+  .standalone-stack {
+    position: absolute;
+    left: 80px;
+    right: 80px;
+    top: 96px;
+    bottom: 96px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .standalone-stack .standalone-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 78px;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    max-width: 100%;
+  }
+
+  .standalone-stack .kicker {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.4;
+    color: var(--muted);
+    max-width: 780px;
+  }
+
+  /* When a visual centerpiece exists, push it into the lower half so the
+     headline sits at the top and the visual reads as the main event. */
+  .standalone-stack .centerpiece {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  /* Brand watermark — bottom-right, subtle, NOT a footer band */
+  .brand-mark {
+    position: absolute;
+    right: 80px;
+    bottom: 64px;
+    height: 30px;
+    width: auto;
+    opacity: 0.7;
+    z-index: 3;
+  }
+
+  /* Standalone-specific tweaks: centerpiece components fill more vertical space
+     and don't have the carousel margin-top that assumes a body-copy block above. */
+  .standalone-stack .tool-cards    { margin-top: 0; }
+  .standalone-stack .flowchart     { margin-top: 0; }
+  .standalone-stack .content-support { margin-top: 0; }
+  .standalone-stack .content-support.is-illustration { margin-top: 0; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="standalone-stack">
+      <h1 class="standalone-headline">{{headline}}</h1>
+      {{kicker_block}}
+      <div class="centerpiece">
+        {{support_block}}
+        {{tool_cards_block}}
+        {{flowchart_block}}
+      </div>
+    </div>
+    {{logos_scene_block}}
+
+    <img class="brand-mark" src="{{asset_logo_lockup}}" alt="The Kiln">
+  </div>
+</body>
+</html>

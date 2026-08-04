@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Kiln — YouTube Banner (Legacy)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #000000;
+    --cream: #F5F4EB;
+    --white: #FFFFFF;
+    --muted: #6b6b6b;
+    --divider: #e5e5e0;
+
+    --canvas-w: 2560px;
+    --canvas-h: 1440px;
+
+    --safe-w: 1546px;
+    --safe-h: 423px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: var(--canvas-w);
+    height: var(--canvas-h);
+    background: var(--white);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+
+  .canvas {
+    position: relative;
+    width: var(--canvas-w);
+    height: var(--canvas-h);
+    background: var(--white);
+    overflow: hidden;
+  }
+
+  /* Hero-scale doodles bleeding off the TV-only edges. Per legacy brand:
+     doodles appear at hero scale, partially cropped off-canvas to feel dynamic.
+     These sit outside the YouTube safe zone — TV/desktop viewers see them,
+     mobile viewers see a clean centered safe zone. */
+  .bleed-doodle {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Doodles sit fully outside the 1546×423 safe zone.
+     Safe zone left edge = (2560-1546)/2 = 507. Doodle right edge must be < 507.
+     Safe zone right edge = 2053. Right doodle left edge must be > 2053. */
+  .bleed-doodle.left {
+    left: -180px;
+    top: 140px;
+    width: 620px;
+    height: auto;
+    transform: rotate(-8deg);
+    opacity: 0.9;
+  }
+
+  .bleed-doodle.right {
+    right: -160px;
+    bottom: 120px;
+    width: 600px;
+    height: auto;
+    transform: rotate(6deg);
+    opacity: 0.92;
+  }
+
+  /* YouTube safe zone — 1546×423, perfectly centered. All critical content lives here. */
+  .safe-zone {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--safe-w);
+    height: var(--safe-h);
+    z-index: 2;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 28px 40px;
+  }
+
+  /* Top row: Kiln lockup left, channel URL right */
+  .safe-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .safe-top .logo-lockup {
+    height: 72px;
+    width: auto;
+    display: block;
+  }
+
+  .safe-top .url {
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+
+  /* Center: huge headline */
+  .safe-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 18px;
+  }
+
+  .headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 108px;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .subtitle .dot {
+    display: inline-block;
+    margin: 0 14px;
+    color: var(--muted);
+  }
+
+  /* Bottom row: Patrick badge left, Kiln tagline right */
+  .safe-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .author-badge {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .author-badge img {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .author-badge .name {
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+  }
+
+  .author-badge .role {
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--muted);
+    letter-spacing: 0;
+    margin-top: 2px;
+  }
+
+  .tagline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+    text-align: right;
+    line-height: 1.25;
+    max-width: 360px;
+  }
+
+  .tagline .muted { color: var(--muted); font-weight: 500; }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <img class="bleed-doodle left" src="file:///Users/patrickspychalski/Documents/Claude%20Code%20Projects/linkedin-content-bot/brand/assets/legacy/doodles/wave-blob.png" alt="">
+    <img class="bleed-doodle right" src="file:///Users/patrickspychalski/Documents/Claude%20Code%20Projects/linkedin-content-bot/brand/assets/legacy/doodles/cursive-swoop.png" alt="">
+
+    <div class="safe-zone">
+      <div class="safe-top">
+        <img class="logo-lockup" src="file:///Users/patrickspychalski/Documents/Claude%20Code%20Projects/linkedin-content-bot/brand/assets/legacy/logos/kiln-lockup-black.png" alt="The Kiln">
+        <div class="url">thekiln.com</div>
+      </div>
+
+      <div class="safe-center">
+        <h1 class="headline">GTM engineering, on camera</h1>
+        <div class="subtitle">Playbooks <span class="dot">·</span> Teardowns <span class="dot">·</span> Tool reviews</div>
+      </div>
+
+      <div class="safe-bottom">
+        <div class="author-badge">
+          <img src="file:///Users/patrickspychalski/Documents/Claude%20Code%20Projects/linkedin-content-bot/brand/assets/legacy/people/patrick.jpeg" alt="Patrick">
+          <div>
+            <div class="name">Patrick</div>
+            <div class="role">GTM Engineer at The Kiln</div>
+          </div>
+        </div>
+        <div class="tagline">Systems that let you sell,<br><span class="muted">not prepare to sell.</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

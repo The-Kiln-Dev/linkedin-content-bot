@@ -1,0 +1,18 @@
+{
+  "output_dir": "output/standalone-tools",
+  "_note": "Single-image LinkedIn post. Tool list using the scattered logo layout with a cursive-swoop background doodle.",
+  "slides": [
+    {
+      "type": "standalone",
+      "headline": "The enterprise stack we keep running into.",
+      "kicker": "Snowflake, Gong, Salesloft, and the rest. These are the systems where compliance is non-negotiable.",
+      "logos_layout": "scattered",
+      "background_doodle": "cursive-swoop.png",
+      "logos": [
+        { "src": "captures/logos/snowflake.com.png", "left": 70,  "top": 40,  "width": 280, "rotate": -4 },
+        { "src": "captures/logos/gong.io.png",       "left": 560, "top": 180, "width": 320, "rotate": 3  },
+        { "src": "captures/logos/salesloft.com.png", "left": 200, "top": 440, "width": 260, "rotate": -6 }
+      ]
+    }
+  ]
+}

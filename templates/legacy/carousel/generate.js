@@ -68,15 +68,13 @@ function buildCover(slide) {
   });
 }
 
-function buildContent(slide) {
-  const tmpl = fs.readFileSync(path.join(TEMPLATES_DIR, 'content.html'), 'utf8');
+/* Shared visual-component builder — shared between content and standalone slides. */
+function buildVisualBlocks(slide) {
   let supportBlock = '';
   if (slide.support_image) {
     const abs = path.isAbsolute(slide.support_image)
       ? slide.support_image
       : path.resolve(ROOT, slide.support_image);
-    // Path under generated/ → illustration variant (no frame chrome).
-    // Anything else (screenshot, photo) → default framed variant.
     const variant = slide.support_style
       || (abs.includes(`${path.sep}generated${path.sep}`) ? 'illustration' : 'framed');
     const cls = variant === 'illustration' ? 'content-support is-illustration' : 'content-support';
@@ -122,6 +120,13 @@ function buildContent(slide) {
     }).join('');
     toolCardsBlock = `<div class="tool-cards">${cards}</div>`;
   }
+
+  return { supportBlock, logosSceneBlock, flowchartBlock, toolCardsBlock };
+}
+
+function buildContent(slide) {
+  const tmpl = fs.readFileSync(path.join(TEMPLATES_DIR, 'content.html'), 'utf8');
+  const { supportBlock, logosSceneBlock, flowchartBlock, toolCardsBlock } = buildVisualBlocks(slide);
 
   return renderTemplate(tmpl, {
     asset_logo_lockup: logoLockupUrl(),
@@ -212,11 +217,35 @@ function renderLogosScene(layout, logos, backgroundDoodle) {
   throw new Error(`Unknown logos_layout: ${layout}`);
 }
 
+/* Standalone single-image post. Reuses all the content slide's visual
+   components (support_image, tool_cards, flowchart, logos_layout) but with
+   a different shell: hero headline + optional kicker + visual centerpiece +
+   small Kiln watermark. No STEP label, no cream footer, no "Next step →". */
+function buildStandalone(slide) {
+  const tmpl = fs.readFileSync(path.join(TEMPLATES_DIR, 'standalone.html'), 'utf8');
+  const { supportBlock, logosSceneBlock, flowchartBlock, toolCardsBlock } = buildVisualBlocks(slide);
+
+  const kickerBlock = slide.kicker
+    ? `<p class="kicker">${slide.kicker}</p>`
+    : '';
+
+  return renderTemplate(tmpl, {
+    asset_logo_lockup: logoLockupUrl(),
+    headline: slide.headline,
+    kicker_block: kickerBlock,
+    support_block: supportBlock,
+    tool_cards_block: toolCardsBlock,
+    flowchart_block: flowchartBlock,
+    logos_scene_block: logosSceneBlock,
+  });
+}
+
 function buildHtml(slide) {
   switch (slide.type) {
-    case 'cover':   return buildCover(slide);
-    case 'content': return buildContent(slide);
-    case 'cta':     return buildCta(slide);
+    case 'cover':      return buildCover(slide);
+    case 'content':    return buildContent(slide);
+    case 'cta':        return buildCta(slide);
+    case 'standalone': return buildStandalone(slide);
     default: throw new Error(`Unknown slide type: ${slide.type}`);
   }
 }
