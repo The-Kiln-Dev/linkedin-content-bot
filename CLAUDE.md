@@ -43,7 +43,9 @@ For each post-asset generation, classify the idea first:
   - Critical principle: **build the metaphor's geometry in SVG first, then anchor every text/logo to that geometry** (never freehand HTML percentages).
   - **MANDATORY for any text inside a non-rectangular shape** (circle, lens/Venn, trapezoid, sector, polygon): use `templates/freeform/lib/layout.js`. Hand-placing text inside curved shapes always fails because the shape's width varies by Y. The library models each shape, computes per-row centroids, and runs a validation pass that catches any overflow before snapshotting. Rectangles can use direct coordinates; everything else must go through the library.
 
-**Default heuristic:** if the post's title/hook contains a concrete physical thing (wall, iceberg, ladder, map, river, factory, foundation, ceiling, bridge, gate), it's probably thematic. If the post is "N tips for X" or "M things I learned", it's tabular. When in doubt, thematic produces a stronger LinkedIn asset.
+**Default heuristic:** if the post's title/hook contains a concrete physical thing (wall, iceberg, ladder, map, river, factory, foundation, ceiling, bridge, gate), it's probably thematic. If the post is "N tips for X" or "M things I learned", it's tabular.
+
+**Patrick's standing preference (Aug 2026): freeform thematic beats the info-card for most single-image posts.** The thematic cards look significantly better and add more value. Before defaulting to the info-card, actively look for a visual metaphor that would carry the content as a freeform composition; reach for the info-card only when the content is irreducibly tabular (a genuine cheat sheet / benchmark table with no structural metaphor). When in doubt, go freeform.
 
 If the info-card validator fails (content overflow, etc.), **restructure content to preserve information before dropping anything**. Try in order: compress copy → change column count → reformat section types → merge related sections. Only as a last resort drop content, and only with explicit user consent. The information is the point; the layout bends to fit it.
 

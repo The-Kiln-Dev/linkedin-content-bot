@@ -76,8 +76,11 @@ The user already has a draft at `drafts/<slug>.md` and wants it rendered.
 1. Read the draft. Understand its shape (single beat, list of N points, dense stats, etc.) — see the format heuristic below.
 2. **Pick the format:**
    - List of N points with explanations → **carousel** (one slide per point)
-   - Dense stats / comparisons / patterns → **info-card**
+   - Content with a visual metaphor that carries the argument → **freeform thematic** (`templates/freeform/`)
+   - Dense stats / comparisons / patterns → **info-card** — but see the standing preference below
    - Single beat / one central insight / process reveal → **animation**
+
+   **Standing preference (Patrick, Aug 2026): freeform thematic over info-card for most single-image posts.** Thematic cards look significantly better and add more value. Only fall back to the info-card when the content is irreducibly tabular (a true cheat sheet or benchmark table with no workable visual metaphor). When in doubt, go freeform — read `templates/freeform/design.md` first.
 3. Confirm the format with the user before generating, unless it's obvious.
 4. Build the JSON input. Schema lives in:
    - Carousel: `templates/exploration/carousel/README.md` + sample `templates/exploration/carousel/inputs/sample-outbound.json`
@@ -95,7 +98,7 @@ The user has written a finished LinkedIn post and wants the visual asset.
 
 This is **Step 8 of `ideation/SKILL.md`** — read that section in full and follow it. Summary:
 
-1. Read the post. Identify its shape (single beat → GIF/info-card; N points → carousel; dense data → info-card; narrative → GIF).
+1. Read the post. Identify its shape (visual metaphor → freeform thematic; N points → carousel; single beat → GIF; irreducibly tabular data → info-card). Standing preference: freeform thematic over info-card for most single-image posts.
 2. Confirm or infer the format. Surface inference briefly; don't wait if obvious.
 3. Build the JSON input using the **post's actual phrasing** — italic-emphasis hook becomes cover title; body points become content slides; final line becomes CTA hook.
 4. Generate concept-specific spots if needed (`templates/exploration/carousel/lib/gen-spot.js` — Recraft brand style; `gen-doodle.js` is the OpenAI fallback).
